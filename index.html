@@ -1,0 +1,1300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Plan a garden around the sun, soil and water in your own neighborhood.">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Grow Where You Live</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a neighborly garden notebook. Public homepage with a drawn rowhouse-block hero, then a working app: widget dashboard, map-plus-panel property editor, garden, planner, community. No external requests: system font stacks only, per the privacy brief. */
+:root{
+  --bg:#FFFDF5; --band:#FFF6D6; --surface:#FFFFFF; --sage:#DDE9D7; --line:#D3DEC8;
+  --fg:#1F2F26; --heading:#244F36; --muted:#56685C;
+  --deep:#244F36; --on-deep:#FFF6D6; --leaf:#4C8B5C;
+  --sun:#F4C84A; --sun-ink:#7A5800; --tomato:#D95243; --tomato-ink:#B23A2C; --pink:#F3A3B9; --pink-ink:#9C3D5B;
+  --lawn:#D7E8C8; --paving:#E7E2D2; --street:#B9B6AC; --dim:#FFFDF5; --roof:#6F5F52; --nroof:#B3A89C;
+  --fence:#8B6F55; --soilbed:#8A5A3C; --pot:#C9714F; --canopy:#3F7F50; --glass:#BFE0E8; --water:#2F78A8; --shade:#22344A; --unknown:#9AA3A6;
+  --h-full:#F4C84A; --h-psun:#D4E39A; --h-pshade:#86B595; --h-shade:#3E6B55;
+  --f-display:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,"URW Palladio L",Georgia,serif;
+  --f-body:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --f-data:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1A14; --band:#152219; --surface:#17261D; --sage:#1F3328; --line:#2D4537;
+  --fg:#E7EFE0; --heading:#BFE3C8; --muted:#9BB0A1;
+  --deep:#9AD3A8; --on-deep:#0E1A13; --leaf:#6BB07D;
+  --sun:#F4C84A; --sun-ink:#F4C84A; --tomato:#EE7564; --tomato-ink:#F59384; --pink:#F3A3B9; --pink-ink:#F3A3B9;
+  --lawn:#20352A; --paving:#2C3430; --street:#3A403C; --dim:#0F1A14; --roof:#5D5047; --nroof:#3E423D;
+  --fence:#A08263; --soilbed:#6E4A33; --pot:#A65E43; --canopy:#4E9A63; --glass:#5E8C96; --water:#5FA8DA; --shade:#000000; --unknown:#5E6668;
+  --h-full:#E6B83C; --h-psun:#9FB563; --h-pshade:#4F7D62; --h-shade:#24443A;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0F1A14; --band:#152219; --surface:#17261D; --sage:#1F3328; --line:#2D4537;
+  --fg:#E7EFE0; --heading:#BFE3C8; --muted:#9BB0A1;
+  --deep:#9AD3A8; --on-deep:#0E1A13; --leaf:#6BB07D;
+  --sun:#F4C84A; --sun-ink:#F4C84A; --tomato:#EE7564; --tomato-ink:#F59384; --pink:#F3A3B9; --pink-ink:#F3A3B9;
+  --lawn:#20352A; --paving:#2C3430; --street:#3A403C; --dim:#0F1A14; --roof:#5D5047; --nroof:#3E423D;
+  --fence:#A08263; --soilbed:#6E4A33; --pot:#A65E43; --canopy:#4E9A63; --glass:#5E8C96; --water:#5FA8DA; --shade:#000000; --unknown:#5E6668;
+  --h-full:#E6B83C; --h-psun:#9FB563; --h-pshade:#4F7D62; --h-shade:#24443A;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{font-size:calc(16px * var(--ts, 1))}
+.skip{position:absolute;left:-9999px;top:8px;z-index:70;background:var(--deep);color:var(--on-deep);padding:8px 14px;border-radius:8px;font-weight:700}
+.skip:focus{left:max(16px, env(safe-area-inset-left, 0px))}
+:root[data-contrast="high"]{--muted:var(--fg);--line:#3D4F44;--sage:#C9DBC1}
+@media (prefers-color-scheme: dark){:root[data-contrast="high"]:not([data-theme="light"]){--line:#B9CBBE;--sage:#2A4535}}
+:root[data-theme="dark"][data-contrast="high"]{--line:#B9CBBE;--sage:#2A4535}
+:root[data-contrast="high"] .btn,:root[data-contrast="high"] .chip,:root[data-contrast="high"] .card,:root[data-contrast="high"] .w,:root[data-contrast="high"] .li{border-width:2px}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:.9375rem;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 120px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--bg)}
+h1,h2,h3,h4{font-family:var(--f-display);color:var(--heading);text-wrap:balance;margin:0;line-height:1.15;font-weight:700}
+h2{font-size:1.55rem} h3{font-size:1.08rem} h4{font-size:.98rem}
+p{margin:0}
+a{color:var(--heading)}
+.wrap{max-width:1180px;margin:0 auto}
+.muted{color:var(--muted)} .small{font-size:.86rem} .tiny{font-size:.76rem}
+.mono{font-family:var(--f-data);font-variant-numeric:tabular-nums}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.between{justify-content:space-between}
+.stack{display:flex;flex-direction:column;gap:10px;min-width:0}
+.eyebrow{font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:6px}
+button{font:inherit}
+.btn{font-weight:700;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:9px 16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;text-decoration:none;line-height:1.2}
+.btn:hover{border-color:var(--leaf)}
+.btn.primary{background:var(--deep);border-color:var(--deep);color:var(--on-deep)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.sm{padding:5px 12px;min-height:34px;font-size:.86rem}
+.btn.link{border:0;background:none;padding:4px 2px;min-height:0;color:var(--heading);text-decoration:underline;text-underline-offset:3px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chip{font-size:.86rem;font-weight:700;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:5px 12px;cursor:pointer;min-height:36px}
+.chip[aria-pressed="true"]{background:var(--deep);color:var(--on-deep);border-color:var(--deep)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:.76rem;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--sage);color:var(--fg);white-space:nowrap}
+.pill.good{background:color-mix(in srgb,var(--leaf) 20%,transparent);color:var(--heading)}
+.pill.warn{background:color-mix(in srgb,var(--sun) 35%,transparent);color:var(--sun-ink)}
+.pill.bad{background:color-mix(in srgb,var(--tomato) 18%,transparent);color:var(--tomato-ink)}
+.ev{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;white-space:nowrap;border:1px solid transparent;vertical-align:middle}
+.ev-measured{background:color-mix(in srgb,var(--leaf) 22%,transparent);color:var(--heading)}
+.ev-modeled{background:color-mix(in srgb,var(--sun) 38%,transparent);color:var(--sun-ink)}
+.ev-reported{background:color-mix(in srgb,var(--pink) 35%,transparent);color:var(--pink-ink)}
+.ev-demo{border:1px dashed var(--muted);color:var(--muted)}
+.src{font-size:.76rem;color:var(--muted)}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:.84rem;font-weight:700;color:var(--muted);min-width:0}
+input[type=text],input[type=number],input[type=date],select,textarea{font:inherit;font-weight:400;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;min-height:42px;width:100%;min-width:0}
+textarea{min-height:64px;resize:vertical}
+input[type=range]{width:100%;accent-color:var(--deep)}
+input[type=checkbox],input[type=radio]{width:20px;height:20px;accent-color:var(--deep);flex:none}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.check{display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer}
+.note{border-left:3px solid var(--sun);padding-left:10px;font-size:.88rem}
+.warnbox{border:1.5px solid var(--tomato);border-radius:10px;padding:10px 12px;font-size:.88rem;display:flex;gap:8px;align-items:flex-start}
+.warnbox b{color:var(--tomato-ink)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td.num,th.num{text-align:right;font-family:var(--f-data);font-variant-numeric:tabular-nums}
+.empty{border:1.5px dashed var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom, 0px));background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:700;z-index:60;max-width:calc(100% - 32px);text-align:center}
+
+/* ---------- homepage ---------- */
+.site-h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:16px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;font-size:1.2rem;color:var(--heading);background:none;border:0;cursor:pointer;padding:0}
+.site-nav{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.site-nav .btn.link{text-decoration:none;font-weight:700;color:var(--fg);padding:8px 10px}
+@media (max-width:820px){.site-nav .hide-sm{display:none}}
+.hero{display:flex;flex-direction:column;gap:18px;padding-block:28px 0}
+.hero h1{font-size:clamp(2.6rem,7vw,4.6rem);letter-spacing:-.02em;line-height:1}
+.hero .sub{font-size:1.15rem;max-width:44ch}
+.hero-art{margin-top:8px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--band)}
+.hero-art svg{display:block;width:100%;height:auto}
+.band{background:var(--band);border-radius:18px;padding:28px 22px;display:flex;flex-direction:column;gap:18px}
+.home-sec{padding-block:36px 0;display:flex;flex-direction:column;gap:18px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.steps{grid-template-columns:minmax(0,1fr)}}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step .n{flex:none;width:38px;height:38px;border-radius:50%;background:var(--deep);color:var(--on-deep);display:flex;align-items:center;justify-content:center;font-family:var(--f-display);font-weight:700;font-size:1.15rem}
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.feat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:8px;text-align:left;cursor:pointer;color:var(--fg)}
+.feat:hover{border-color:var(--leaf)}
+.feat svg{flex:none}
+.proof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:860px){.proof{grid-template-columns:minmax(0,1fr)}}
+.proof .card svg{width:100%;height:auto;max-width:100%;border-radius:8px;background:var(--lawn)}
+.native-row{display:flex;gap:8px;flex-wrap:wrap}
+.privacy-hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center}
+@media (max-width:600px){.privacy-hero{grid-template-columns:minmax(0,1fr)}}
+.site-f{margin-top:44px;border-top:1px solid var(--line);padding-block:20px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+.site-f .row{gap:2px 12px}
+
+/* ---------- app shell ---------- */
+.app-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-block:12px 6px;flex-wrap:wrap}
+.app-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.app-tools select{width:auto;min-height:38px;padding:5px 8px}
+.savechip{font-size:.78rem;font-weight:700;border-radius:999px;padding:5px 10px;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tabs{position:sticky;top:env(safe-area-inset-top, 0px);z-index:8;background:var(--bg);display:flex;gap:4px;overflow-x:auto;padding-block:6px;border-bottom:1px solid var(--line);scrollbar-width:none}
+.tabs button{border:0;background:none;color:var(--muted);padding:9px 13px;border-radius:9px;cursor:pointer;white-space:nowrap;font-weight:700}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--heading);box-shadow:inset 0 -3px 0 var(--deep)}
+.demobar{margin-top:10px;font-size:.86rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border:1px dashed var(--muted);border-radius:10px}
+.alertbar{margin-top:10px;display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;background:var(--surface);border:1.5px solid var(--tomato);cursor:pointer;width:100%;color:var(--fg);text-align:left}
+.view{padding-top:18px;display:flex;flex-direction:column;gap:16px}
+.pagehead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+
+/* dashboard */
+.dash{display:grid;gap:14px;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:row dense;align-items:start}
+.w{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.w-map{grid-column:span 2;grid-row:span 2}
+.w-next{border:1.5px solid var(--deep);background:color-mix(in srgb,var(--sage) 55%,var(--surface))}
+@media (max-width:980px){.dash{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.dash{grid-template-columns:minmax(0,1fr)}.w-map{grid-column:span 1;grid-row:span 1}}
+.w-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.wctl{display:flex;gap:4px}
+.wctl button{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;font-weight:700}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.kv div{display:flex;flex-direction:column;gap:1px}
+.kv b{font-family:var(--f-display);font-size:1.35rem;color:var(--heading);line-height:1.1}
+.lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.forecast{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
+.forecast .bar{height:44px;display:flex;align-items:flex-end;justify-content:center}
+.forecast .bar i{display:block;width:60%;background:var(--water);border-radius:3px 3px 0 0;min-height:2px}
+.meter{height:10px;border-radius:6px;background:var(--sage);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--water)}
+.meter.money i{background:var(--leaf)}
+.task{display:flex;gap:10px;align-items:flex-start;padding-block:6px;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:0}
+.task.done .tt{text-decoration:line-through;color:var(--muted)}
+.list{display:flex;flex-direction:column;gap:8px}
+.li{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;background:var(--surface);min-width:0}
+.zbar{display:grid;grid-template-columns:minmax(0,9rem) minmax(0,1fr) 3.4rem;gap:8px;align-items:center;font-size:.86rem}
+.zbar .track{height:12px;background:var(--sage);border-radius:6px;overflow:hidden}
+.zbar .track i{display:block;height:100%;background:var(--sun)}
+.zbar .track i.unk{background:repeating-linear-gradient(45deg,var(--unknown) 0 4px,transparent 4px 8px)}
+
+/* property */
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.toolbar .sep{width:1px;height:26px;background:var(--line);margin-inline:4px}
+.pgrid{display:grid;gap:16px;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);align-items:start}
+@media (max-width:860px){.pgrid{grid-template-columns:minmax(0,1fr)}}
+.mapbox{position:relative;width:100%;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--lawn);touch-action:none;display:flex;justify-content:center}
+.mapbox.mini{touch-action:auto;cursor:pointer}
+canvas{display:block;max-width:100%}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px;border:1px solid var(--line)}
+.timebig{font-family:var(--f-display);font-weight:700;font-size:2.2rem;color:var(--heading);line-height:1}
+.sel{border:2px solid var(--sun)}
+details.card summary{cursor:pointer;font-weight:700;font-family:var(--f-display);color:var(--heading)}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.slot{position:relative;aspect-ratio:1;max-width:100%;border:1.5px dashed var(--line);border-radius:10px;display:flex;align-items:flex-end;justify-content:center;text-align:center;font-size:.8rem;font-weight:700;color:var(--muted);cursor:pointer;overflow:hidden;background:var(--bg);padding:6px}
+.slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.slot span{position:relative;background:color-mix(in srgb,var(--surface) 88%,transparent);padding:2px 6px;border-radius:4px}
+.slot input{position:absolute;opacity:0;pointer-events:none}
+
+/* garden */
+.ggrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.latin{font-style:italic;color:var(--muted);font-size:.86rem}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;padding:3px 4px 3px 10px;border-radius:999px;background:var(--sage)}
+.tag button{border:0;background:none;color:var(--muted);cursor:pointer;width:24px;height:24px;border-radius:50%;font-weight:700}
+
+/* planner + community */
+.cols3{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}
+@media (max-width:980px){.cols3{grid-template-columns:minmax(0,1fr)}}
+.cols2{display:grid;gap:16px;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);align-items:start}
+@media (max-width:860px){.cols2{grid-template-columns:minmax(0,1fr)}}
+
+/* consent + sheets */
+.consent{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-top:2px solid var(--deep);
+  padding-block:16px calc(16px + env(safe-area-inset-bottom, 0px));padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));box-shadow:0 -10px 30px color-mix(in srgb,var(--fg) 14%,transparent);max-height:80vh;overflow:auto}
+.consent .wrap{display:flex;flex-direction:column;gap:12px;max-width:900px}
+.cbtns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.cbtns{grid-template-columns:minmax(0,1fr)}}
+.cbtns .btn{border-color:var(--deep);color:var(--heading);background:var(--surface)}
+.copt{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.copt .stack{gap:2px}
+.sheet-bg{position:fixed;inset:0;z-index:55;background:color-mix(in srgb,var(--fg) 45%,transparent);display:flex;align-items:center;justify-content:center;padding:16px}
+.sheet{background:var(--surface);border-radius:16px;max-width:620px;width:100%;max-height:85vh;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:12px;border:1px solid var(--line)}
+
+/* wizard */
+.wiz{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:16px;padding-top:12px}
+.wsteps{display:flex;gap:6px;flex-wrap:wrap}
+.wsteps span{font-size:.8rem;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--sage);color:var(--muted)}
+.wsteps span.on{background:var(--deep);color:var(--on-deep)}
+.dial{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.cookie-note{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-top:2px solid var(--deep);padding-block:12px calc(12px + env(safe-area-inset-bottom, 0px));padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.stores{margin:2px 0 0;padding-left:18px;font-size:.84rem}
+figure.media{margin:0;display:flex;flex-direction:column;gap:6px}
+figure.media img,figure.media video{border-radius:8px;max-width:100%;max-height:260px;object-fit:cover;background:var(--sage)}
+figcaption{font-size:.84rem}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+
+<a class="skip" href="#main" data-act="skip">Skip to main content</a>
+<div class="wrap">
+
+<!-- ================= HOMEPAGE ================= -->
+<div id="home">
+  <header class="site-h">
+    <button class="logo" data-act="go-home" aria-label="Grow Where You Live home"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="23" cy="10" r="6.5" fill="var(--sun)"/><path d="M6 27h22v3H6z" fill="var(--soilbed)"/><path d="M17 27c0-7 0-10-4-14 6 1 8 5 8 10 1-4 4-6 8-6-3 2-5 5-5 10z" fill="var(--leaf)"/><circle cx="11" cy="22" r="2.4" fill="var(--tomato)"/></svg>Grow Where You Live</button>
+    <nav class="site-nav" aria-label="Main">
+      <button class="btn link hide-sm" data-act="scroll" data-arg="how">How it Works</button>
+      <button class="btn link hide-sm" data-act="scroll" data-arg="features">Features</button>
+      <button class="btn link hide-sm" data-act="scroll" data-arg="natives">Native Plants</button>
+      <button class="btn link hide-sm" data-act="scroll" data-arg="privacy">Privacy</button>
+      <button class="btn sm" data-act="display" aria-label="Accessibility and display settings">Aa Display</button>
+      <button class="btn sm" data-act="login">Log In</button>
+      <button class="btn sm primary" data-act="start">Start My Garden</button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <span class="eyebrow">Built for the block, the backyard &amp; the balcony</span>
+    <h1>Grow where you live.</h1>
+    <p class="sub">Discover your sun, understand your soil, plan your water and grow a garden that fits your space, whether it's a rowhouse yard, balcony or backyard.</p>
+    <div class="row"><button class="btn primary" data-act="start">Start My Garden</button><button class="btn" data-act="demo">Explore a Demo Yard</button></div>
+    <div class="hero-art" id="heroArt"></div>
+    <p class="tiny muted">Illustration of a fictional Southeast DC-inspired block. Not a real address.</p>
+  </section>
+
+  <section class="home-sec" id="how">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><div class="stack"><h3>Add your space</h3><p class="muted">Pick your city, point the compass and outline your yard, patio or plot. No account needed to try it.</p></div></div>
+      <div class="step"><span class="n">2</span><div class="stack"><h3>Explore sun, soil &amp; water</h3><p class="muted">Drag the sun across the day, log soil tests and mark where water pools after rain.</p></div></div>
+      <div class="step"><span class="n">3</span><div class="stack"><h3>Plan and grow</h3><p class="muted">Match native and edible plants to each bed, then follow seasonal tasks and keep a journal.</p></div></div>
+    </div>
+  </section>
+
+  <section class="home-sec" id="features">
+    <h2>What you can do</h2>
+    <div class="feats" id="featList"></div>
+  </section>
+
+  <section class="home-sec" id="natives">
+    <div class="band">
+      <div class="stack"><h2>Native plants for your region</h2><p class="muted">Natives feed local pollinators and birds and usually need less water once settled. A few from the Mid-Atlantic list:</p></div>
+      <div class="native-row" id="nativeRow"></div>
+      <div><button class="btn" data-act="demo-tab" data-arg="garden">Browse the plant library</button></div>
+    </div>
+  </section>
+
+  <section class="home-sec">
+    <h2>Real neighborhoods, real spaces</h2>
+    <div class="proof" id="proof"></div>
+  </section>
+
+  <section class="home-sec" id="privacy">
+    <div class="band privacy-hero">
+      <svg width="88" height="88" viewBox="0 0 88 88" aria-hidden="true"><path d="M44 8l28 10v20c0 20-12 34-28 42C28 72 16 58 16 38V18z" fill="var(--sage)" stroke="var(--deep)" stroke-width="3"/><path d="M44 62c0-10 0-16-7-22 9 1 11 7 11 13 1-6 6-9 12-9-5 3-8 8-8 18z" fill="var(--leaf)"/></svg>
+      <div class="stack">
+        <h2>Your garden is yours.</h2>
+        <p>Optional cookies are off by default, and nothing is stored on your device unless you turn it on. No ad pixels, no session replay, no fingerprinting. The site never asks for your camera, microphone, photo library or device location. Your address and photos never appear in anything public.</p>
+        <div class="row"><button class="btn" data-act="privacy-choices">Privacy choices</button><button class="btn link" data-act="sheet" data-arg="policy">Read the privacy policy</button></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app" hidden>
+  <header class="app-h">
+    <button class="logo" data-act="go-home" aria-label="Back to the homepage"><svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><circle cx="23" cy="10" r="6.5" fill="var(--sun)"/><path d="M6 27h22v3H6z" fill="var(--soilbed)"/><path d="M17 27c0-7 0-10-4-14 6 1 8 5 8 10 1-4 4-6 8-6-3 2-5 5-5 10z" fill="var(--leaf)"/><circle cx="11" cy="22" r="2.4" fill="var(--tomato)"/></svg>Grow Where You Live</button>
+    <div class="app-tools">
+      <label class="tiny muted" for="propSel">Property</label>
+      <select id="propSel"></select>
+      <button class="savechip" id="saveChip" data-act="privacy-choices"></button>
+      <button class="btn sm" data-act="display" aria-label="Accessibility and display settings">Aa Display</button>
+      <div class="chips" role="group" aria-label="Detail level">
+        <button class="chip" data-act="mode" data-arg="starter" id="modeStarter">Starter</button>
+        <button class="chip" data-act="mode" data-arg="advanced" id="modeAdv">Advanced</button>
+      </div>
+    </div>
+  </header>
+  <nav class="tabs" role="tablist" aria-label="App sections">
+    <button role="tab" data-act="tab" data-arg="dash">Home</button>
+    <button role="tab" data-act="tab" data-arg="property">My Property</button>
+    <button role="tab" data-act="tab" data-arg="garden">My Garden</button>
+    <button role="tab" data-act="tab" data-arg="planner">My Planner</button>
+    <button role="tab" data-act="tab" data-arg="community">Community</button>
+  </nav>
+  <div id="demoBar"></div>
+  <button class="alertbar" id="alertBar" data-act="tab" data-arg="community" hidden></button>
+
+  <section class="view" id="v-dash"></section>
+
+  <section class="view" id="v-property" hidden>
+    <div class="pagehead"><div class="stack"><h2>My Property</h2><p class="muted small" id="propSub"></p></div></div>
+    <div class="toolbar" id="tools" role="group" aria-label="Map tools"></div>
+    <div class="pgrid">
+      <div class="stack">
+        <div class="chips" id="layers" role="group" aria-label="Map layer"></div>
+        <div class="mapbox" id="propBox"><canvas id="propCv" aria-label="Map of your property. A text version is under the map."></canvas></div>
+        <div class="legend" id="propLegend"></div>
+        <div class="chips" id="years" role="group" aria-label="Look ahead"></div>
+        <details class="card" id="mapWords"><summary>Map in words</summary><div id="mapWordsBody" class="stack small"></div></details>
+      </div>
+      <div class="stack">
+        <div id="selCard"></div>
+        <div class="card" id="timeCard">
+          <div class="row between" style="align-items:flex-end">
+            <div><div class="lbl">Time of day</div><div class="timebig mono" id="timeLbl"></div></div>
+            <button class="btn sm" id="playBtn">Play the day</button>
+          </div>
+          <input type="range" id="timeSlider" min="240" max="1320" step="5" aria-label="Time of day">
+          <p id="sunInfo" class="small"></p>
+          <div class="fields"><label class="f">Date<input type="date" id="dateIn"></label></div>
+          <div class="chips" id="datePresets"></div>
+          <p class="muted small">Move the time slider to explore estimated shadows. For the best result, add the height of your house, fences and nearby trees.</p>
+        </div>
+        <div id="layerDyn" class="stack"></div>
+      </div>
+    </div>
+    <section class="card">
+      <div class="row between"><h3>Yard photos</h3><span class="pill good">Location data removed on upload</span></div>
+      <p class="muted small">An overhead photo can sit under the map for tracing. Front, back and side photos help you compare the shade model with what you see. Choose a file from a folder on your device: the site only sees the file you pick, never your photo library, camera or microphone. Photos stay in this browser tab and are never shared or saved.</p>
+      <div class="photos" id="photos"></div>
+      <div class="stack" id="photoAlts"></div>
+      <label class="check small"><input type="checkbox" id="usePhoto" checked> Show the overhead photo under the map</label>
+    </section>
+  </section>
+
+  <section class="view" id="v-garden" hidden></section>
+  <section class="view" id="v-planner" hidden></section>
+  <section class="view" id="v-community" hidden></section>
+</div>
+
+<!-- ================= SETUP ================= -->
+<div id="setup" hidden></div>
+
+<footer class="site-f">
+  <span class="small muted">Grow Where You Live · working prototype</span>
+  <div class="row small">
+    <button class="btn link" data-act="sheet" data-arg="contact">Contact</button>
+    <button class="btn link" data-act="display">Accessibility &amp; display</button>
+    <button class="btn link" data-act="sheet" data-arg="policy">Privacy policy</button>
+    <button class="btn link" data-act="privacy-choices">Privacy choices</button>
+    <button class="btn link" data-act="sheet" data-arg="rules">Community rules</button>
+    <button class="btn link" data-act="sheet" data-arg="sources">Data sources</button>
+  </div>
+</footer>
+</div>
+
+<div class="cookie-note" id="cookieNote" role="region" aria-label="Cookie notice" hidden></div>
+<div class="consent" id="consent" role="region" aria-labelledby="consentT" hidden></div>
+<div id="sheetHost"></div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+"use strict";
+const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const RAD=Math.PI/180, DEG=180/Math.PI;
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const NOW=new Date(), TODAY=ymd(NOW);
+const addDays=(s,n)=>{const d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return ymd(d)};
+const isDate=s=>/^\d{4}-\d{2}-\d{2}$/.test(s||"");
+const dshort=s=>isDate(s)?new Date(s+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"}):s;
+const dlong=s=>isDate(s)?new Date(s+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):s;
+const daysFrom=(a,b)=>Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/864e5);
+let UID=0;const nid=p=>(p||"x")+Date.now().toString(36)+(UID++);
+const fmtT=m=>{m=Math.round(m);const h=Math.floor(m/60)%24,mm=((m%60)+60)%60;return (h%12||12)+":"+pad(mm)+" "+(h<12?"AM":"PM")};
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+/* ---------- storage, gated by consent ---------- */
+const LS={get(k){try{const v=localStorage.getItem("gwyl_"+k);return v?JSON.parse(v):null}catch(e){return null}},
+  set(k,v){try{localStorage.setItem("gwyl_"+k,JSON.stringify(v))}catch(e){}},
+  del(k){try{localStorage.removeItem("gwyl_"+k)}catch(e){}}};
+let CONSENT=LS.get("consent");
+const canSave=()=>!!(CONSENT&&CONSENT.functional);
+
+/* ---------- evidence badges ---------- */
+const EV={measured:["■","Measured","Lab or sensor result"],modeled:["◐","Modeled","Software estimate"],reported:["●","Reported","Your observation"],demo:["◇","Demo","Example only"]};
+const ev=k=>{const e=EV[k];return '<span class="ev ev-'+k+'" title="'+e[2]+'"><span aria-hidden="true">'+e[0]+"</span>"+e[1]+"</span>"};
+const evDemo=p=>p&&p.demo?ev("demo"):"";
+
+/* ---------- reference data ---------- */
+const REGIONS={ma:"Mid-Atlantic & Northeast",mw:"Upper Midwest & Great Lakes",se:"Southeast",pl:"Southern Plains & Texas",sw:"Desert Southwest",pnw:"Pacific Northwest",ca:"California"};
+const PRESETS=[
+ {name:"Washington, DC",lat:38.90,lon:-77.03,tz:-5,dst:true,region:"ma"},
+ {name:"Baltimore, MD",lat:39.29,lon:-76.61,tz:-5,dst:true,region:"ma"},
+ {name:"Philadelphia, PA",lat:39.95,lon:-75.17,tz:-5,dst:true,region:"ma"},
+ {name:"Milwaukee, WI",lat:43.04,lon:-87.91,tz:-6,dst:true,region:"mw"},
+ {name:"Chicago, IL",lat:41.88,lon:-87.63,tz:-6,dst:true,region:"mw"},
+ {name:"Atlanta, GA",lat:33.75,lon:-84.39,tz:-5,dst:true,region:"se"},
+ {name:"Austin, TX",lat:30.27,lon:-97.74,tz:-6,dst:true,region:"pl"},
+ {name:"Phoenix, AZ",lat:33.45,lon:-112.07,tz:-7,dst:false,region:"sw"},
+ {name:"Seattle, WA",lat:47.61,lon:-122.33,tz:-8,dst:true,region:"pnw"},
+ {name:"Los Angeles, CA",lat:34.05,lon:-118.24,tz:-8,dst:true,region:"ca"}];
+function P(n,l,t,s,soil,note){return{n,l,t,s,soil,note}}
+const PLANTS={
+ ma:[P("Virginia bluebells","Mertensia virginica","Flower","PS","w","Spring ephemeral; plant in fall"),P("Black-eyed Susan","Rudbeckia hirta","Flower","FP","cd","Blooms Jun–Sep; reseeds"),P("Butterfly weed","Asclepias tuberosa","Flower","F","ds","Monarch host; needs sharp drainage"),P("Swamp milkweed","Asclepias incarnata","Flower","FP","cw","Rain garden center; monarch host"),P("New England aster","Symphyotrichum novae-angliae","Flower","FP","cw","Fall fuel for migrating monarchs"),P("Cardinal flower","Lobelia cardinalis","Flower","PS","w","Rain gardens; hummingbirds"),P("Golden ragwort","Packera aurea","Groundcover","PS","cw","Early yellow blooms in damp shade"),P("Wild columbine","Aquilegia canadensis","Flower","PS","ds","Early hummingbird food"),P("Pennsylvania sedge","Carex pensylvanica","Groundcover","PS","d","Lawn substitute for dry shade"),P("Christmas fern","Polystichum acrostichoides","Fern","PS","d","Evergreen for shady rowhouse yards"),P("Little bluestem","Schizachyrium scoparium","Grass","F","ds","Copper fall color; stays small"),P("Switchgrass","Panicum virgatum","Grass","F","cwd","Handles wet and dry"),P("Inkberry","Ilex glabra","Shrub","FP","cw","Evergreen hedge for small yards"),P("Arrowwood viburnum","Viburnum dentatum","Shrub","FP","cw","Bird berries; tolerates clay"),P("Winterberry","Ilex verticillata","Shrub","FP","cw","Red winter berries; needs a male nearby"),P("Serviceberry","Amelanchier canadensis","Tree","FP","cw","April blooms, June berries; 15–25 ft"),P("Eastern redbud","Cercis canadensis","Tree","FP","c","Pink April blooms; 20–30 ft"),P("Sweetbay magnolia","Magnolia virginiana","Tree","FP","w","Lemon-scented flowers; takes wet soil")],
+ mw:[P("Purple coneflower","Echinacea purpurea","Flower","FP","cd","Blooms Jul–Sep"),P("Black-eyed Susan","Rudbeckia hirta","Flower","FP","cd","Blooms Jun–Sep"),P("Butterfly milkweed","Asclepias tuberosa","Flower","F","ds","Monarch host"),P("Swamp milkweed","Asclepias incarnata","Flower","FP","cw","Rain garden center"),P("Blue flag iris","Iris versicolor","Flower","FP","cw","Rain garden; May–Jun"),P("Wild bergamot","Monarda fistulosa","Flower","FP","cd","Blooms Jul–Aug"),P("Wild columbine","Aquilegia canadensis","Flower","PS","ds","Early hummingbird food"),P("Wild ginger","Asarum canadense","Groundcover","S","c","Groundcover under trees"),P("Prairie dropseed","Sporobolus heterolepis","Grass","F","cd","Fine texture"),P("Red-osier dogwood","Cornus sericea","Shrub","FP","cw","Red winter stems"),P("Ninebark","Physocarpus opulifolius","Shrub","FP","cd","Tough hedge"),P("Serviceberry","Amelanchier laevis","Tree","FP","c","April blooms"),P("Bur oak","Quercus macrocarpa","Tree","F","cd","Long-lived shade tree")],
+ se:[P("Coral honeysuckle","Lonicera sempervirens","Vine","FP","c","Hummingbird vine"),P("Swamp sunflower","Helianthus angustifolius","Flower","F","cw","Fall blooms"),P("Dense blazing star","Liatris spicata","Flower","F","cw","Purple spikes"),P("Pink muhly grass","Muhlenbergia capillaris","Grass","F","ds","Pink fall plumes"),P("Oakleaf hydrangea","Hydrangea quercifolia","Shrub","PS","c","Four-season shrub"),P("American beautyberry","Callicarpa americana","Shrub","PS","cd","Purple berries"),P("Fringetree","Chionanthus virginicus","Tree","FP","c","Fragrant spring blooms"),P("Bald cypress","Taxodium distichum","Tree","F","cw","Takes standing water")],
+ pl:[P("Mexican hat","Ratibida columnifera","Flower","F","cd","Drought tough"),P("Blue mistflower","Conoclinium coelestinum","Flower","FP","cw","Fall butterflies"),P("Turk's cap","Malvaviscus arboreus var. drummondii","Shrub","PS","cd","Blooms in shade"),P("Inland sea oats","Chasmanthium latifolium","Grass","PS","cw","Shade grass"),P("Cenizo","Leucophyllum frutescens","Shrub","F","ds","Blooms after rain"),P("Texas redbud","Cercis canadensis var. texensis","Tree","FP","cd","Drought tough")],
+ sw:[P("Desert marigold","Baileya multiradiata","Flower","F","ds","Long bloom"),P("Parry's penstemon","Penstemon parryi","Flower","FP","ds","Hummingbirds"),P("Globemallow","Sphaeralcea ambigua","Flower","F","ds","Orange blooms"),P("Deer grass","Muhlenbergia rigens","Grass","FP","dw","Water-harvesting basins"),P("Desert willow","Chilopsis linearis","Tree","F","ds","Summer blooms")],
+ pnw:[P("Common camas","Camassia quamash","Flower","FP","cw","Wet meadows"),P("Sword fern","Polystichum munitum","Fern","PS","d","Evergreen for shade"),P("Slough sedge","Carex obnupta","Grass","PS","cw","Rain gardens"),P("Red-flowering currant","Ribes sanguineum","Shrub","FP","d","Early hummingbird blooms"),P("Vine maple","Acer circinatum","Tree","PS","c","Small tree")],
+ ca:[P("California poppy","Eschscholzia californica","Flower","F","ds","Reseeds"),P("Douglas iris","Iris douglasiana","Flower","PS","c","Coastal spring bloom"),P("Spreading rush","Juncus patens","Grass","FP","cw","Bioswales"),P("Toyon","Heteromeles arbutifolia","Shrub","FP","cd","Winter berries"),P("Coast live oak","Quercus agrifolia","Tree","F","cd","Wildlife value")]};
+const EDIBLES=[P("Tomato","Solanum lycopersicum","Vegetable","F","","Needs 6–8 h of sun; stake or cage"),P("Pepper","Capsicum annuum","Vegetable","F","","Loves heat; great in containers"),P("Bush beans","Phaseolus vulgaris","Vegetable","F","","Fast; sow after last frost"),P("Garlic","Allium sativum","Vegetable","F","","Plant cloves in fall, harvest in summer"),P("Kale","Brassica oleracea","Vegetable","FP","","Handles part shade and cold"),P("Swiss chard","Beta vulgaris","Vegetable","FP","","Harvest leaves for months"),P("Lettuce","Lactuca sativa","Vegetable","P","","Prefers cool weather and some shade"),P("Strawberries","Fragaria × ananassa","Fruit","FP","","Good for raised beds"),P("Basil","Ocimum basilicum","Herb","F","","Warm weather; pinch flowers"),P("Thyme","Thymus vulgaris","Herb","F","ds","Likes dry, well-drained pots"),P("Parsley","Petroselinum crispum","Herb","FP","","Swallowtail caterpillar host"),P("Mint","Mentha spp.","Herb","PS","w","Keep in a pot; it spreads")];
+const PESTS=[
+ {n:"Spotted lanternfly",r:"ma mw se",m:[7,8,9,10,11,12],tip:"Feeds on grapes, maples and tree-of-heaven. Scrape gray egg masses Sep–Jun and report sightings to your state agriculture department."},
+ {n:"Brown marmorated stink bug",r:"ma mw se pnw",m:[9,10,11],tip:"Gathers on sunny siding in fall looking for winter shelter. Seal gaps and drop them into soapy water."},
+ {n:"Jumping worms",r:"ma mw se",m:[7,8,9,10,11],tip:"Soil looks like coffee grounds and worms thrash when touched. Bag and trash them; don't share mulch or plants from infested beds."},
+ {n:"Boxelder bugs",r:"mw ma pl pnw sw",m:[9,10,11],tip:"Cluster on sunny south and west walls in fall. They don't hurt plants."},
+ {n:"Japanese beetle",r:"ma mw se",m:[6,7,8],tip:"Hand-pick into soapy water in the morning. Skip pheromone traps; they attract more."},
+ {n:"Emerald ash borer",r:"ma mw se pl",m:[5,6,7,8],tip:"D-shaped exit holes and a thinning crown on ash trees. Call a certified arborist."},
+ {n:"Box tree moth",r:"ma mw",m:[5,6,7,8,9,10],tip:"Webbing and chewed leaves on boxwood. Report new finds to your state agriculture department."},
+ {n:"Aphids",r:"all",m:[4,5,6,7,8,9,10],tip:"Knock them off with a hose. Ladybugs and lacewings clean up most outbreaks."},
+ {n:"Tomato hornworm",r:"all",m:[6,7,8,9],tip:"Hand-pick. Leave any covered in white cocoons; parasitic wasps are handling those."},
+ {n:"Imported cabbageworm",r:"all",m:[5,6,7,8,9,10],tip:"Green caterpillars on kale and broccoli. Use row cover."},
+ {n:"Slugs and snails",r:"pnw ma mw ca",m:[3,4,5,6,9,10,11],tip:"Worst in cool, wet weather. Water in the morning and set beer traps."},
+ {n:"Fall armyworm",r:"se pl",m:[8,9,10],tip:"Brown lawn patches overnight. Check at dusk."},
+ {n:"Whiteflies",r:"sw ca se",m:[5,6,7,8,9,10,11],tip:"Use yellow sticky cards and insecticidal soap."},
+ {n:"Spider mites",r:"all",m:[6,7,8,9],tip:"Stippled leaves in hot, dry spells. Hose off leaf undersides."}];
+const pestsFor=(region,m)=>PESTS.filter(p=>(p.r==="all"||p.r.split(" ").includes(region))&&p.m.includes(m));
+
+/* ---------- object types ---------- */
+const TYPES={house:"House",neighbor:"Neighbor's building",fence:"Fence",greenhouse:"Greenhouse",shed:"Shed",bed:"Garden bed",container:"Container",tree:"Tree",barrel:"Rain barrel",area:"Soil zone",lot:"Lot boundary"};
+const SHADING={house:1,neighbor:1,fence:1,greenhouse:1,shed:1,tree:1};
+const ZONE_TYPES={bed:1,container:1,area:1};
+
+/* ---------- fictional demo property ---------- */
+function makeDemo(){
+ const T=TODAY;
+ return {id:"demo",demo:true,name:"Sample rowhouse yard",place:"Southeast DC (fictional)",kind:"Rowhouse yard",
+  loc:{lat:38.86,lon:-76.99,tz:-5,dst:true,region:"ma",name:"Southeast Washington, DC"},
+  face:270,rot:0,view:{W:110,H:60},_v:1,
+  ground:[{type:"street",x:2.5,y:30,w:5,d:60},{type:"paving",x:8.5,y:30,w:7,d:60},{type:"street",x:107,y:30,w:6,d:60},{type:"paving",x:68,y:30,w:8,d:19.4}],
+  objects:[
+   {id:"lot",type:"lot",name:"Your lot",x:58,y:30,w:92,d:20,rot:0},
+   {id:"house",type:"house",name:"House",x:44,y:30,w:40,d:20,h:30,rot:0},
+   {id:"nbN",type:"neighbor",name:"North neighbor's rowhouse",x:44,y:10,w:40,d:20,h:32,rot:0,fixed:true},
+   {id:"nbS",type:"neighbor",name:"South neighbor's rowhouse",x:44,y:50,w:40,d:20,h:28,rot:0,fixed:true},
+   {id:"fN",type:"fence",name:"North side fence",x:84,y:20.3,w:40,d:.6,h:6,rot:0},
+   {id:"fS",type:"fence",name:"South side fence",x:84,y:39.7,w:40,d:.6,h:6,rot:0},
+   {id:"fE",type:"fence",name:"Back fence",x:103.7,y:30,w:.6,d:20,h:6,rot:0},
+   {id:"lawn",type:"area",name:"Back lawn",x:88,y:30,w:30,d:18.6,rot:0,tests:[
+     {id:"t3",kind:"modeled",method:"Regional soil survey",source:"USDA soil survey · regional context, not a test",date:"Survey data",tex:"Urban fill (Udorthents–Urban land)",notes:"Disturbed, often compacted fill. Drainage varies block to block."},
+     {id:"t4",kind:"reported",method:"Drainage (perc) test",source:"Your test",date:"2026-06-08",drain:.4,notes:"Slow: about 0.4 inches per hour."}]},
+   {id:"bedF",type:"bed",name:"Front yard bed",x:18,y:30,w:9,d:16,h:0,rot:0,plants:["Black-eyed Susan","Butterfly weed","Pennsylvania sedge"],tests:[
+     {id:"t1",kind:"reported",method:"Jar test",source:"Your test",date:"2026-05-03",tex:"Clay loam",notes:"Thick clay layer settled on top after two days."}]},
+   {id:"rb1",type:"bed",name:"Raised bed 1",x:92,y:23.6,w:12,d:4,h:1.5,rot:0,plants:["Kale","Swiss chard"],tests:[
+     {id:"t2",kind:"measured",method:"Lab soil test",source:"University soil lab (example report)",date:"2026-04-12",ph:6.6,om:"High",n:"Low",p:"High",k:"OK",lead:"Low",notes:"Raised-bed mix with compost."}]},
+   {id:"rb2",type:"bed",name:"Raised bed 2",x:92,y:30.5,w:12,d:4,h:1.5,rot:0,plants:[],tests:[]},
+   {id:"pots",type:"container",name:"Herb pots",x:70,y:36.5,w:3,d:3,rot:0,plants:["Basil","Thyme","Parsley"],tests:[]},
+   {id:"barrel1",type:"barrel",name:"Rain barrel",x:65.4,y:38.4,w:2.2,d:2.2,rot:0,cap:55},
+   {id:"st",type:"tree",name:"Street tree (willow oak)",x:9,y:30,r:12,h:38,matureH:55,matureR:18,rate:.6,rot:0},
+   {id:"nmaple",type:"tree",name:"neighbor's maple",x:91,y:51,r:9,h:null,matureH:null,matureR:null,rate:0,rot:0,fixed:true},
+   {id:"svc",type:"tree",name:"Serviceberry (planned)",x:99.5,y:36.4,r:2.5,h:6,matureH:20,matureR:8,rate:1.2,planned:true,rot:0}],
+  water:{down:90,slope:"gentle",soil:"clayey",
+   spouts:[{id:"s1",name:"Rear downspout (south)",x:64.3,y:39.2,share:.5,barrel:"barrel1",toGarden:true},
+           {id:"s2",name:"Rear downspout (north)",x:64.3,y:20.8,share:.5,barrel:null,toGarden:false}],
+   lows:[{id:"l1",x:19,y:34,date:addDays(T,-18),note:"Water stood about two days after the storm"},
+         {id:"l2",x:97,y:37.6,date:addDays(T,-18),note:"Puddle by the south fence"}],
+   fill:{pct:60,date:addDays(T,-3)}},
+  weather:[0,.3,.9,.1,0,0,.2].map((r,i)=>({date:addDays(T,i),rain:r,hi:[64,61,57,59,63,66,62][i],lo:[47,49,46,44,45,50,48][i]})),
+  tasks:[
+   {id:"k1",title:"Scrape lanternfly egg masses off the fence and street tree",due:addDays(T,3),why:"Egg masses appear Sep–Jun",done:false},
+   {id:"k2",title:"Plant garlic cloves in Raised bed 2",due:addDays(T,8),why:"Zone 7b window: mid-Oct to mid-Nov",done:false},
+   {id:"k3",title:"Plant Virginia bluebells in the front yard bed",due:addDays(T,13),why:"Fall planting settles roots before spring",done:false},
+   {id:"k4",title:"Leave fallen leaves on the beds as winter mulch",due:addDays(T,14),why:"Shelters overwintering insects",done:false},
+   {id:"k5",title:"Plant the serviceberry by the back fence",due:addDays(T,15),why:"Fall is the best season to plant trees",done:false},
+   {id:"k6",title:"Send a soil sample from the front yard bed to a lab",due:addDays(T,19),why:"No lab test on file for this bed",done:false},
+   {id:"k7",title:"Empty and disconnect the rain barrel before the first hard freeze",due:addDays(T,29),why:"DC's first freeze usually comes mid-November to early December",done:false},
+   {id:"k0",title:"Pick the last tomatoes and pull the vines",due:addDays(T,-7),why:"Cool nights end ripening",done:true}],
+  journal:[
+   {id:"j1",date:addDays(T,-3),kind:"reported",text:"Rain barrel about 60% full after Tuesday's rain."},
+   {id:"j2",date:addDays(T,-18),kind:"reported",text:"Water stood in the front yard bed for two days after the storm. Marked it on the map."},
+   {id:"j3",date:"2026-08-18",kind:"harvest",text:"About 6 lb of tomatoes from Raised bed 1 this week."},
+   {id:"j4",date:"2026-04-12",kind:"measured",text:"Lab results came back for Raised bed 1."}],
+  budget:[
+   {id:"b1",item:"Rain barrel, 55 gal",planned:90,actual:89},
+   {id:"b2",item:"Downspout diverter kit",planned:30,actual:null},
+   {id:"b3",item:"Serviceberry, 5-gal pot",planned:65,actual:null},
+   {id:"b4",item:"Compost, 1 cu yd",planned:50,actual:45},
+   {id:"b5",item:"Garlic seed cloves",planned:18,actual:null},
+   {id:"b6",item:"Lab soil test fee",planned:20,actual:null}],
+  sightings:[
+   {id:"g1",pest:"Spotted lanternfly",note:"Egg masses on a street tree trunk",dist:.4,date:addDays(T,-1),status:"verified",by:"Photo reviewed by a community moderator",cell:[2,1]},
+   {id:"g2",pest:"Brown marmorated stink bug",note:"Clusters on south-facing siding",dist:.7,date:addDays(T,-2),status:"unverified",cell:[3,2]},
+   {id:"g3",pest:"Spotted lanternfly",note:"Adults on tree-of-heaven along an alley",dist:.6,date:addDays(T,-3),status:"unverified",cell:[1,3]},
+   {id:"g4",pest:"Jumping worms",note:"Found while turning a community garden bed",dist:1.7,date:addDays(T,-4),status:"verified",by:"Confirmed by the county extension office (example)",cell:[0,4]}]};
+}
+
+function makeMine(w){
+ const rot=w.face-270, t=rot*RAD, u=[Math.cos(t),Math.sin(t)], v=[-u[1],u[0]];
+ const LW=w.lotDepth, LD=w.lotWidth;
+ const bw=Math.abs(LW*u[0])+Math.abs(LD*v[0]), bh=Math.abs(LW*u[1])+Math.abs(LD*v[1]);
+ const m=10, V={W:Math.round(bw+2*m),H:Math.round(bh+2*m)}, C=[V.W/2,V.H/2];
+ const hx=-LW/2+w.setback+w.houseDepth/2, H=[C[0]+u[0]*hx,C[1]+u[1]*hx];
+ const rear=w.houseDepth/2+.7, side=w.houseWidth/2-.8;
+ const label=w.kind==="Patio or containers"?"Building wall":"House";
+ return {id:"mine",demo:false,name:w.name||"My garden",place:w.locName,kind:w.kind,loc:w.loc,face:w.face,rot,view:V,_v:1,ground:[],
+  objects:[{id:"lot",type:"lot",name:"Your space",x:C[0],y:C[1],w:LW,d:LD,rot},
+   {id:"house",type:"house",name:label,x:H[0],y:H[1],w:w.houseDepth,d:w.houseWidth,h:w.houseHeight,rot}],
+  water:{down:(w.face+180)%360,slope:"gentle",soil:"silty",
+   spouts:[{id:"s1",name:"Rear downspout (left)",x:H[0]+u[0]*rear+v[0]*side,y:H[1]+u[1]*rear+v[1]*side,share:.5,barrel:null,toGarden:false},
+           {id:"s2",name:"Rear downspout (right)",x:H[0]+u[0]*rear-v[0]*side,y:H[1]+u[1]*rear-v[1]*side,share:.5,barrel:null,toGarden:false}],
+   lows:[],fill:null},
+  weather:null,tasks:[],journal:[],budget:[],sightings:[]};
+}
+
+/* ---------- state ---------- */
+const WIDGETS=[["next","Recommended next step",0],["map","My property",0],["weather","Weather and rain this week",0],["sun","Today's sunlight",0],["actions","Quick actions",0],["tasks","Upcoming tasks",0],["soil","Soil health",0],["pests","Local pest watch",0],["garden","My gardens and plants",0],["water","Water storage",0],["journal","Journal",0],["zonesun","Sun hours by bed",1],["budget","Project budget",1]];
+const S={view:"home",tab:"dash",propId:"demo",props:{demo:makeDemo()},date:TODAY,minutes:840,Y:0,layer:"shade",tool:"select",sel:null,spot:null,
+ dash:{order:WIDGETS.map(w=>w[0]),hidden:[],advanced:false,customizing:false},alerts:{on:false,radius:1},
+ pf:{cat:"native",sun:"any",soil:"any",type:"any",bed:""},usePhoto:true,wiz:null,mySightings:[]};
+const A11Y={ts:1,contrast:false,motion:false,captions:true};
+if(canSave()){const m=LS.get("mine");if(m&&m.objects)S.props.mine=m;const pr=LS.get("prefs");if(pr){if(pr.dash)Object.assign(S.dash,pr.dash,{customizing:false});if(pr.alerts)S.alerts=pr.alerts;if(pr.a11y)Object.assign(A11Y,pr.a11y);}
+ const known=WIDGETS.map(w=>w[0]);S.dash.order=S.dash.order.filter(x=>known.includes(x)).concat(known.filter(x=>!S.dash.order.includes(x)));}
+const PHOTOS={};
+const prop=()=>S.props[S.propId];
+let persistT;
+const NO_MEDIA=(k,v)=>(k==="photo"||k==="video"||k==="captions")?undefined:v;
+function persist(){if(!canSave())return;clearTimeout(persistT);persistT=setTimeout(()=>{if(S.props.mine)LS.set("mine",JSON.parse(JSON.stringify(S.props.mine,NO_MEDIA)));LS.set("prefs",{dash:S.dash,alerts:S.alerts,a11y:A11Y})},250)}
+function changed(p){p._v++;persist()}
+
+/* ---------- sun position (NOAA approximation) ---------- */
+function nthSunday(y,m,n){const d=new Date(y,m,1);return new Date(y,m,1+(7-d.getDay())%7+7*(n-1))}
+function tzOff(date,loc){let o=loc.tz;if(loc.dst){const d=new Date(date+"T12:00:00"),y=d.getFullYear();if(d>=nthSunday(y,2,2)&&d<nthSunday(y,10,1))o+=1}return o}
+function sunPos(min,date,loc){
+ const d=new Date(date+"T12:00:00"),doy=Math.round((d-new Date(d.getFullYear(),0,1))/864e5)+1;
+ const g=2*Math.PI/365*(doy-1+(min/60-12)/24);
+ const eq=229.18*(0.000075+0.001868*Math.cos(g)-0.032077*Math.sin(g)-0.014615*Math.cos(2*g)-0.040849*Math.sin(2*g));
+ const dec=0.006918-0.399912*Math.cos(g)+0.070257*Math.sin(g)-0.006758*Math.cos(2*g)+0.000907*Math.sin(2*g)-0.002697*Math.cos(3*g)+0.00148*Math.sin(3*g);
+ const ha=((min+eq+4*loc.lon-60*tzOff(date,loc))/4-180)*RAD,lat=loc.lat*RAD;
+ const cz=Math.max(-1,Math.min(1,Math.sin(lat)*Math.sin(dec)+Math.cos(lat)*Math.cos(dec)*Math.cos(ha)));
+ return{alt:90-Math.acos(cz)*DEG,az:(Math.atan2(Math.sin(ha),Math.cos(ha)*Math.sin(lat)-Math.tan(dec)*Math.cos(lat))*DEG+540)%360};
+}
+const DAYC=new Map();
+function day(p,date){date=date||S.date;const k=date+p.loc.lat+","+p.loc.lon+p.loc.tz+p.loc.dst;if(DAYC.has(k))return DAYC.get(k);
+ let rise=null,set=null;const smp=[];for(let m=0;m<1440;m+=5){const s=sunPos(m,date,p.loc);if(s.alt>-.833){if(rise===null)rise=m;set=m}if(s.alt>0)smp.push({m,az:s.az,alt:s.alt})}
+ const r={rise,set,samples:smp};if(DAYC.size>30)DAYC.clear();DAYC.set(k,r);return r}
+const DIRS=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+const WORDS={N:"north",NNE:"north-northeast",NE:"northeast",ENE:"east-northeast",E:"east",ESE:"east-southeast",SE:"southeast",SSE:"south-southeast",S:"south",SSW:"south-southwest",SW:"southwest",WSW:"west-southwest",W:"west",WNW:"west-northwest",NW:"northwest",NNW:"north-northwest"};
+const dir16=b=>DIRS[Math.round((((b%360)+360)%360)/22.5)%16];
+
+/* ---------- geometry ---------- */
+const dv=b=>[Math.sin(b*RAD),-Math.cos(b*RAD)];
+function corners(o){const t=(o.rot||0)*RAD,ux=Math.cos(t),uy=Math.sin(t),vx=-uy,vy=ux,a=o.w/2,b=o.d/2;
+ return[[-a,-b],[a,-b],[a,b],[-a,b]].map(([p,q])=>[o.x+ux*p+vx*q,o.y+uy*p+vy*q])}
+function hull(P){P=P.slice().sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);const lo=[],up=[];
+ for(const p of P){while(lo.length>=2&&cr(lo[lo.length-2],lo[lo.length-1],p)<=0)lo.pop();lo.push(p)}
+ for(let i=P.length-1;i>=0;i--){const p=P[i];while(up.length>=2&&cr(up[up.length-2],up[up.length-1],p)<=0)up.pop();up.push(p)}
+ up.pop();lo.pop();return lo.concat(up)}
+function inPoly(p,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])c=!c}return c}
+function segDist(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],L=dx*dx+dy*dy;let t=L?((p[0]-a[0])*dx+(p[1]-a[1])*dy)/L:0;t=Math.max(0,Math.min(1,t));return Math.hypot(a[0]+t*dx-p[0],a[1]+t*dy-p[1])}
+function polyDist(p,poly){if(inPoly(p,poly))return 0;let d=1e9;for(let i=0;i<poly.length;i++)d=Math.min(d,segDist(p,poly[i],poly[(i+1)%poly.length]));return d}
+const buildings=p=>p.objects.filter(o=>o.type==="house"||o.type==="neighbor"||o.type==="shed"||o.type==="greenhouse").map(corners);
+const lotPoly=p=>{const l=p.objects.find(o=>o.type==="lot");return l?corners(l):null};
+function treeAt(o,Y){if(o.h==null)return{h:null,r:o.r};const mh=o.matureH||o.h,mr=o.matureR||o.r,h=Math.min(mh,o.h+(o.rate||0)*Y),f=mh>o.h?(h-o.h)/(mh-o.h):1;return{h,r:o.r+(mr-o.r)*f}}
+const unknownObjs=p=>p.objects.filter(o=>SHADING[o.type]&&o.h==null);
+function casters(p,Y,mode){const out=[];for(const o of p.objects){if(!SHADING[o.type])continue;
+  if(o.type==="tree"){const t=treeAt(o,Y);if(t.h==null){if(mode==="worst")out.push({tree:1,x:o.x,y:o.y,r:o.r,h:60});continue}out.push({tree:1,x:o.x,y:o.y,r:t.r,h:t.h});continue}
+  let h=o.h;if(h==null){if(mode!=="worst")continue;h=30}if(h<1)continue;out.push({poly:corners(o),h})}return out}
+function shadowSet(cs,az,alt){if(alt<=.3)return null;const t=Math.tan(alt*RAD),s=[-Math.sin(az*RAD),Math.cos(az*RAD)];
+ return cs.map(c=>{if(c.tree){const l1=Math.min(c.h*.3/t,400),l2=Math.min(c.h*.95/t,400);return{a:[c.x+s[0]*l1,c.y+s[1]*l1],b:[c.x+s[0]*l2,c.y+s[1]*l2],r:c.r}}
+  const L=Math.min(c.h/t,400);return{poly:hull(c.poly.concat(c.poly.map(q=>[q[0]+s[0]*L,q[1]+s[1]*L])))}})}
+function shaded(pt,set){if(!set)return true;for(const s of set){if(s.poly){if(inPoly(pt,s.poly))return true}else if(segDist(pt,s.a,s.b)<s.r)return true}return false}
+const SC=new Map();
+function samples(p,Y,mode,step){const k=[p.id,p._v,S.date,Y,mode,step,p.loc.lat,p.loc.lon].join("|");if(SC.has(k))return SC.get(k);
+ const cs=casters(p,Y,mode),out=[];for(const s of day(p).samples)if(s.m%step===0)out.push({m:s.m,set:shadowSet(cs,s.az,s.alt)});
+ if(SC.size>60)SC.clear();SC.set(k,out);return out}
+function hoursAt(pt,smp,step){let n=0,f=null,l=null;for(const s of smp)if(!shaded(pt,s.set)){n++;if(f===null)f=s.m;l=s.m}return{h:n*step/60,first:f,last:l===null?null:l+step}}
+function avgHours(p,pts,Y,mode){const smp=samples(p,Y,mode,10);let h=0,f=null,l=null;for(const pt of pts){const r=hoursAt(pt,smp,10);h+=r.h;if(r.first!==null){f=f===null?r.first:Math.min(f,r.first);l=l===null?r.last:Math.max(l,r.last)}}return{h:h/pts.length,first:f,last:l}}
+function zonePts(o){if(o.type==="tree")return[[o.x,o.y]];const t=(o.rot||0)*RAD,u=[Math.cos(t),Math.sin(t)],v=[-u[1],u[0]];
+ return[[0,0],[.25,.25],[-.25,.25],[.25,-.25],[-.25,-.25]].map(([a,b])=>[o.x+u[0]*a*o.w+v[0]*b*o.d,o.y+u[1]*a*o.w+v[1]*b*o.d])}
+function estimate(p,pts,Y){const unk=unknownObjs(p),a=avgHours(p,pts,Y||0,"known");if(!unk.length)return{ok:true,h:a.h,first:a.first,last:a.last};
+ const b=avgHours(p,pts,Y||0,"worst");if(a.h-b.h<.25)return{ok:true,h:a.h,first:a.first,last:a.last};return{ok:false,lo:b.h,hi:a.h,need:unk}}
+const sunClass=h=>h>=6?{k:"F",t:"Full sun",c:"--h-full"}:h>=4?{k:"P",t:"Part sun",c:"--h-psun"}:h>=2?{k:"P",t:"Part shade",c:"--h-pshade"}:{k:"S",t:"Full shade",c:"--h-shade"};
+const zonesOf=p=>p.objects.filter(o=>ZONE_TYPES[o.type]);
+const bedsOf=p=>p.objects.filter(o=>o.type==="bed"||o.type==="container");
+function isWet(p,o){const poly=corners(o);if(p.water.lows.some(l=>polyDist([l.x,l.y],poly)<2))return true;return(o.tests||[]).some(t=>t.wet==="long"||t.wet==="day"||(t.drain!=null&&t.drain<.5))}
+
+/* ---------- colors ---------- */
+function tok(){const cs=getComputedStyle(document.documentElement),g=n=>cs.getPropertyValue("--"+n).trim();
+ const o={};["bg","surface","fg","muted","line","heading","deep","leaf","sun","tomato","pink","lawn","paving","street","dim","roof","nroof","fence","soilbed","pot","canopy","glass","water","shade","unknown","h-full","h-psun","h-pshade","h-shade","sage"].forEach(k=>o[k]=g(k));o.font=getComputedStyle(document.body).fontFamily;return o}
+function hex(c){c=(c||"").trim();if(/^#[0-9a-f]{6}$/i.test(c))return[parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16)];return[128,128,128]}
+
+/* ---------- map drawing ---------- */
+function fit(cv,V,maxH){const box=cv.parentElement;let w=box.clientWidth||600,h=w*V.H/V.W;if(maxH&&h>maxH){h=maxH;w=h*V.W/V.H}
+ const dpr=Math.min(2,window.devicePixelRatio||1),W=Math.round(w*dpr),H=Math.round(h*dpr);if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}
+ cv.style.width=w+"px";cv.style.height=h+"px";return{w,h,dpr,k:w/V.W}}
+const inWorld=(g,c)=>c.setTransform(g.dpr*g.k,0,0,g.dpr*g.k,0,0), inScreen=(g,c)=>c.setTransform(g.dpr,0,0,g.dpr,0,0);
+function path(c,pts){c.beginPath();pts.forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.closePath()}
+const HEAT={key:"",cv:document.createElement("canvas"),step:1.5,cols:0,rows:0};
+function buildHeat(p,Y,T){const key=[p.id,p._v,S.date,Y,T["h-full"],T.unknown].join("|");if(HEAT.key===key)return;
+ const V=p.view,step=V.W*V.H>9000?2:1.5,cols=Math.ceil(V.W/step),rows=Math.ceil(V.H/step),lp=lotPoly(p),bl=buildings(p);
+ const A=samples(p,Y,"known",15),unk=unknownObjs(p).length,B=unk?samples(p,Y,"worst",15):null;
+ HEAT.cv.width=cols;HEAT.cv.height=rows;const cx=HEAT.cv.getContext("2d"),img=cx.createImageData(cols,rows);
+ const cm={F:hex(T["h-full"]),PS:hex(T["h-psun"]),PH:hex(T["h-pshade"]),S:hex(T["h-shade"]),U:hex(T.unknown)};
+ for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const pt=[i*step+step/2,j*step+step/2],o=(j*cols+i)*4;
+  if((lp&&!inPoly(pt,lp))||bl.some(b=>inPoly(pt,b))){img.data[o+3]=0;continue}
+  const a=hoursAt(pt,A,15).h;let c;if(B&&a-hoursAt(pt,B,15).h>=.25)c=cm.U;else c=a>=6?cm.F:a>=4?cm.PS:a>=2?cm.PH:cm.S;
+  img.data[o]=c[0];img.data[o+1]=c[1];img.data[o+2]=c[2];img.data[o+3]=215}
+ cx.putImageData(img,0,0);Object.assign(HEAT,{key,step,cols,rows})}
+const RAIN={propId:null,parts:null,trail:document.createElement("canvas"),ran:false,frame:0,raf:null};
+const shadeLayer=document.createElement("canvas");
+
+function drawMap(cv,p,o){
+ const T=tok(),g=fit(cv,p.view,o.maxH),c=cv.getContext("2d"),V=p.view,Y=o.Y||0;
+ inWorld(g,c);c.clearRect(0,0,V.W,V.H);c.fillStyle=T.lawn;c.fillRect(0,0,V.W,V.H);
+ for(const gr of p.ground||[]){path(c,corners(gr));c.fillStyle=gr.type==="street"?T.street:T.paving;c.fill()}
+ const ph=PHOTOS[p.id]&&PHOTOS[p.id].overhead;if(ph&&S.usePhoto){c.globalAlpha=.85;c.drawImage(ph.img,0,0,V.W,V.H);c.globalAlpha=1}
+ const lp=lotPoly(p);
+ if(lp&&!o.mini){c.save();c.beginPath();c.rect(0,0,V.W,V.H);lp.slice().reverse().forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.closePath();c.globalAlpha=.35;c.fillStyle=T.dim;c.fill();c.restore()}
+ if(o.layer==="hours"){buildHeat(p,Y,T);c.save();if(lp){path(c,lp);c.clip()}c.imageSmoothingEnabled=true;c.drawImage(HEAT.cv,0,0,HEAT.cols*HEAT.step,HEAT.rows*HEAT.step);c.restore()}
+ if(o.layer==="shade"){const sp=sunPos(o.minutes,S.date,p.loc),set=shadowSet(casters(p,Y,"known"),sp.az,sp.alt);
+  if(!set){c.globalAlpha=.5;c.fillStyle=T.shade;c.fillRect(0,0,V.W,V.H);c.globalAlpha=1}
+  else{shadeLayer.width=cv.width;shadeLayer.height=cv.height;const l=shadeLayer.getContext("2d");inWorld(g,l);l.fillStyle=T.shade;l.strokeStyle=T.shade;l.lineCap="round";
+   for(const s of set){if(s.poly){path(l,s.poly);l.fill()}else{l.lineWidth=s.r*2;l.beginPath();l.moveTo(s.a[0],s.a[1]);l.lineTo(s.b[0]+.01,s.b[1]);l.stroke()}}
+   c.setTransform(1,0,0,1,0,0);c.globalAlpha=.42;c.drawImage(shadeLayer,0,0);c.globalAlpha=1;inWorld(g,c)}}
+ const px=1/g.k;
+ if(o.layer==="soil"){for(const z of zonesOf(p)){const ts=z.tests||[];const kinds=ts.map(t=>t.kind);
+  const col=kinds.includes("measured")?T.leaf:kinds.includes("reported")?T.pink:kinds.includes("modeled")?T.sun:T.unknown;
+  path(c,corners(z));c.globalAlpha=.5;c.fillStyle=col;c.fill();c.globalAlpha=1;c.setLineDash([3*px,2*px]);c.strokeStyle=T.fg;c.lineWidth=1.2*px;c.stroke();c.setLineDash([])}}
+ if(lp){path(c,lp);c.setLineDash([5*px,3*px]);c.strokeStyle=T.fg;c.globalAlpha=.6;c.lineWidth=1.5*px;c.stroke();c.setLineDash([]);c.globalAlpha=1}
+ const order=["fence","bed","container","greenhouse","shed","neighbor","house","barrel","tree"];
+ for(const ty of order)for(const ob of p.objects){if(ob.type!==ty)continue;
+  if(ty==="tree"){const t=treeAt(ob,Y),r=t.r;c.beginPath();c.arc(ob.x,ob.y,r,0,7);c.fillStyle=T.canopy;c.globalAlpha=(ob.planned||ob.h==null)?.38:.82;c.fill();c.globalAlpha=1;
+    if(ob.planned||ob.h==null){c.setLineDash([2*px,2*px]);c.strokeStyle=T.fg;c.lineWidth=1.5*px;c.stroke();c.setLineDash([])}
+    c.fillStyle=T.soilbed;c.beginPath();c.arc(ob.x,ob.y,Math.max(.6,1.6*px),0,7);c.fill();
+    if(ob.h==null&&!o.mini){inScreen(g,c);c.fillStyle=T.fg;c.font="700 14px "+T.font;c.textAlign="center";c.textBaseline="middle";c.fillText("?",ob.x*g.k,ob.y*g.k-12);inWorld(g,c)}
+    continue}
+  const cp=corners(ob);path(c,cp);
+  if(ty==="house"){c.fillStyle=T.roof;c.fill();c.strokeStyle=T.fg;c.lineWidth=1.5*px;c.stroke();
+   c.strokeStyle=T.sun;c.lineWidth=Math.max(3*px,.8);c.beginPath();c.moveTo(cp[0][0],cp[0][1]);c.lineTo(cp[3][0],cp[3][1]);c.stroke();
+   if(!o.mini){const t=(ob.rot||0)*RAD,f=[-Math.cos(t),-Math.sin(t)],mx=(cp[0][0]+cp[3][0])/2,my=(cp[0][1]+cp[3][1])/2;
+    inScreen(g,c);c.fillStyle=T.fg;c.font="800 10px "+T.font;c.textAlign="center";c.textBaseline="middle";c.save();c.translate(mx*g.k-f[0]*14,my*g.k-f[1]*14);c.fillStyle=T.surface;c.fillText("FRONT",0,0);c.restore();inWorld(g,c)}}
+  else if(ty==="neighbor"){c.fillStyle=T.nroof;c.fill();c.strokeStyle=T.fg;c.globalAlpha=.4;c.lineWidth=px;c.stroke();c.globalAlpha=1}
+  else if(ty==="fence"){c.fillStyle=T.fence;c.fill()}
+  else if(ty==="bed"){c.fillStyle=T.soilbed;c.fill();c.strokeStyle=T.fg;c.globalAlpha=.5;c.lineWidth=px;c.stroke();c.globalAlpha=1;
+   const n=(ob.plants||[]).length;if(n){c.fillStyle=T.leaf;const z=zonePts(ob);z.forEach(q=>{c.beginPath();c.arc(q[0],q[1],Math.min(ob.w,ob.d)*.13,0,7);c.fill()})}}
+  else if(ty==="container"){c.beginPath();c.arc(ob.x,ob.y,ob.w/2,0,7);c.fillStyle=T.pot;c.fill();c.fillStyle=T.leaf;c.beginPath();c.arc(ob.x,ob.y,ob.w/4,0,7);c.fill()}
+  else if(ty==="greenhouse"){c.fillStyle=T.glass;c.globalAlpha=.8;c.fill();c.globalAlpha=1;c.strokeStyle=T.fg;c.lineWidth=1.2*px;c.stroke()}
+  else if(ty==="shed"){c.fillStyle=T.nroof;c.fill();c.strokeStyle=T.fg;c.lineWidth=px;c.stroke()}
+  else if(ty==="barrel"){c.beginPath();c.arc(ob.x,ob.y,ob.w/2,0,7);c.fillStyle=T.water;c.fill();c.strokeStyle=T.surface;c.lineWidth=1.5*px;c.stroke()}}
+ if(!o.mini){inScreen(g,c);c.font="700 10px "+T.font;c.textAlign="center";c.textBaseline="middle";
+  for(const b of p.objects.filter(x=>x.type==="bed"||(o.layer==="soil"&&x.type==="area"))){const lx=b.x*g.k,ly=b.y*g.k+(b.type==="bed"?0:-10);const txt=b.name;const tw=c.measureText(txt).width;
+   c.fillStyle=T.surface;c.globalAlpha=.85;c.fillRect(lx-tw/2-3,ly-7,tw+6,14);c.globalAlpha=1;c.fillStyle=T.fg;c.fillText(txt,lx,ly)}inWorld(g,c)}
+ if(o.layer==="water"){
+  const d=dv(p.water.down),cx=V.W/2,cy=V.H/2,L=Math.min(V.W,V.H)*.36;c.globalAlpha=.22;c.strokeStyle=T.water;c.lineCap="round";c.lineWidth=Math.max(5*px,1.2);
+  c.beginPath();c.moveTo(cx-d[0]*L,cy-d[1]*L);c.lineTo(cx+d[0]*L,cy+d[1]*L);c.stroke();c.globalAlpha=.35;c.fillStyle=T.water;const ah=Math.max(4,10*px),n=[-d[1],d[0]],ax=cx+d[0]*L,ay=cy+d[1]*L;
+  c.beginPath();c.moveTo(ax+d[0]*ah,ay+d[1]*ah);c.lineTo(ax+n[0]*ah*.7,ay+n[1]*ah*.7);c.lineTo(ax-n[0]*ah*.7,ay-n[1]*ah*.7);c.closePath();c.fill();c.globalAlpha=1;
+  if(RAIN.propId===p.id&&(RAIN.parts||RAIN.ran)&&RAIN.trail.width===cv.width){c.setTransform(1,0,0,1,0,0);c.drawImage(RAIN.trail,0,0);inWorld(g,c)}
+  for(const l of p.water.lows){c.strokeStyle=T.water;c.lineWidth=1.5*px;[1.2,2.4,3.6].forEach((rr,i)=>{c.globalAlpha=1-i*.28;c.beginPath();c.arc(l.x,l.y,rr,0,7);c.stroke()});c.globalAlpha=1}
+  const plan=gardenPlan(p);
+  if(RAIN.propId===p.id&&RAIN.ran&&plan.base&&p.water.slope!=="steep"&&plan.routedArea>0){c.setLineDash([3*px,2*px]);c.strokeStyle=T.deep;c.lineWidth=2*px;c.fillStyle=T.leaf;c.globalAlpha=.22;
+   c.beginPath();c.ellipse(plan.base[0],plan.base[1],plan.r*1.3,plan.r/1.3,(p.water.down+90)*RAD,0,7);c.fill();c.globalAlpha=1;c.stroke();c.setLineDash([]);
+   if(!o.mini){inScreen(g,c);c.fillStyle=T.fg;c.font="800 11px "+T.font;c.textAlign="center";c.textBaseline="middle";c.fillText("Rain garden candidate",plan.base[0]*g.k,plan.base[1]*g.k);inWorld(g,c)}}
+  for(const s of p.water.spouts){const b=s.barrel&&p.objects.find(x=>x.id===s.barrel);if(b){c.strokeStyle=T.water;c.lineWidth=1.5*px;c.beginPath();c.moveTo(s.x,s.y);c.lineTo(b.x,b.y);c.stroke()}
+   c.fillStyle=T.water;c.fillRect(s.x-1,s.y-1,2,2);c.strokeStyle=T.surface;c.lineWidth=px;c.strokeRect(s.x-1,s.y-1,2,2)}
+  if(RAIN.propId===p.id&&RAIN.parts){c.fillStyle=T.water;for(const q of RAIN.parts){c.beginPath();c.arc(q.x,q.y,.5,0,7);c.fill()}}}
+ const sel=S.sel&&p.objects.find(x=>x.id===S.sel);
+ if(sel&&!o.mini){c.strokeStyle=T.sun;c.lineWidth=3*px;c.setLineDash([4*px,3*px]);if(sel.type==="tree"){c.beginPath();c.arc(sel.x,sel.y,treeAt(sel,Y).r+1,0,7)}else if(sel.type==="container"||sel.type==="barrel"){c.beginPath();c.arc(sel.x,sel.y,sel.w/2+1,0,7)}else path(c,corners(sel));c.stroke();c.setLineDash([])}
+ if(S.spot&&!o.mini&&(o.layer==="shade"||o.layer==="hours")){c.strokeStyle=T.fg;c.lineWidth=2.5*px;c.beginPath();c.arc(S.spot.x,S.spot.y,2,0,7);c.stroke();c.fillStyle=T.surface;c.beginPath();c.arc(S.spot.x,S.spot.y,.8,0,7);c.fill()}
+ inScreen(g,c);const cx2=g.w-30,cy2=28,cr=o.mini?14:19;c.fillStyle=T.surface;c.globalAlpha=.92;c.beginPath();c.arc(cx2,cy2,cr,0,7);c.fill();c.globalAlpha=1;c.strokeStyle=T.line;c.lineWidth=1;c.stroke();
+ c.fillStyle=T.tomato;c.beginPath();c.moveTo(cx2,cy2-cr+5);c.lineTo(cx2-4,cy2);c.lineTo(cx2+4,cy2);c.closePath();c.fill();c.fillStyle=T.muted;c.beginPath();c.moveTo(cx2,cy2+cr-5);c.lineTo(cx2-4,cy2);c.lineTo(cx2+4,cy2);c.closePath();c.fill();
+ c.fillStyle=T.fg;c.font="800 10px "+T.font;c.textAlign="center";c.textBaseline="middle";c.fillText("N",cx2-cr-7,cy2-cr+5);
+ if(!o.mini){const ft=V.W>160?50:V.W>80?20:10,len=ft*g.k,x=12,y=g.h-12;c.strokeStyle=T.fg;c.lineWidth=2;c.beginPath();c.moveTo(x,y);c.lineTo(x+len,y);c.moveTo(x,y-4);c.lineTo(x,y+1);c.moveTo(x+len,y-4);c.lineTo(x+len,y+1);c.stroke();
+  c.font="600 10px "+T.font;c.textAlign="left";c.textBaseline="bottom";c.fillText(ft+" ft",x+len+5,y+4)}
+ o.sunPx=null;
+ if(o.handle&&(o.layer==="shade")){const sp=sunPos(o.minutes,S.date,p.loc);if(sp.alt>0){const R=Math.min(g.w,g.h)/2-20,hx=g.w/2+R*Math.sin(sp.az*RAD),hy=g.h/2-R*Math.cos(sp.az*RAD);o.sunPx=[hx,hy];
+  c.strokeStyle=T.sun;c.lineWidth=2;for(let i=0;i<8;i++){const a=i*Math.PI/4;c.beginPath();c.moveTo(hx+Math.cos(a)*15,hy+Math.sin(a)*15);c.lineTo(hx+Math.cos(a)*20,hy+Math.sin(a)*20);c.stroke()}
+  c.fillStyle=T.sun;c.beginPath();c.arc(hx,hy,11,0,7);c.fill();c.strokeStyle=T.surface;c.lineWidth=2.5;c.stroke()}}
+ return g;
+}
+
+/* ---------- water planning ---------- */
+function gardenPlan(p){
+ const house=p.objects.find(o=>o.type==="house"),roof=house?house.w*house.d:0,d=dv(p.water.down),bl=buildings(p),lp=lotPoly(p);
+ let routedArea=0;for(const s of p.water.spouts)if(s.toGarden)routedArea+=roof*s.share;
+ const factor={sandy:.15,silty:.25,clayey:.32}[p.water.soil]||.25,area=routedArea*factor,r=Math.max(2,Math.sqrt(area/Math.PI));
+ const okAt=pt=>bl.every(b=>polyDist(pt,b)>=10+r*.8)&&(!lp||inPoly(pt,lp));
+ let base=null;const lows=p.water.lows.slice().sort((a,b)=>(b.x*d[0]+b.y*d[1])-(a.x*d[0]+a.y*d[1]));
+ for(const l of lows)if(okAt([l.x,l.y])){base=[l.x,l.y];break}
+ if(!base){const sp=p.water.spouts.filter(s=>s.toGarden);if(sp.length){const s=sp[0];let pt=[s.x,s.y];for(let i=0;i<120&&!okAt(pt);i++){pt=[pt[0]+d[0]*.5,pt[1]+d[1]*.5]}if(okAt(pt))base=pt}}
+ return{roof,routedArea,factor,area,r,base,ok:!!base};
+}
+
+/* ---------- homepage art ---------- */
+function heroSVG(){
+ const bricks=["#B4553F","#9A4636","#C47456","#6E8F73","#C99A3E","#A44F3D"],doors=["#244F36","#D95243","#3F5C7A","#244F36","#7A3E52","#D95243"];
+ let s='<svg viewBox="0 0 1200 470" role="img" aria-label="Illustration of a fictional city block: brick rowhouses with stoops, flower beds in small front yards, potted plants on the steps, a rain barrel and a street tree under a warm sun.">';
+ s+='<rect width="1200" height="470" fill="var(--band)"/>';
+ s+='<g><circle cx="1075" cy="88" r="42" fill="var(--sun)"/>';for(let i=0;i<12;i++){const a=i*Math.PI/6;s+='<line x1="'+(1075+Math.cos(a)*56)+'" y1="'+(88+Math.sin(a)*56)+'" x2="'+(1075+Math.cos(a)*72)+'" y2="'+(88+Math.sin(a)*72)+'" stroke="var(--sun)" stroke-width="6" stroke-linecap="round"/>'}s+="</g>";
+ for(let i=0;i<9;i++)s+='<circle cx="'+(60+i*140)+'" cy="'+(150+(i%3)*8)+'" r="'+(38+(i%2)*10)+'" fill="var(--leaf)" opacity=".35"/>';
+ const X0=24,HW=192;
+ for(let i=0;i<6;i++){const x=X0+i*HW,top=112+[10,0,20,4,24,8][i],col=bricks[i],doorLeft=i%2===0,dx=doorLeft?x+22:x+HW-62;
+  s+='<rect x="'+x+'" y="'+top+'" width="'+HW+'" height="'+(340-top)+'" fill="'+col+'"/>';
+  s+='<rect x="'+(x-3)+'" y="'+(top-16)+'" width="'+(HW+6)+'" height="18" fill="#3C2F2A" opacity=".55"/>';
+  for(let k=0;k<15;k++)s+='<rect x="'+(x+4+k*12.6)+'" y="'+(top+2)+'" width="6" height="6" fill="#3C2F2A" opacity=".35"/>';
+  for(let k=0;k<3;k++){const wx=x+30+k*50;s+='<rect x="'+(wx-3)+'" y="'+(top+34)+'" width="40" height="8" fill="#F1E6D0"/><rect x="'+wx+'" y="'+(top+42)+'" width="34" height="58" fill="#2B3A35"/><line x1="'+(wx+17)+'" y1="'+(top+42)+'" x2="'+(wx+17)+'" y2="'+(top+100)+'" stroke="#F1E6D0" stroke-width="2"/><line x1="'+wx+'" y1="'+(top+70)+'" x2="'+(wx+34)+'" y2="'+(top+70)+'" stroke="#F1E6D0" stroke-width="2"/>'}
+  const lw=doorLeft?[x+92,x+142]:[x+22,x+72];lw.forEach(wx=>{s+='<rect x="'+(wx-3)+'" y="226" width="40" height="8" fill="#F1E6D0"/><rect x="'+wx+'" y="234" width="34" height="62" fill="#2B3A35"/><line x1="'+(wx+17)+'" y1="234" x2="'+(wx+17)+'" y2="296" stroke="#F1E6D0" stroke-width="2"/>'});
+  s+='<rect x="'+(dx-4)+'" y="232" width="48" height="10" fill="#F1E6D0"/><rect x="'+dx+'" y="242" width="40" height="80" fill="'+doors[i]+'"/><rect x="'+(dx+4)+'" y="246" width="32" height="12" fill="#F4E9B0" opacity=".8"/><circle cx="'+(dx+32)+'" cy="286" r="2.5" fill="#F4C84A"/>';
+  s+='<rect x="'+x+'" y="322" width="'+HW+'" height="18" fill="#3C2F2A" opacity=".25"/>';
+  s+='<rect x="'+x+'" y="340" width="'+HW+'" height="48" fill="var(--lawn)"/>';
+  for(let k=0;k<5;k++)s+='<rect x="'+(dx-8)+'" y="'+(322+k*13.2)+'" width="56" height="13.2" fill="'+(k%2?"#BDB1A1":"#D2C8B9")+'"/>';
+  s+='<line x1="'+(dx-8)+'" y1="320" x2="'+(dx-8)+'" y2="388" stroke="#2B2B2B" stroke-width="2"/><line x1="'+(dx+48)+'" y1="320" x2="'+(dx+48)+'" y2="388" stroke="#2B2B2B" stroke-width="2"/>';
+  const bx=doorLeft?x+80:x+10,bw=HW-100;s+='<ellipse cx="'+(bx+bw/2)+'" cy="364" rx="'+(bw/2)+'" ry="18" fill="#4C8B5C"/>';
+  for(let k=0;k<9;k++){const fx=bx+10+k*(bw-20)/8,fy=356+((k*37)%14);s+='<circle cx="'+fx+'" cy="'+fy+'" r="4.5" fill="'+["#D95243","#F3A3B9","#F4C84A"][k%3]+'"/>'}
+  if(i!==3){s+='<path d="M'+(dx-2)+' 312h14l-3 10h-8z" fill="#C9714F"/><circle cx="'+(dx+5)+'" cy="306" r="8" fill="#4C8B5C"/><circle cx="'+(dx+2)+'" cy="302" r="3" fill="#F3A3B9"/>'}
+  s+='<line x1="'+x+'" y1="388" x2="'+(x+HW)+'" y2="388" stroke="#2B2B2B" stroke-width="2"/>';for(let k=0;k<=12;k++)s+='<line x1="'+(x+k*16)+'" y1="378" x2="'+(x+k*16)+'" y2="388" stroke="#2B2B2B" stroke-width="1.5"/>';}
+ const rx=X0+2*HW-14;s+='<rect x="'+(rx+4)+'" y="116" width="5" height="224" fill="#5C6B70"/><rect x="'+(rx-14)+'" y="326" width="30" height="44" rx="6" fill="#2F78A8"/><rect x="'+(rx-14)+'" y="334" width="30" height="4" fill="#ffffff" opacity=".35"/>';
+ s+='<rect x="0" y="388" width="1200" height="40" fill="var(--paving)"/>';for(let k=0;k<20;k++)s+='<line x1="'+(k*64)+'" y1="388" x2="'+(k*64)+'" y2="428" stroke="#9E9888" stroke-width="1" opacity=".6"/>';
+ const tx=X0+4*HW-6;s+='<rect x="'+(tx-7)+'" y="290" width="14" height="118" fill="#6B4A33"/><circle cx="'+tx+'" cy="250" r="64" fill="#3C7A4C"/><circle cx="'+(tx-48)+'" cy="276" r="44" fill="#4C8B5C"/><circle cx="'+(tx+50)+'" cy="272" r="46" fill="#4C8B5C"/><circle cx="'+(tx+8)+'" cy="214" r="40" fill="#5C9A6A"/>';
+ s+='<rect x="0" y="428" width="1200" height="8" fill="#A9A396"/><rect x="0" y="436" width="1200" height="34" fill="var(--street)"/>';
+ return s+"</svg>";
+}
+const ICON={
+ map:'<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M3 7l7-3 10 3 7-3v19l-7 3-10-3-7 3z" fill="var(--sage)" stroke="var(--deep)" stroke-width="2"/><path d="M10 4v19M20 7v19" stroke="var(--deep)" stroke-width="2"/></svg>',
+ sun:'<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="6" fill="var(--sun)"/><g stroke="var(--sun-ink)" stroke-width="2" stroke-linecap="round"><path d="M15 2v4M15 24v4M2 15h4M24 15h4M6 6l3 3M21 21l3 3M24 6l-3 3M9 21l-3 3"/></g></svg>',
+ water:'<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M15 3c5 7 8 11 8 15a8 8 0 0 1-16 0c0-4 3-8 8-15z" fill="var(--water)"/></svg>',
+ leaf:'<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M5 25C5 12 12 5 26 4c0 14-7 21-21 21z" fill="var(--leaf)"/><path d="M5 25L18 12" stroke="var(--surface)" stroke-width="2"/></svg>',
+ bug:'<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><ellipse cx="15" cy="17" rx="7" ry="9" fill="var(--tomato)"/><path d="M15 8v18" stroke="var(--surface)" stroke-width="1.5"/><circle cx="15" cy="7" r="3.5" fill="var(--fg)"/><g stroke="var(--fg)" stroke-width="1.5"><path d="M8 13l-4-2M8 18H3M8 23l-4 2M22 13l4-2M22 18h5M22 23l4 2"/></g></svg>'};
+function renderHome(){
+ $("#heroArt").innerHTML=heroSVG();
+ const F=[["map","Interactive property","Outline your yard, mark the front door and place beds, trees, fences and rain barrels.","property"],
+  ["sun","Sun & shade","Drag the sun through any day of the year and see estimated sun hours for each bed.","property"],
+  ["water","Water & drainage","See where roof water goes, size a rain barrel and find a rain garden candidate.","property:water"],
+  ["leaf","Native plants","Match natives and edibles to each bed's light and moisture.","garden"],
+  ["bug","Seasonal alerts","Know which pests are active this month and see verified reports nearby.","community"]];
+ $("#featList").innerHTML=F.map(f=>'<button class="feat" data-act="demo-tab" data-arg="'+f[3]+'">'+ICON[f[0]]+"<h3>"+f[1]+'</h3><span class="muted small">'+f[2]+'</span><span class="small" style="color:var(--heading);font-weight:700">Try it in the demo yard →</span></button>').join("");
+ $("#nativeRow").innerHTML=PLANTS.ma.slice(0,10).map(p=>'<span class="pill" style="padding:6px 12px;font-size:.84rem">'+esc(p.n)+"</span>").join("");
+ const proof=[["Rowhouse front yard","12 × 20 ft · faces west","Afternoon sun suits a pollinator bed of black-eyed Susan and little bluestem.",
+   '<rect x="0" y="0" width="160" height="40" fill="var(--roof)"/><rect x="20" y="52" width="70" height="40" rx="3" fill="var(--soilbed)"/><circle cx="35" cy="66" r="7" fill="var(--leaf)"/><circle cx="58" cy="76" r="7" fill="var(--leaf)"/><circle cx="78" cy="64" r="6" fill="var(--pink)"/><rect x="104" y="40" width="22" height="70" fill="var(--paving)"/>'],
+  ["Small backyard","18 × 30 ft · faces east","Morning sun on raised beds; downspout overflow feeds a small rain garden.",
+   '<rect x="0" y="0" width="40" height="110" fill="var(--roof)"/><rect x="62" y="10" width="60" height="18" rx="3" fill="var(--soilbed)"/><rect x="62" y="38" width="60" height="18" rx="3" fill="var(--soilbed)"/><circle cx="46" cy="98" r="6" fill="var(--water)"/><ellipse cx="118" cy="88" rx="22" ry="12" fill="var(--leaf)" opacity=".6"/><circle cx="140" cy="20" r="14" fill="var(--canopy)" opacity=".8"/>'],
+  ["Container patio","8 × 10 ft · faces south","Pots of peppers, basil and thyme where there's no ground to dig.",
+   '<rect x="0" y="0" width="160" height="22" fill="var(--roof)"/><rect x="10" y="30" width="140" height="74" fill="var(--paving)"/><g fill="var(--pot)"><circle cx="34" cy="52" r="11"/><circle cx="64" cy="80" r="13"/><circle cx="100" cy="50" r="10"/><circle cx="128" cy="82" r="12"/></g><g fill="var(--leaf)"><circle cx="34" cy="52" r="6"/><circle cx="64" cy="80" r="7"/><circle cx="100" cy="50" r="5"/><circle cx="128" cy="82" r="6"/></g>']];
+ $("#proof").innerHTML=proof.map(x=>'<div class="card"><svg viewBox="0 0 160 110" aria-hidden="true">'+x[3]+'</svg><div class="row between"><h3>'+x[0]+"</h3>"+ev("demo")+'</div><span class="small muted mono">'+x[1]+'</span><p class="small">'+x[2]+"</p></div>").join("");
+}
+
+/* ---------- consent ---------- */
+let consentOpen=false,noteOpen=!CONSENT;
+function renderConsent(){
+ const note=$("#cookieNote");note.hidden=!(noteOpen&&!consentOpen);
+ if(!note.hidden)note.innerHTML='<div class="wrap row between" style="max-width:900px"><p class="small" style="flex:1;min-width:220px"><b>Optional cookies are off.</b> Nothing is stored on your device unless you turn it on yourself. You can see exactly what each option would store.</p><div class="row"><button class="btn sm" data-act="privacy-choices">See what each option stores</button><button class="btn sm" data-act="note-ok">OK</button></div></div>';
+ const el=$("#consent");el.hidden=!consentOpen;if(!consentOpen)return;
+ const f=CONSENT?CONSENT.functional:false,a=CONSENT?CONSENT.analytics:false;
+ const opt=(id,on,dis,title,desc,stores,never)=>'<div class="copt"><input type="checkbox" id="'+id+'"'+(on?" checked":"")+(dis?" disabled":"")+' aria-describedby="'+id+'d"><div class="stack"><label for="'+id+'"><b>'+title+'</b></label><div class="stack" style="gap:4px" id="'+id+'d"><span class="small muted">'+desc+"</span>"+(stores?'<span class="small"><b>What it stores:</b></span><ul class="stores">'+stores.map(s=>"<li>"+s+"</li>").join("")+"</ul>":"")+(never?'<span class="small"><b>Never stores:</b> '+never+"</span>":"")+"</div></div></div>";
+ el.innerHTML='<div class="wrap"><div class="row between"><h3 id="consentT">Privacy choices</h3><button class="btn sm" data-act="consent-close">Close</button></div><p class="small">Every optional setting starts off. Turn on only what you want. This is exactly what each one stores, and where.</p>'+
+  opt("cEss",true,true,"Essential · always on","Keeps the site working. It stores nothing at all until you turn on one of the options below.",["Your privacy choices: which options are on, the date you chose them and the policy version"],"anything about you, your garden or your device.")+
+  opt("cFun",f,false,"Save my garden on this device","Kept in this browser on this device only. Never sent to us or anyone else. Off means everything resets when you leave.",["Your property's name and the nearest city you picked","Lot and house sizes and which way the front faces","Beds, trees and other things you draw on the map","Soil records, tasks, journal text and photo descriptions, budget items","Dashboard layout and display settings"],"photos, videos, your street address or your device's location. Photos and videos only stay in the open tab.")+
+  opt("cAna",a,false,"Product analytics","Would show us which features people use, so we can improve them. No analytics are installed in this prototype, so nothing is collected either way.",["Which pages and features are opened, counted without names","Screen size and browser type","No identifier that follows you to other sites"],"your address or location, photos, journal text or soil data.")+
+  opt("cMkt",false,true,"Marketing and ads · not used","We don't use ad pixels, retargeting or cross-site tracking, so there is nothing to turn on.",null,null)+
+  '<div class="row"><button class="btn primary" data-act="consent" data-arg="save">Save my choices</button><button class="btn" data-act="consent" data-arg="off">Turn everything off</button></div>'+
+  (CONSENT?'<p class="tiny muted">Saved choice: '+esc(CONSENT.method)+", "+esc(new Date(CONSENT.ts).toLocaleString())+" · policy "+esc(CONSENT.v)+"</p>":'<p class="tiny muted">Nothing is stored on this device right now.</p>')+"</div>";
+}
+function setConsent(kind){
+ const fun=kind==="save"&&$("#cFun").checked,ana=kind==="save"&&$("#cAna").checked,was=canSave();
+ if(!fun&&!ana){CONSENT=null;LS.del("consent");LS.del("mine");LS.del("prefs")}
+ else{CONSENT={v:"draft-0.2",ts:new Date().toISOString(),method:"Turned on: "+[fun&&"save my garden",ana&&"analytics"].filter(Boolean).join(" and "),functional:fun,analytics:ana};LS.set("consent",CONSENT);if(!fun){LS.del("mine");LS.del("prefs")}else persist()}
+ consentOpen=false;noteOpen=false;renderConsent();renderChrome();
+ toast(fun?(was?"Choices saved.":"Saving is on. Your garden stays on this device."):(was?"Saving is off. Stored garden data was erased from this device.":"Everything optional is off. Nothing is stored."));
+}
+const reduceMotion=()=>A11Y.motion||window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function applyA11y(){const r=document.documentElement;r.style.setProperty("--ts",String(A11Y.ts));if(A11Y.contrast)r.setAttribute("data-contrast","high");else r.removeAttribute("data-contrast")}
+function openDisplay(){const ch=(arg,label,on)=>'<button class="chip" data-act="a11y" data-arg="'+arg+'" aria-pressed="'+on+'">'+label+"</button>";
+ $("#sheetHost").innerHTML='<div class="sheet-bg" data-act="close-sheet"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetT"><div class="row between"><h2 id="sheetT">Accessibility &amp; display</h2><button class="btn sm" data-act="close-sheet">Close</button></div>'+
+ '<div class="stack"><span class="lbl" id="tsL">Text size</span><div class="chips" role="group" aria-labelledby="tsL">'+ch("ts:1","Standard",A11Y.ts===1)+ch("ts:1.15","Large",A11Y.ts===1.15)+ch("ts:1.3","Larger",A11Y.ts===1.3)+"</div>"+
+ '<label class="check"><input type="checkbox" data-f="a11y.contrast"'+(A11Y.contrast?" checked":"")+'> Higher contrast</label><label class="check"><input type="checkbox" data-f="a11y.motion"'+(A11Y.motion?" checked":"")+'> Reduce motion (no animated rain or day playback)</label><label class="check"><input type="checkbox" data-f="a11y.captions"'+(A11Y.captions?" checked":"")+'> Turn on video captions automatically</label>'+
+ '<p class="small muted">'+(canSave()?"These settings are saved on this device.":"These settings last until you leave. Turn on saving in Privacy choices to keep them.")+"</p></div><h3>How the site is built for everyone</h3><div class=\"stack small\">"+SHEETS.a11y[1]+"</div></div></div>";
+ const b=$("#sheetHost .chip[aria-pressed=true]");if(b)b.focus()}
+
+/* ---------- toast, sheets ---------- */
+let toastT;function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3000)}
+const SHEETS={
+ policy:["Privacy policy (draft)","<p>This is a draft for the prototype.</p><ul><li><b>Optional cookies are off by default.</b> Nothing is stored on your device until you turn something on in Privacy choices, which lists exactly what each option stores.</li><li>No analytics, ad pixels, session replay or fingerprinting are installed.</li><li>The page loads no outside fonts, maps or scripts, so no third party sees your visit.</li><li><b>Permissions we never ask for:</b> camera, microphone, photo library, contacts or your device's location.</li><li><b>Location:</b> you pick or type your nearest city. It is used only for plant-related things: sun times, planting season, native plants, pest seasons and weather.</li><li><b>Photos and videos:</b> you choose individual files from a folder on your device. Location data inside photos is removed. They stay in the open tab and are never saved or shared.</li><li>Pest reports show only a coarse area of about a mile, never your address.</li></ul><p class='small muted'>Privacy and accessibility requirements need legal review for each jurisdiction before launch.</p>"],
+ a11y:["Accessibility","<ul><li>Text size, higher contrast and reduced motion are under Accessibility &amp; display at the top of every page.</li><li>Every photo you add asks for a short description. Screen readers read it aloud, and it shows as a caption for everyone.</li><li>Every video needs a written description or transcript before it's added, can carry a caption file (.vtt), never plays on its own and has no sound until you press play.</li><li>Every map has a text version (Map in words) and a sun-hours table.</li><li>Every slider works with arrow keys; dragging is never required.</li><li>Status uses words and shapes, not color alone, and notices are announced to screen readers.</li><li>Nothing on the site relies on sound.</li><li>The target is WCAG 2.2 AA.</li></ul>"],
+ rules:["Community rules","<ul><li>Report what you saw and roughly where. The public map only ever shows a coarse area.</li><li>Add a photo when you can. Moderators verify reports from photos.</li><li>No addresses, faces or license plates in photos.</li><li>Unverified reports are labeled until someone confirms them.</li></ul>"],
+ sources:["Data sources","<ul><li>Sun position: NOAA solar calculation (an approximation of the Solar Position Algorithm).</li><li>Soils: USDA NRCS soil survey (SSURGO), used as regional context only.</li><li>Native plants: starter lists by region; the Maryland Plant Atlas is a candidate source for the Mid-Atlantic.</li><li>Pests: seasonal ranges from extension guidance; sightings in the demo are examples.</li><li>Weather in the demo is example data. The full app needs a licensed forecast provider.</li></ul>"],
+ contact:["Contact","<p>Contact details will be added before launch. For now, share feedback with the person who sent you this prototype.</p>"],
+ login:["Log in","<p>Accounts aren't part of this prototype. You can explore the demo yard, or start your own garden on this device without an account.</p><div class='row'><button class='btn primary' data-act='start'>Start My Garden</button><button class='btn' data-act='demo'>Explore the demo yard</button></div>"]};
+function openSheet(k){const s=SHEETS[k];if(!s)return;$("#sheetHost").innerHTML='<div class="sheet-bg" data-act="close-sheet"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetT"><div class="row between"><h2 id="sheetT">'+s[0]+'</h2><button class="btn sm" data-act="close-sheet">Close</button></div><div class="stack small">'+s[1]+"</div></div></div>";const b=$("#sheetHost .sheet .btn");if(b)b.focus()}
+
+/* ---------- app chrome ---------- */
+function renderChrome(){
+ $("#home").hidden=S.view!=="home";$("#app").hidden=S.view!=="app";$("#setup").hidden=S.view!=="setup";
+ if(S.view!=="app")return;
+ const p=prop();
+ $("#propSel").innerHTML='<option value="demo">Sample rowhouse yard (demo)</option>'+(S.props.mine?'<option value="mine">'+esc(S.props.mine.name)+"</option>":"")+'<option value="new">+ Add my property</option>';
+ $("#propSel").value=S.propId;
+ const sc=$("#saveChip");if(p.demo){sc.textContent="Demo · changes aren't saved";}else sc.textContent=canSave()?"Saved on this device":"Not saved · turn on saving";
+ $("#modeStarter").setAttribute("aria-pressed",!S.dash.advanced);$("#modeAdv").setAttribute("aria-pressed",S.dash.advanced);
+ $$(".tabs [data-act=tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.arg===S.tab));
+ $("#demoBar").innerHTML=p.demo?'<div class="demobar">'+ev("demo")+"<span>You're exploring a fictional sample yard in a Southeast DC-style neighborhood. Edit anything; it resets when you leave.</span></div>":"";
+ const sg=sightingsFor(p).filter(s=>!s.mine&&s.dist<=S.alerts.radius),ver=sg.filter(s=>s.status==="verified");
+ const ab=$("#alertBar");if(S.alerts.on&&sg.length){ab.hidden=false;ab.innerHTML='<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2 1 18h18z" fill="var(--tomato)"/><path d="M10 8v4M10 14.5v.5" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span><b>'+ver.length+" verified</b> and "+(sg.length-ver.length)+" unverified pest report"+(sg.length===1?"":"s")+" within "+S.alerts.radius+" mi this week. Nearest: "+esc(sg.slice().sort((a,b)=>a.dist-b.dist)[0].pest)+".</span>"}else ab.hidden=true;
+ ["dash","property","garden","planner","community"].forEach(t=>$("#v-"+t).hidden=t!==S.tab);
+ ({dash:renderDash,property:renderProperty,garden:renderGarden,planner:renderPlanner,community:renderCommunity})[S.tab]();
+}
+function go(tab,opts){S.view="app";S.tab=tab;stopPlay();if(opts&&opts.layer)S.layer=opts.layer;renderChrome();window.scrollTo({top:0})}
+
+/* ---------- dashboard ---------- */
+function nextStep(p){
+ if(!bedsOf(p).some(o=>o.type==="bed"))return{t:"Add your first garden bed to the map.",btn:"Add a bed",act:"goto-tool",arg:"bed"};
+ const unk=unknownObjs(p);if(unk.length)return{t:"Add the height of the "+unk[0].name.replace(/^the /i,"")+" to improve the shade estimate.",btn:"Add the height",act:"select-obj",arg:unk[0].id};
+ const ut=zonesOf(p).find(z=>z.type!=="container"&&!(z.tests||[]).some(t=>t.kind==="measured"));if(ut)return{t:ut.name+" has no lab soil test yet. A test shows pH and nutrients before you plant.",btn:"Add a soil test",act:"goto-layer",arg:"soil"};
+ const sp=p.water.spouts.find(s=>!s.barrel);if(sp)return{t:"The "+sp.name.toLowerCase()+" isn't connected to a rain barrel yet.",btn:"Plan water",act:"goto-layer",arg:"water"};
+ if(!p.water.lows.length)return{t:"After the next rain, mark where water pools.",btn:"Mark a spot",act:"goto-tool",arg:"pool"};
+ return{t:"Look ahead 10 years to see how planned trees change your shade.",btn:"Look ahead",act:"goto-years",arg:"10"};
+}
+function latestTest(z){const ts=(z.tests||[]).slice();const rank={measured:3,reported:2,modeled:1};ts.sort((a,b)=>(rank[b.kind]-rank[a.kind])||(String(b.date).localeCompare(String(a.date))));return ts[0]}
+function testSummary(t){const bits=[];if(t.ph!=null)bits.push("pH "+t.ph);if(t.tex)bits.push(t.tex);["n","p","k"].forEach(x=>{if(t[x])bits.push(x.toUpperCase()+" "+t[x].toLowerCase())});if(t.om)bits.push("organic matter "+String(t.om).toLowerCase());if(t.lead)bits.push("lead "+t.lead.toLowerCase());if(t.drain!=null)bits.push(t.drain+" in/hr drainage");if(t.wet)bits.push({none:"drains in hours",day:"puddles up to a day",long:"standing water over a day"}[t.wet]);return bits.join(" · ")||t.method}
+function W(id,p){
+ switch(id){
+ case"next":{const n=nextStep(p);return'<p>'+esc(n.t)+'</p><div><button class="btn primary sm" data-act="'+n.act+'" data-arg="'+esc(n.arg)+'">'+n.btn+"</button></div>"}
+ case"map":return'<div class="mapbox mini" data-act="tab" data-arg="property"><canvas id="miniCv" aria-label="Small map of your property. Opens the map editor."></canvas></div><div class="row between"><span class="small muted">'+esc(p.place)+" · "+esc(p.kind)+'</span><button class="btn sm" data-act="tab" data-arg="property">Open the map editor</button></div><p class="tiny muted">Estimated shade at '+fmtT(S.minutes)+", "+dshort(S.date)+". Your address is never shown.</p>";
+ case"weather":{if(!p.weather)return'<div class="empty"><p class="small">Forecasts connect in the full app. This prototype can\'t reach a weather service, so no numbers are shown for your property.</p></div>';
+  const tot=p.weather.reduce((a,b)=>a+b.rain,0),mx=Math.max(1,...p.weather.map(w=>w.rain));
+  return'<div class="row between"><span class="small"><b class="mono">'+tot.toFixed(1)+' in</b> of rain expected this week</span>'+ev("demo")+'</div><div class="forecast">'+p.weather.map(w=>'<div><div class="bar"><i style="height:'+Math.max(2,w.rain/mx*44)+'px"></i></div><div class="tiny mono">'+w.rain.toFixed(1)+'"</div><div class="tiny"><b>'+new Date(w.date+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"})+'</b></div><div class="tiny muted mono">'+w.hi+"°</div></div>").join("")+"</div>"}
+ case"sun":{const d=day(p),beds=bedsOf(p).filter(b=>b.type==="bed");const len=d.set-d.rise;
+  let best=null;for(const b of beds){const e=estimate(p,zonePts(b),0);if(e.ok&&(!best||e.h>best.e.h))best={b,e}}
+  const sp=sunPos(S.minutes,S.date,p.loc);
+  return'<div class="kv"><div><span class="lbl">Sunrise</span><b class="mono">'+fmtT(d.rise)+'</b></div><div><span class="lbl">Sunset</span><b class="mono">'+fmtT(d.set)+'</b></div><div><span class="lbl">Daylight</span><b class="mono">'+Math.floor(len/60)+"h "+(len%60)+"m</b></div></div>"+
+  (best?'<p class="small">Sunniest bed today: <b>'+esc(best.b.name)+"</b>, about "+best.e.h.toFixed(1)+" h of direct sun "+ev("modeled")+"</p>":beds.length?'<p class="small">Bed estimates need a missing height first.</p>':'<p class="small muted">Add a bed to see its sun hours.</p>')+
+  '<p class="tiny muted">At '+fmtT(S.minutes)+" the sun is "+(sp.alt>0?"in the "+WORDS[dir16(sp.az)]:"down")+". Estimates assume clear skies.</p>"}
+ case"actions":return'<div class="stack"><button class="btn sm" data-act="goto-layer" data-arg="shade">Show me where my yard gets sun</button><button class="btn sm" data-act="goto-tool" data-arg="pool">Mark where water pools</button><button class="btn sm" data-act="goto-layer" data-arg="soil">Add a soil test</button><button class="btn sm" data-act="tab" data-arg="community">Report a pest</button><button class="btn sm" data-act="tab" data-arg="planner">Add a journal entry</button></div>';
+ case"tasks":{const open=p.tasks.filter(t=>!t.done).sort((a,b)=>a.due.localeCompare(b.due)).slice(0,4);
+  if(!p.tasks.length)return'<div class="empty"><p class="small">No tasks yet. Add your own in the planner; care reminders show up as you plan beds.</p><button class="btn sm" data-act="tab" data-arg="planner">Open the planner</button></div>';
+  return'<div>'+open.map(taskRow).join("")+'</div><button class="btn sm" data-act="tab" data-arg="planner">See all tasks</button>'}
+ case"soil":{const zs=zonesOf(p).filter(z=>z.type!=="container");if(!zs.length)return'<div class="empty"><p class="small">No soil zones yet. Each bed you add becomes a zone you can test.</p></div>';
+  return'<div class="list">'+zs.map(z=>{const t=latestTest(z);const miss=!(z.tests||[]).some(x=>x.kind==="measured");return'<div class="li"><div class="row between"><b>'+esc(z.name)+"</b>"+(t?ev(t.kind):'<span class="pill">Not tested</span>')+"</div>"+(t?'<span class="small">'+esc(testSummary(t))+'</span><span class="src">'+esc(t.source||t.method)+" · "+esc(dlong(t.date))+"</span>":"")+(miss?'<span class="tiny" style="color:var(--tomato-ink);font-weight:700">No lab test on file</span>':"")+"</div>"}).join("")+"</div>"}
+ case"pests":{const m=NOW.getMonth()+1,risk=pestsFor(p.loc.region,m).filter(x=>x.r!=="all").slice(0,3),sg=sightingsFor(p).filter(s=>!s.mine),v=sg.filter(s=>s.status==="verified").length;
+  return'<div class="row between"><span class="lbl">Active in '+MONTHS[m-1]+"</span>"+ev("modeled")+'</div><ul class="small" style="margin:0;padding-left:18px">'+risk.map(r=>"<li>"+esc(r.n)+"</li>").join("")+"</ul>"+
+  (sg.length?'<p class="small"><b>'+v+" verified</b> and <b>"+(sg.length-v)+" unverified</b> reports nearby this week "+evDemo(p)+"</p>":'<p class="small muted">No community reports near you yet.</p>')+
+  '<p class="tiny muted">Alerts are '+(S.alerts.on?"on.":"off until you turn them on.")+'</p><button class="btn sm" data-act="tab" data-arg="community">Open pest watch</button>'}
+ case"garden":{const beds=p.objects.filter(o=>o.type==="bed"),pots=p.objects.filter(o=>o.type==="container"),trees=p.objects.filter(o=>o.type==="tree"&&!o.fixed),gh=p.objects.filter(o=>o.type==="greenhouse");
+  if(!beds.length&&!pots.length)return'<div class="empty"><p class="small">No beds or containers yet.</p><button class="btn sm" data-act="goto-tool" data-arg="bed">Add a bed</button></div>';
+  const n=bedsOf(p).reduce((a,b)=>a+(b.plants||[]).length,0);
+  return'<div class="kv"><div><span class="lbl">Beds</span><b>'+beds.length+'</b></div><div><span class="lbl">Containers</span><b>'+pots.length+'</b></div><div><span class="lbl">Trees</span><b>'+trees.length+'</b></div><div><span class="lbl">Plantings</span><b>'+n+"</b></div></div>"+(gh.length?'<p class="small">'+gh.length+" greenhouse"+(gh.length>1?"s":"")+"</p>":"")+
+  '<div class="list">'+bedsOf(p).slice(0,3).map(b=>'<div class="small"><b>'+esc(b.name)+":</b> "+((b.plants||[]).length?esc(b.plants.join(", ")):'<span class="muted">empty</span>')+"</div>").join("")+'</div><button class="btn sm" data-act="tab" data-arg="garden">Open My Garden</button>'}
+ case"water":{const house=p.objects.find(o=>o.type==="house"),roof=house.w*house.d,gal=roof*.623,barrels=p.objects.filter(o=>o.type==="barrel"),cap=barrels.reduce((a,b)=>a+(b.cap||0),0);
+  let h='<div class="kv"><div><span class="lbl">Roof runoff per inch</span><b class="mono">'+Math.round(gal)+' gal</b></div><div><span class="lbl">Barrel capacity</span><b class="mono">'+cap+" gal</b></div></div><p class='tiny muted'>"+ev("modeled")+" "+Math.round(roof)+" sq ft roof × 0.623 gal per sq ft per inch.</p>";
+  if(!barrels.length)return h+'<div class="empty"><p class="small">No rain barrels yet. Add one on the map and connect it to a downspout.</p><button class="btn sm" data-act="goto-tool" data-arg="barrel">Add a rain barrel</button></div>';
+  if(p.water.fill)h+='<div class="stack" style="gap:4px"><div class="row between"><span class="small">Barrel fill <b class="mono">'+p.water.fill.pct+'%</b></span>'+ev("reported")+'</div><div class="meter"><i style="width:'+p.water.fill.pct+'%"></i></div><span class="src">Updated '+dlong(p.water.fill.date)+"</span></div>";
+  else h+='<p class="small muted">No fill level reported yet.</p>';
+  h+='<label class="f">How full is it today?<input type="range" min="0" max="100" step="10" value="'+(p.water.fill?p.water.fill.pct:0)+'" data-f="fill" aria-label="Barrel fill percent"></label>';
+  if(p.weather){const tot=p.weather.reduce((a,b)=>a+b.rain,0),sp=p.water.spouts.find(s=>s.barrel),cap1=sp?roof*sp.share*.623*.9*tot:0;if(sp)h+='<p class="small">This week\'s forecast could send about <b class="mono">'+Math.round(cap1)+" gal</b> to the barrel. "+(cap1>cap*(1-(p.water.fill?p.water.fill.pct:0)/100)?"Expect overflow; make sure it drains away from the house.":"It should hold it.")+" "+ev("demo")+"</p>"}
+  return h}
+ case"journal":{if(!p.journal.length)return'<div class="empty"><p class="small">Nothing logged yet. Notes, photos, harvests and soil amendments go here.</p><button class="btn sm" data-act="tab" data-arg="planner">Add an entry</button></div>';
+  return'<div class="list">'+p.journal.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,3).map(journalRow).join("")+"</div>"}
+ case"zonesun":{const zs=bedsOf(p);if(!zs.length)return'<p class="small muted">Add beds to compare sun hours.</p>';
+  return'<div class="row between"><span class="small muted">'+dshort(S.date)+", clear sky</span>"+ev("modeled")+'</div><div class="stack" style="gap:6px">'+zs.map(z=>{const e=estimate(p,zonePts(z),S.Y);return'<div class="zbar"><span class="small" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(z.name)+'</span><span class="track">'+(e.ok?'<i style="width:'+Math.min(100,e.h/12*100)+'%"></i>':'<i class="unk" style="width:100%"></i>')+'</span><span class="mono small" style="text-align:right">'+(e.ok?e.h.toFixed(1)+" h":"?")+"</span></div>"}).join("")+'</div><p class="tiny muted">Scale: 0 to 12 hours. Striped means a height is missing.</p>'}
+ case"budget":{if(!p.budget.length)return'<div class="empty"><p class="small">No project costs yet.</p></div>';const pl=p.budget.reduce((a,b)=>a+(b.planned||0),0),ac=p.budget.reduce((a,b)=>a+(b.actual||0),0);
+  return'<div class="kv"><div><span class="lbl">Planned</span><b class="mono">$'+pl+'</b></div><div><span class="lbl">Spent</span><b class="mono">$'+ac+'</b></div></div><div class="meter money"><i style="width:'+Math.min(100,pl?ac/pl*100:0)+'%"></i></div><button class="btn sm" data-act="tab" data-arg="planner">Open the budget</button>'}
+ }return""}
+function visWidgets(){const adv=S.dash.advanced;return S.dash.order.filter(id=>!S.dash.hidden.includes(id)&&(adv||!WIDGETS.find(w=>w[0]===id)[2]))}
+function renderDash(){
+ const p=prop(),adv=S.dash.advanced,cz=S.dash.customizing,vis=visWidgets();
+ const first=p.demo?"":(!p.objects.some(o=>o.type==="bed")?'<div class="card"><h3>Your garden starts here.</h3><p>Add a garden bed to your map, or explore our sample Southeast DC yard to see how sunlight, soil and water can shape your plan.</p><div class="row"><button class="btn primary sm" data-act="goto-tool" data-arg="bed">Add a bed</button><button class="btn sm" data-act="switch-prop" data-arg="demo">Explore the sample yard</button></div></div>':"");
+ let h='<div class="pagehead"><div class="stack"><span class="eyebrow">Welcome back</span><h2>'+esc(p.name)+'</h2><span class="small muted">'+esc(p.place)+" · "+esc(p.kind)+'</span></div><div class="row"><button class="btn sm" data-act="dash-customize" aria-pressed="'+cz+'">'+(cz?"Done customizing":"Customize")+"</button></div></div>"+first+'<div class="dash">';
+ vis.forEach((id,i)=>{const w=WIDGETS.find(x=>x[0]===id);
+  h+='<article class="w w-'+id+'" aria-labelledby="wt-'+id+'"><div class="w-h"><h3 id="wt-'+id+'">'+w[1]+"</h3>"+(cz?'<span class="wctl"><button data-act="dash-move" data-arg="'+id+':-1" aria-label="Move '+w[1]+' earlier"'+(i===0?" disabled":"")+'>↑</button><button data-act="dash-move" data-arg="'+id+':1" aria-label="Move '+w[1]+' later"'+(i===vis.length-1?" disabled":"")+'>↓</button><button data-act="dash-hide" data-arg="'+id+'" aria-label="Hide '+w[1]+'">✕</button></span>':"")+"</div>"+W(id,p)+"</article>"});
+ h+="</div>";
+ const hid=S.dash.hidden.filter(id=>adv||!WIDGETS.find(w=>w[0]===id)[2]);
+ if(hid.length)h+='<div class="row small"><span class="muted">Hidden:</span>'+hid.map(id=>'<button class="chip" data-act="dash-show" data-arg="'+id+'">Show '+WIDGETS.find(w=>w[0]===id)[1]+"</button>").join("")+"</div>";
+ if(!adv)h+='<p class="small muted">Advanced mode adds sun hours by bed, the project budget and sun-angle numbers.</p>';
+ h+='<p class="tiny muted">'+ev("measured")+" lab or sensor result · "+ev("modeled")+" software estimate · "+ev("reported")+" your observation · "+ev("demo")+" example only</p>";
+ $("#v-dash").innerHTML=h;
+ const mc=$("#miniCv");if(mc)drawMap(mc,p,{layer:"shade",minutes:S.minutes,Y:0,mini:true,maxH:420});
+}
+
+/* ---------- property ---------- */
+const TOOLS=[["select","Select & move"],["bed","+ Bed"],["container","+ Container"],["tree","+ Tree"],["fence","+ Fence"],["greenhouse","+ Greenhouse"],["barrel","+ Rain barrel"],["pool","Mark where water pools"]];
+const NEWOBJ={bed:{w:8,d:4,h:1,name:"New bed",plants:[],tests:[]},container:{w:2.5,d:2.5,name:"New container",plants:[],tests:[]},tree:{r:5,h:null,matureH:null,matureR:null,rate:0,name:"New tree"},fence:{w:16,d:.6,h:6,name:"New fence"},greenhouse:{w:8,d:6,h:8,name:"Greenhouse"},barrel:{w:2.2,d:2.2,cap:55,name:"Rain barrel"}};
+const UNDO=[],REDO=[];
+function snap(p){return JSON.stringify({objects:p.objects,water:p.water})}
+function pushUndo(){const p=prop();UNDO.push({id:p.id,s:snap(p)});if(UNDO.length>60)UNDO.shift();REDO.length=0}
+function restore(stackA,stackB){const e=stackA.pop();if(!e)return;const p=S.props[e.id];if(!p)return;stackB.push({id:p.id,s:snap(p)});const o=JSON.parse(e.s);p.objects=o.objects;p.water=o.water;if(S.sel&&!p.objects.find(x=>x.id===S.sel))S.sel=null;changed(p);renderProperty()}
+const propOpts={};
+function renderProperty(){
+ const p=prop();
+ $("#propSub").textContent=p.place+" · front faces "+WORDS[dir16(p.face)]+" · "+(p.demo?"fictional demo property":"private to you");
+ $("#tools").innerHTML=TOOLS.map(t=>'<button class="chip" data-act="tool" data-arg="'+t[0]+'" aria-pressed="'+(S.tool===t[0])+'">'+t[1]+"</button>").join("")+'<span class="sep" aria-hidden="true"></span><button class="chip" data-act="undo"'+(UNDO.length?"":" disabled")+'>Undo</button><button class="chip" data-act="redo"'+(REDO.length?"":" disabled")+">Redo</button>";
+ const L=[["shade","Shade now"],["hours","Sun hours"],["water","Water"],["soil","Soil zones"]];
+ $("#layers").innerHTML='<span class="lbl">Layer</span>'+L.map(l=>'<button class="chip" data-act="layer" data-arg="'+l[0]+'" aria-pressed="'+(S.layer===l[0])+'">'+l[1]+"</button>").join("");
+ $("#years").innerHTML='<span class="lbl">Look ahead</span>'+[0,1,3,5,10].map(y=>'<button class="chip" data-act="years" data-arg="'+y+'" aria-pressed="'+(S.Y===y)+'">'+(y?y+(y===1?" year":" years"):"Now")+"</button>").join("")+(S.Y?" "+ev("modeled")+'<span class="tiny muted">Projected tree growth, not a guarantee.</span>':"");
+ $("#timeCard").hidden=!(S.layer==="shade"||S.layer==="hours");
+ $("#dateIn").value=S.date;$("#timeSlider").value=S.minutes;
+ $("#datePresets").innerHTML=[["today","Today"],["03-20","Spring equinox"],["06-21","Summer solstice"],["09-22","Fall equinox"],["12-21","Winter solstice"]].map(d=>'<button class="chip" data-act="date" data-arg="'+d[0]+'">'+d[1]+"</button>").join("");
+ renderSelCard();renderLayerDyn();renderPhotos();drawProp();
+}
+function drawProp(){const p=prop();if(S.view!=="app"||S.tab!=="property")return;
+ Object.assign(propOpts,{layer:S.layer,minutes:S.minutes,Y:S.Y,handle:true,maxH:Math.round(window.innerHeight*.72)});
+ drawMap($("#propCv"),p,propOpts);updateTimeText();
+ const leg=$("#propLegend");
+ if(S.layer==="hours")leg.innerHTML=[["--h-full","6+ h full sun"],["--h-psun","4–6 h part sun"],["--h-pshade","2–4 h part shade"],["--h-shade","Under 2 h shade"]].map(x=>'<span><i style="background:var('+x[0]+')"></i>'+x[1]+"</span>").join("")+(unknownObjs(p).length?'<span><i style="background:var(--unknown)"></i>Needs a height</span>':"")+" "+ev("modeled");
+ else if(S.layer==="shade")leg.innerHTML='<span><i style="background:var(--shade);opacity:.5"></i>Estimated shade at '+fmtT(S.minutes)+'</span><span><i style="background:var(--sun)"></i>Front of house</span><span>Dashed tree: planned or height unknown</span>';
+ else if(S.layer==="water")leg.innerHTML='<span><i style="background:var(--water)"></i>Downspouts, barrels, flow</span><span>Rings: where you saw water pool '+ev("reported")+"</span>";
+ else leg.innerHTML='<span><i style="background:var(--leaf)"></i>Lab tested</span><span><i style="background:var(--pink)"></i>Your observations only</span><span><i style="background:var(--sun)"></i>Regional survey only</span><span><i style="background:var(--unknown)"></i>No data</span>';
+ renderMapWords(p);
+}
+function updateTimeText(){const p=prop();$("#timeLbl").textContent=fmtT(S.minutes);const sp=sunPos(S.minutes,S.date,p.loc),d=day(p);
+ $("#sunInfo").innerHTML=(sp.alt>0?"The sun is in the <b>"+WORDS[dir16(sp.az)]+"</b>"+(S.dash.advanced?' (azimuth <span class="mono">'+Math.round(sp.az)+'°</span>, <span class="mono">'+Math.round(sp.alt)+"°</span> above the horizon)":", "+Math.round(sp.alt)+"° above the horizon")+". Shadows point "+WORDS[dir16(sp.az+180)]+".":"<b>The sun is down.</b> Slide into daylight.")+'<br><span class="muted mono tiny">Sunrise '+fmtT(d.rise)+" · Sunset "+fmtT(d.set)+"</span>"}
+function renderSelCard(){
+ const p=prop(),o=S.sel&&p.objects.find(x=>x.id===S.sel),el=$("#selCard");if(!o){el.innerHTML="";return}
+ const shade=SHADING[o.type],box=o.type!=="tree"&&o.type!=="container"&&o.type!=="barrel";
+ let h='<div class="card sel"><div class="row between"><h3>'+esc(o.name)+'</h3><span class="small muted">'+TYPES[o.type]+"</span></div>";
+ if(o.fixed)h+='<p class="small muted">This is on a neighboring property, so it can\'t be moved. Its height still matters for your shade.</p>';
+ else h+='<label class="f">Name<input type="text" data-f="sel.name" value="'+esc(o.name)+'"></label>';
+ h+='<div class="fields">';
+ if(box&&!o.fixed)h+='<label class="f">Length (ft)<input type="number" min="0.5" step="0.5" data-f="sel.w" value="'+o.w+'"></label><label class="f">Width (ft)<input type="number" min="0.5" step="0.5" data-f="sel.d" value="'+o.d+'"></label>';
+ if(o.type==="container"||o.type==="barrel")h+='<label class="f">Diameter (ft)<input type="number" min="1" step="0.5" data-f="sel.w" value="'+o.w+'"></label>';
+ if(shade&&o.type!=="tree")h+='<label class="f">Height (ft)<input type="number" min="0" step="1" data-f="sel.h" id="selH" value="'+(o.h==null?"":o.h)+'" placeholder="Unknown"></label>';
+ if(o.type==="tree"){h+='<label class="f">Height now (ft)<input type="number" min="1" step="1" data-f="sel.h" id="selH" value="'+(o.h==null?"":o.h)+'" placeholder="Unknown"></label><label class="f">Canopy width (ft)<input type="number" min="1" step="1" data-f="sel.cw" value="'+Math.round(o.r*2)+'"></label>';
+  if(!o.fixed)h+='<label class="f">Mature height (ft)<input type="number" min="1" step="1" data-f="sel.matureH" value="'+(o.matureH||"")+'"></label><label class="f">Mature canopy (ft)<input type="number" min="1" step="1" data-f="sel.mcw" value="'+(o.matureR?Math.round(o.matureR*2):"")+'"></label><label class="f">Growth per year (ft)<input type="number" min="0" step="0.1" data-f="sel.rate" value="'+(o.rate||0)+'"></label>'}
+ if(o.type==="barrel")h+='<label class="f">Capacity (gal)<input type="number" min="10" step="5" data-f="sel.cap" value="'+o.cap+'"></label>';
+ h+="</div>";
+ if(o.type==="tree"&&!o.fixed)h+='<label class="check small"><input type="checkbox" data-f="sel.planned" '+(o.planned?"checked":"")+"> Planned, not planted yet</label>";
+ if(o.type==="barrel"){h+='<label class="f">Connected downspout<select data-f="sel.spout"><option value="">Not connected</option>'+p.water.spouts.map(s=>'<option value="'+s.id+'"'+(s.barrel===o.id?" selected":"")+">"+esc(s.name)+"</option>").join("")+"</select></label>"}
+ if(shade)h+=o.h==null?'<div class="warnbox"><span aria-hidden="true">?</span><span><b>Height unknown.</b> Sun-hour estimates near this '+(o.type==="tree"?"tree":"object")+" are hidden until you add it. A rough guess is fine.</span></div>":'<span class="src">'+ev("reported")+" Height entered by you</span>";
+ h+='<div class="row">'+(box&&!o.fixed?'<button class="btn sm" data-act="sel-rotate">Turn 90°</button>':"")+(!o.fixed&&o.type!=="house"?'<button class="btn sm" data-act="sel-delete">Delete</button>':"")+'<button class="btn sm" data-act="sel-clear">Done</button></div></div>';
+ el.innerHTML=h;
+}
+function zoneTable(p){
+ const zs=bedsOf(p);if(!zs.length)return'<p class="small muted">Add a bed to see sun hours by zone.</p>';
+ return'<div class="tablewrap"><table><thead><tr><th>Bed</th><th class="num">Direct sun</th><th>Light</th></tr></thead><tbody>'+zs.map(z=>{const e=estimate(p,zonePts(z),S.Y);const c=e.ok?sunClass(e.h):null;
+  return"<tr><td>"+esc(z.name)+'</td><td class="num">'+(e.ok?e.h.toFixed(1)+" h":"–")+"</td><td>"+(e.ok?'<span class="pill" style="background:var('+c.c+');color:'+(c.t==="Full shade"?"#FFFFFF":"#1F2F26")+'">'+c.t+"</span>":'<button class="btn link small" data-act="select-obj" data-arg="'+e.need[0].id+'">Needs '+esc(e.need[0].name)+" height</button>")+"</td></tr>"}).join("")+"</tbody></table></div>"}
+function renderLayerDyn(){
+ const p=prop(),el=$("#layerDyn");let h="";
+ if(S.layer==="shade"||S.layer==="hours"){
+  const unk=unknownObjs(p);
+  if(unk.length)h+='<div class="warnbox"><span aria-hidden="true">!</span><span><b>Shade model incomplete.</b> The '+unk.map(u=>esc(u.name)).join(", ")+" "+(unk.length===1?"needs":"need")+' a height. Beds it could shade show "Needs a height" instead of a number. <button class="btn link small" data-act="select-obj" data-arg="'+unk[0].id+'">Add it</button></span></div>';
+  if(S.spot){const inB=buildings(p).some(b=>inPoly([S.spot.x,S.spot.y],b));const e=inB?null:estimate(p,[[S.spot.x,S.spot.y]],S.Y);
+   h+='<div class="card"><div class="row between"><h3>Checked spot</h3>'+ev("modeled")+"</div>"+(inB?'<p class="small">That spot is on a roof. Tap the ground.</p>':e.ok?'<div class="kv"><div><span class="lbl">Direct sun</span><b class="mono">'+e.h.toFixed(1)+' h</b></div><div><span class="lbl">Sun window</span><b class="mono" style="font-size:1rem">'+(e.first!==null?fmtT(e.first)+"–"+fmtT(e.last):"No direct sun")+'</b></div></div><p class="small">'+sunClass(e.h).t+" on "+dlong(S.date)+(S.Y?", "+S.Y+" years from now":"")+'.</p><span class="src">Clear-sky estimate from sun position and the heights you entered.</span>':'<p class="small">Somewhere between '+e.lo.toFixed(1)+" and "+e.hi.toFixed(1)+" h depending on the "+esc(e.need[0].name)+'. <button class="btn link small" data-act="select-obj" data-arg="'+e.need[0].id+'">Add its height</button></p>')+"</div>"}
+  else h+='<p class="small muted">Tap the ground with Select &amp; move to check any spot. Drag the sun around the map edge to change the time.</p>';
+  h+='<div class="card"><div class="row between"><h3>Sun by bed</h3>'+ev("modeled")+'</div><p class="tiny muted">'+dlong(S.date)+(S.Y?" · "+S.Y+" years ahead":"")+' · clear sky. "Full sun" on plant tags means 6+ hours in the growing season, so check June too.</p>'+zoneTable(p)+"</div>";
+ }
+ else if(S.layer==="water"){
+  const house=p.objects.find(o=>o.type==="house"),roof=house.w*house.d,plan=gardenPlan(p),barrels=p.objects.filter(o=>o.type==="barrel");
+  h+='<div class="card"><h3>How your yard drains</h3><div class="fields"><label class="f">Ground slopes down toward<select data-f="water.down">'+["N","NE","E","SE","S","SW","W","NW"].map((d,i)=>'<option value="'+i*45+'"'+(p.water.down===i*45?" selected":"")+">"+WORDS[d][0].toUpperCase()+WORDS[d].slice(1)+"</option>").join("")+'</select></label><label class="f">Slope<select data-f="water.slope">'+[["gentle","Gentle (under 5%)"],["moderate","Moderate (5–12%)"],["steep","Steep (over 12%)"]].map(o=>'<option value="'+o[0]+'"'+(p.water.slope===o[0]?" selected":"")+">"+o[1]+"</option>").join("")+'</select></label><label class="f">Soil where a rain garden would go<select data-f="water.soil">'+[["sandy","Sandy"],["silty","Silty or loam"],["clayey","Clay"]].map(o=>'<option value="'+o[0]+'"'+(p.water.soil===o[0]?" selected":"")+">"+o[1]+"</option>").join("")+'</select></label></div><button class="btn primary" data-act="rain"'+(RAIN.raf?" disabled":"")+'>Make it rain</button><p class="tiny muted">The flow is a rough picture from your slope setting, not an engineering plan.</p></div>';
+  h+='<div class="card"><div class="row between"><h3>Downspouts</h3>'+ev("modeled")+"</div>"+p.water.spouts.map(s=>{const g=roof*s.share*.623;const b=s.barrel&&barrels.find(x=>x.id===s.barrel);return'<div class="li"><b>'+esc(s.name)+'</b><span class="small">About <b class="mono">'+Math.round(g)+" gal</b> per inch of rain ("+Math.round(s.share*100)+'% of the roof)</span><label class="f">Rain barrel<select data-f="spout.barrel" data-arg="'+s.id+'"><option value="">None</option>'+barrels.map(x=>'<option value="'+x.id+'"'+(s.barrel===x.id?" selected":"")+">"+esc(x.name)+" ("+x.cap+" gal)</option>").join("")+'</select></label><label class="check small"><input type="checkbox" data-f="spout.toGarden" data-arg="'+s.id+'" '+(s.toGarden?"checked":"")+"> Send "+(s.barrel?"overflow":"water")+" to a rain garden</label>"+(b?'<span class="small">The '+b.cap+'-gal barrel fills after about <b class="mono">'+(b.cap/(g*.9)).toFixed(2)+" in</b> of rain.</span>":"")+"</div>"}).join("")+
+   (barrels.length?"":'<p class="small muted">No barrels yet. Use "+ Rain barrel" above, then connect it here.</p>')+
+   '<details><summary class="small">Assumptions</summary><ul class="small"><li>Roof footprint '+Math.round(roof)+" sq ft from your house size.</li><li>0.623 gallons per square foot per inch of rain.</li><li>Roof split evenly between downspouts.</li><li>10% lost to gutter overflow and first-flush.</li></ul></details></div>";
+  if(p.water.slope==="steep")h+='<div class="warnbox"><span><b>Too steep for a rain garden.</b> On slopes over 12%, terraces or a dry creek bed slow water better.</span></div>';
+  else if(plan.routedArea>0)h+='<div class="card"><div class="row between"><h3>Rain garden candidate</h3>'+ev("modeled")+'</div><p class="small">For <b class="mono">'+Math.round(plan.routedArea)+" sq ft</b> of roof on "+({sandy:"sandy",silty:"silty or loam",clayey:"clay"})[p.water.soil]+' soil, plan about <b class="mono">'+Math.round(plan.area)+" sq ft</b>, dug 6–7 in deep. That's roof area × "+plan.factor+".</p>"+(RAIN.ran&&RAIN.propId===p.id?(plan.ok?'<p class="small">The dashed outline marks a spot downhill, at least 10 ft from any building, inside your lot.</p>':'<p class="small">No spot inside your lot is 10 ft from buildings in the downhill direction. Mark a low spot farther out, or route water with a buried pipe.</p>'):'<p class="small muted">Tap Make it rain to see where it could go.</p>')+'<div class="warnbox"><span aria-hidden="true">!</span><span><b>Check on-site</b> before digging: keep 10+ ft from foundations, away from septic fields and property lines, and call 811 to mark utilities. Water should soak in within 1–2 days.</span></div></div>';
+  else h+='<p class="small muted">Tick "Send to a rain garden" on a downspout to size one.</p>';
+  h+='<div class="card"><div class="row between"><h3>Where water pools</h3>'+ev("reported")+"</div>"+(p.water.lows.length?p.water.lows.map(l=>'<div class="row between small"><span>'+esc(l.note||"Pooling spot")+' <span class="src">'+dlong(l.date)+'</span></span><button class="btn link small" data-act="low-delete" data-arg="'+l.id+'">Remove</button></div>').join(""):'<p class="small muted">None marked yet.</p>')+'<button class="btn sm" data-act="tool" data-arg="pool">Mark where water pools</button></div>';
+ }
+ else if(S.layer==="soil"){
+  const zs=zonesOf(p);
+  h+='<div class="card"><h3>Soil zones</h3><p class="tiny muted">Regional soil maps are context only. Lab tests are the only source of nutrient levels.</p>'+(zs.length?zs.map(z=>{const ts=(z.tests||[]).slice().reverse();const miss=z.type!=="container"&&!ts.some(t=>t.kind==="measured");
+   return'<div class="li"><div class="row between"><b>'+esc(z.name)+"</b>"+(isWet(p,z)?'<span class="pill bad">Waterlogging reported</span>':"")+"</div>"+(ts.length?ts.map(t=>'<div class="small">'+ev(t.kind)+" "+esc(t.method)+": "+esc(testSummary(t))+'<br><span class="src">'+esc(t.source||"")+(t.source?" · ":"")+esc(dlong(t.date))+"</span>"+(t.notes?'<br><span class="muted">'+esc(t.notes)+"</span>":"")+"</div>").join(""):'<span class="small muted">No tests or observations yet.</span>')+(miss?'<span class="tiny" style="color:var(--tomato-ink);font-weight:700">Missing a lab test</span>':"")+"</div>"}).join(""):'<p class="small muted">Add a bed to create a soil zone.</p>')+"</div>";
+  if(zs.length)h+='<form class="card" id="soilForm"><h3>Add a soil record</h3><label class="f">Zone<select id="sfZone">'+zs.map(z=>'<option value="'+z.id+'">'+esc(z.name)+"</option>").join("")+'</select></label><label class="f">Type<select id="sfKind"><option value="lab">Lab test (Measured)</option><option value="kit">Home test kit (Measured)</option><option value="obs">Jar test or observation (Reported)</option><option value="amend">Amendment added (Reported)</option></select></label><label class="f">Date<input type="date" id="sfDate" value="'+TODAY+'"></label>'+
+   '<div class="fields"><label class="f">Texture<select id="sfTex"><option value="">–</option><option>Sand</option><option>Sandy loam</option><option>Loam</option><option>Silt loam</option><option>Clay loam</option><option>Clay</option><option>Raised-bed mix</option></select></label><label class="f">pH<input type="number" id="sfPh" min="3" max="10" step="0.1"></label><label class="f">Drainage (in/hr)<input type="number" id="sfDr" min="0" max="20" step="0.1"></label></div>'+
+   '<div class="fields">'+["n","p","k"].map(x=>'<label class="f">'+{n:"Nitrogen",p:"Phosphorus",k:"Potassium"}[x]+'<select id="sf'+x+'"><option value="">–</option><option>Low</option><option>OK</option><option>High</option></select></label>').join("")+'<label class="f">Lead (lab)<select id="sfLead"><option value="">–</option><option>Low</option><option>Moderate</option><option>High</option></select></label></div>'+
+   '<label class="f">Water after rain<select id="sfWet"><option value="">–</option><option value="none">Gone in hours</option><option value="day">Puddles up to a day</option><option value="long">Standing over a day</option></select></label><label class="f">Notes<textarea id="sfNotes" placeholder="Lab name, amendment amount, worms, compaction…"></textarea></label><p class="tiny muted">Leave anything you didn\'t measure blank. Urban soils: test for lead before growing food in the ground.</p><button class="btn primary" type="submit">Save record</button></form>';
+ }
+ el.innerHTML=h;
+}
+function renderMapWords(p){
+ const ob=p.objects.filter(o=>o.type!=="lot"),lines=[];
+ lines.push("<p>Front of the house faces "+WORDS[dir16(p.face)]+". Ground slopes down toward the "+WORDS[dir16(p.water.down)]+".</p>");
+ lines.push('<ul style="margin:0;padding-left:18px">'+ob.map(o=>{let s="<b>"+esc(o.name)+"</b> ("+TYPES[o.type].toLowerCase()+")";
+  if(o.type==="tree"){const t=treeAt(o,S.Y);s+=": "+(t.h==null?"height unknown":Math.round(t.h)+" ft tall")+", canopy "+Math.round(t.r*2)+" ft"+(o.planned?", planned":"")}
+  else if(o.type==="container"||o.type==="barrel")s+=": "+o.w+" ft across"+(o.cap?", "+o.cap+" gal":"");
+  else s+=": "+o.w+" × "+o.d+" ft"+(SHADING[o.type]?", "+(o.h==null?"height unknown":o.h+" ft tall"):"");
+  return"<li>"+s+"</li>"}).join("")+"</ul>");
+ if(p.water.lows.length)lines.push("<p>Water pooling reported at "+p.water.lows.length+" spot"+(p.water.lows.length===1?"":"s")+".</p>");
+ $("#mapWordsBody").innerHTML=lines.join("");
+}
+function renderPhotos(){
+ const p=prop(),ph=PHOTOS[p.id]||{},SL=[["overhead","Overhead"],["front","Front"],["back","Back"],["left","Left side"],["right","Right side"]];
+ $("#photoAlts").innerHTML=SL.filter(s=>ph[s[0]]).map(s=>'<label class="f">Describe the '+s[1].toLowerCase()+' photo<input type="text" data-alt="'+s[0]+'" value="'+esc(ph[s[0]].alt||"")+'" placeholder="e.g. Back yard at noon, shade from the fence covers the left half"></label>').join("")+(SL.some(s=>ph[s[0]]&&!ph[s[0]].alt)?'<span class="tiny" style="color:var(--tomato-ink);font-weight:700">Add a description to each photo so screen-reader users know what it shows.</span>':"");
+ $("#photos").innerHTML=SL.map(s=>'<label class="slot">'+(ph[s[0]]?'<img alt="'+esc(ph[s[0]].alt||s[1]+" photo of the yard, no description yet")+'" src="'+ph[s[0]].url+'">':"")+'<input type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.heic" data-photo="'+s[0]+'"><span>'+(ph[s[0]]?s[1]+" ✓":"+ "+s[1])+"</span></label>").join("");
+ $("#usePhoto").checked=S.usePhoto;
+}
+function stripImage(file,cb){const rd=new FileReader();rd.onload=()=>{const img=new Image();img.onload=()=>{const sc=Math.min(1,1600/Math.max(img.width,img.height)),cv=document.createElement("canvas");cv.width=Math.round(img.width*sc);cv.height=Math.round(img.height*sc);cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);const url=cv.toDataURL("image/jpeg",.85),clean=new Image();clean.onload=()=>cb(url,clean);clean.src=url};img.onerror=()=>toast("That file couldn't be read as an image. Try a JPG or PNG.");img.src=rd.result};rd.readAsDataURL(file)}
+
+/* map pointer */
+let drag=null;
+function toWorld(cv,e,V){const r=cv.getBoundingClientRect(),k=r.width/V.W;return{x:(e.clientX-r.left)/k,y:(e.clientY-r.top)/k,px:e.clientX-r.left,py:e.clientY-r.top}}
+function hitTest(p,pt){const pri=["barrel","container","tree","bed","greenhouse","shed","fence","house","neighbor"];if(S.layer==="soil")pri.push("area");
+ for(const ty of pri)for(const o of p.objects.slice().reverse()){if(o.type!==ty)continue;
+  if(ty==="tree"){if(Math.hypot(o.x-pt[0],o.y-pt[1])<Math.max(2,treeAt(o,S.Y).r))return o}
+  else if(ty==="container"||ty==="barrel"){if(Math.hypot(o.x-pt[0],o.y-pt[1])<o.w/2+1)return o}
+  else{const c=corners(o);if(inPoly(pt,c)||(ty==="fence"&&polyDist(pt,c)<1.2))return o}}return null}
+const cvP=$("#propCv");
+cvP.addEventListener("pointerdown",e=>{const p=prop(),w=toWorld(cvP,e,p.view);
+ if(propOpts.sunPx&&Math.hypot(w.px-propOpts.sunPx[0],w.py-propOpts.sunPx[1])<26){drag={sun:true};cvP.setPointerCapture(e.pointerId);stopPlay();return}
+ if(S.tool==="select"){const o=hitTest(p,[w.x,w.y]);
+  if(o){S.sel=o.id;if(!o.fixed&&o.type!=="area"&&!(o.type==="house"&&p.demo)){pushUndo();drag={id:o.id,dx:w.x-o.x,dy:w.y-o.y,moved:false};cvP.setPointerCapture(e.pointerId)}renderSelCard();drawProp();return}
+  S.sel=null;S.spot={x:w.x,y:w.y};renderSelCard();renderLayerDyn();drawProp();return}
+ if(S.tool==="pool"){pushUndo();p.water.lows.push({id:nid("l"),x:w.x,y:w.y,date:TODAY,note:"Water pooled here"});changed(p);S.tool="select";if(S.layer!=="water")S.layer="water";toast("Marked as a Reported observation for "+dshort(TODAY)+".");renderProperty();return}
+ const base=NEWOBJ[S.tool];if(base){pushUndo();const o=Object.assign({id:nid("o"),type:S.tool,x:w.x,y:w.y,rot:p.rot||0},JSON.parse(JSON.stringify(base)));p.objects.push(o);changed(p);S.sel=o.id;S.tool="select";
+  toast(o.type==="tree"?"Tree added. Add its height so the shade estimate can use it.":TYPES[o.type]+" added. Drag to place it.");renderProperty();if(o.type==="tree"){const hi=$("#selH");if(hi)hi.focus()}}});
+cvP.addEventListener("pointermove",e=>{if(!drag)return;const p=prop(),w=toWorld(cvP,e,p.view);
+ if(drag.sun){const r=cvP.getBoundingClientRect(),ang=(Math.atan2(w.px-r.width/2,-(w.py-r.height/2))*DEG+360)%360;let best=null,bd=1e9;for(const s of day(p).samples){let d=Math.abs(s.az-ang);d=Math.min(d,360-d);if(d<bd){bd=d;best=s}}if(best){S.minutes=best.m;$("#timeSlider").value=S.minutes;drawProp()}return}
+ const o=p.objects.find(x=>x.id===drag.id);if(!o)return;const nx=Math.max(0,Math.min(p.view.W,w.x-drag.dx)),ny=Math.max(0,Math.min(p.view.H,w.y-drag.dy));
+ if(o.type==="house"){const dx=nx-o.x,dy=ny-o.y;p.water.spouts.forEach(s=>{s.x+=dx;s.y+=dy})}o.x=nx;o.y=ny;drag.moved=true;if(S.layer!=="hours")p._v++;drawProp()});
+function endDrag(){if(!drag)return;const p=prop();if(drag.id){if(drag.moved){changed(p);renderLayerDyn()}else UNDO.pop()}else renderLayerDyn();drag=null;drawProp()}
+cvP.addEventListener("pointerup",endDrag);cvP.addEventListener("pointercancel",endDrag);
+
+/* time controls */
+const ts=$("#timeSlider");ts.addEventListener("input",()=>{S.minutes=+ts.value;stopPlay();drawProp()});
+ts.addEventListener("change",()=>renderLayerDyn());
+$("#dateIn").addEventListener("change",e=>{if(isDate(e.target.value)){S.date=e.target.value;HEAT.key="";renderProperty()}});
+let playT=null;function stopPlay(){if(playT){clearInterval(playT);playT=null;$("#playBtn").textContent="Play the day"}}
+$("#playBtn").addEventListener("click",()=>{if(playT){stopPlay();return}const d=day(prop());if(d.rise===null)return;if(S.layer!=="shade"){S.layer="shade";renderProperty()}
+ if(S.minutes<d.rise||S.minutes>=d.set-10)S.minutes=Math.ceil(d.rise/5)*5;$("#playBtn").textContent="Pause";
+ const reduce=reduceMotion();
+ playT=setInterval(()=>{S.minutes+=reduce?60:10;if(S.minutes>=d.set){S.minutes=d.set;stopPlay()}ts.value=S.minutes;drawProp()},reduce?600:80)});
+$("#usePhoto").addEventListener("change",e=>{S.usePhoto=e.target.checked;drawProp()});
+
+/* rain */
+function rain(){
+ const p=prop();if(RAIN.raf)cancelAnimationFrame(RAIN.raf);const cv=$("#propCv"),g=fit(cv,p.view,propOpts.maxH);
+ RAIN.trail.width=cv.width;RAIN.trail.height=cv.height;const tc=RAIN.trail.getContext("2d");inWorld(g,tc);const T=tok();tc.strokeStyle=T.water;tc.lineWidth=.5;tc.globalAlpha=.08;
+ RAIN.propId=p.id;RAIN.ran=false;RAIN.frame=0;
+ const d=dv(p.water.down),sp={gentle:.35,moderate:.6,steep:.9}[p.water.slope],bl=buildings(p),V=p.view;
+ const parts=[];const spouts=p.water.spouts;
+ for(let i=0;i<650;i++){if(i%3===0&&spouts.length){const s=spouts[i%spouts.length],b=s.barrel&&p.objects.find(x=>x.id===s.barrel);parts.push({x:s.x+(Math.random()-.5)*1.5,y:s.y+(Math.random()-.5)*1.5,stuck:false,cap:b&&Math.random()<.45?b:null});continue}
+  const x=Math.random()*V.W,y=Math.random()*V.H;if(bl.some(b=>inPoly([x,y],b))){i--;continue}parts.push({x,y,stuck:false,cap:null})}
+ RAIN.parts=parts;RAIN.raf=1;renderLayerDyn();
+ const finish=()=>{RAIN.raf=null;RAIN.parts=null;RAIN.ran=true;drawProp();renderLayerDyn()};
+ if(reduceMotion()){for(let f=0;f<210;f++)advance();finish();toast("Rain simulated. Blue lines show where water flows.");return}
+ RAIN.raf=requestAnimationFrame(step);
+ function step(){advance();if(RAIN.frame%2===0)drawProp();if(RAIN.frame<210&&S.tab==="property"&&S.view==="app")RAIN.raf=requestAnimationFrame(step);else finish()}
+ function advance(){RAIN.frame++;
+  for(const q of parts){if(q.stuck)continue;let vx,vy;
+   if(q.cap){const dx=q.cap.x-q.x,dy=q.cap.y-q.y,dd=Math.hypot(dx,dy);if(dd<.8){q.stuck=true;continue}vx=dx/dd*.6;vy=dy/dd*.6}
+   else{vx=d[0]*sp;vy=d[1]*sp;for(const l of p.water.lows){const dx=l.x-q.x,dy=l.y-q.y,dd=Math.hypot(dx,dy);if(dd<2){q.stuck=true}else if(dd<20){const f=sp*1.8*(1-dd/20);vx+=dx/dd*f;vy+=dy/dd*f}}vx+=(Math.random()-.5)*.35;vy+=(Math.random()-.5)*.35}
+   let nx=q.x+vx,ny=q.y+vy;const hitB=bl.find(b=>inPoly([nx,ny],b));
+   if(hitB&&!q.cap){const cx=hitB.reduce((a,b)=>a+b[0],0)/4,cy=hitB.reduce((a,b)=>a+b[1],0)/4,ox=q.x-cx,oy=q.y-cy,od=Math.hypot(ox,oy)||1,t=[-oy/od,ox/od],sg=(t[0]*d[0]+t[1]*d[1])>=0?1:-1;nx=q.x+t[0]*sp*sg+ox/od*.25;ny=q.y+t[1]*sp*sg+oy/od*.25}
+   if(nx<0||ny<0||nx>V.W||ny>V.H){nx=Math.max(0,Math.min(V.W,nx));ny=Math.max(0,Math.min(V.H,ny));q.stuck=true}
+   tc.beginPath();tc.moveTo(q.x,q.y);tc.lineTo(nx,ny);tc.stroke();q.x=nx;q.y=ny}}
+}
+
+/* ---------- garden ---------- */
+function plantFit(p,b,pl){
+ const e=estimate(p,zonePts(b),0),out=[];
+ if(!e.ok)out.push(["warn","Light unknown"]);else{const k=sunClass(e.h).k;out.push(pl.s.includes(k)?["good","Light fits ("+e.h.toFixed(1)+" h)"]:["bad","Wrong light ("+e.h.toFixed(1)+" h)"])}
+ const wet=isWet(p,b);if(wet)out.push(pl.soil.includes("w")?["good","Takes wet soil"]:(pl.soil.includes("d")||pl.soil.includes("s"))?["bad","May rot in wet soil"]:["warn","Watch drainage"]);
+ return out}
+function renderGarden(){
+ const p=prop(),beds=bedsOf(p),pf=S.pf,region=p.loc.region;
+ if(pf.bed&&!beds.find(b=>b.id===pf.bed))pf.bed="";
+ let h='<div class="pagehead"><div class="stack"><h2>My Garden</h2><p class="muted small">Beds, plantings and a plant library matched to your light and soil.</p></div></div>';
+ h+='<h3>My beds and containers</h3>';
+ if(!beds.length)h+='<div class="empty"><p>No beds yet. Draw one on the map and it shows up here with its sun and soil.</p><button class="btn primary sm" data-act="goto-tool" data-arg="bed">Add a bed</button></div>';
+ else h+='<div class="ggrid">'+beds.map(b=>{const e=estimate(p,zonePts(b),0),t=latestTest(b),c=e.ok?sunClass(e.h):null;
+  return'<div class="card"><div class="row between"><h3>'+esc(b.name)+'</h3><span class="small muted mono">'+(b.type==="container"?b.w+" ft pot":b.w+" × "+b.d+" ft")+'</span></div><div class="row small">'+(e.ok?'<span class="pill" style="background:var('+c.c+');color:'+(c.t==="Full shade"?"#FFFFFF":"#1F2F26")+'">'+c.t+" · "+e.h.toFixed(1)+" h</span>"+ev("modeled"):'<span class="pill warn">Light needs a height</span>')+(isWet(p,b)?'<span class="pill bad">Wet after rain</span>':"")+"</div>"+
+  (t?'<span class="small">'+ev(t.kind)+" "+esc(testSummary(t))+"</span>":'<span class="small muted">No soil data yet.</span>')+
+  '<div class="chips">'+((b.plants||[]).length?b.plants.map((n,i)=>'<span class="tag">'+esc(n)+'<button data-act="planting-remove" data-arg="'+b.id+":"+i+'" aria-label="Remove '+esc(n)+'">×</button></span>').join(""):'<span class="small muted">Nothing planted yet.</span>')+'</div><button class="btn sm" data-act="match-bed" data-arg="'+b.id+'">Find plants for this bed</button></div>'}).join("")+"</div>";
+ const list=(pf.cat==="native"?PLANTS[region]||PLANTS.ma:EDIBLES);
+ const types=["any"].concat([...new Set(list.map(x=>x.t))]);if(!types.includes(pf.type))pf.type="any";
+ const mb=pf.bed&&beds.find(b=>b.id===pf.bed);
+ let items=list.filter(x=>(pf.sun==="any"||x.s.includes(pf.sun))&&(pf.soil==="any"||x.soil.includes(pf.soil))&&(pf.type==="any"||x.t===pf.type));
+ if(mb)items=items.map(x=>({x,f:plantFit(p,mb,x)})).sort((a,b)=>a.f.filter(z=>z[0]==="bad").length-b.f.filter(z=>z[0]==="bad").length);else items=items.map(x=>({x,f:null}));
+ const chip=(k,v,t)=>'<button class="chip" data-act="pf" data-arg="'+k+":"+v+'" aria-pressed="'+(pf[k]===v)+'">'+t+"</button>";
+ h+='<div class="pagehead" id="libHead" style="margin-top:8px"><h3>Plant library · '+(pf.cat==="native"?esc(REGIONS[region])+" natives":"Edibles")+'</h3><label class="f" style="flex-direction:row;align-items:center;gap:8px">Match to<select data-f="pf.bed" style="width:auto"><option value="">Any spot</option>'+beds.map(b=>'<option value="'+b.id+'"'+(pf.bed===b.id?" selected":"")+">"+esc(b.name)+"</option>").join("")+"</select></label></div>";
+ h+='<div class="chips">'+chip("cat","native","Natives")+chip("cat","edible","Edibles")+'</div><div class="chips">'+chip("sun","any","Any light")+chip("sun","F","Full sun")+chip("sun","P","Part sun or shade")+chip("sun","S","Shade")+'</div><div class="chips">'+chip("soil","any","Any soil")+chip("soil","c","Handles clay")+chip("soil","w","Wet / rain garden")+chip("soil","d","Dry")+'</div><div class="chips">'+types.map(t=>chip("type",t,t==="any"?"All types":t)).join("")+"</div>";
+ const sunT={F:"Full sun",P:"Part sun",S:"Shade"},soilT={c:"Clay",w:"Wet",d:"Dry",s:"Sandy"};
+ h+=items.length?'<div class="ggrid">'+items.map(({x,f})=>'<div class="card"><div class="row between"><h4>'+esc(x.n)+'</h4><span class="small muted">'+x.t+'</span></div><span class="latin">'+esc(x.l)+'</span><div class="chips">'+x.s.split("").map(s=>'<span class="pill">'+sunT[s]+"</span>").join("")+x.soil.split("").filter(Boolean).map(s=>'<span class="pill">'+soilT[s]+"</span>").join("")+'</div><p class="small muted">'+esc(x.note)+"</p>"+(f?'<div class="chips">'+f.map(z=>'<span class="pill '+z[0]+'">'+(z[0]==="good"?"✓ ":z[0]==="bad"?"✗ ":"? ")+z[1]+"</span>").join("")+'</div><button class="btn sm" data-act="plant-add" data-arg="'+esc(x.n)+'">Add to '+esc(mb.name)+"</button>":"")+"</div>").join("")+"</div>":'<div class="empty"><p>No plants match all of these filters. Loosen the soil or type filter.</p></div>';
+ h+='<p class="note small">Starter lists by region. The full app would pull every native for your zip code and show nurseries that stock them.</p>';
+ $("#v-garden").innerHTML=h;
+}
+
+/* ---------- planner ---------- */
+function taskRow(t){const od=!t.done&&t.due<TODAY;return'<div class="task'+(t.done?" done":"")+'"><input type="checkbox" id="tk'+t.id+'" data-act="task" data-arg="'+t.id+'" '+(t.done?"checked":"")+'><label for="tk'+t.id+'" class="stack" style="gap:1px"><span class="tt small"><b>'+esc(t.title)+'</b></span><span class="tiny muted">'+(od?'<b style="color:var(--tomato-ink)">Overdue</b> · ':"")+"Due "+dshort(t.due)+(t.why?" · "+esc(t.why):"")+"</span></label></div>"}
+function journalRow(j){const k=j.kind==="harvest"||j.kind==="note"?"reported":j.kind;return'<div class="li"><div class="row between"><span class="small"><b>'+dlong(j.date)+"</b>"+(j.kind==="harvest"?" · Harvest":"")+"</span>"+ev(k)+'</div><span class="small">'+esc(j.text)+"</span>"+mediaHTML(j)+"</div>"}
+function mediaHTML(j){
+ if(j.photo)return'<figure class="media"><img src="'+j.photo+'" alt="'+esc(j.alt||"Photo with no description")+'"><figcaption>'+esc(j.alt||"")+"</figcaption></figure>";
+ if(j.video)return'<figure class="media"><video controls preload="metadata" playsinline src="'+j.video+'" aria-describedby="vd'+j.id+'">'+(j.captions?'<track kind="captions" srclang="en" label="English captions" src="'+j.captions+'"'+(A11Y.captions?" default":"")+">":"")+'</video><figcaption id="vd'+j.id+'"><b>Description and transcript:</b> '+esc(j.alt||"")+(j.captions?"":" <span class=\"muted\">(no caption file attached)</span>")+"</figcaption></figure>";
+ if(j.alt)return'<span class="src">Photo or video not kept after leaving the page. Description: '+esc(j.alt)+"</span>";return""}
+function renderPlanner(){
+ const p=prop(),tasks=p.tasks.slice().sort((a,b)=>a.due.localeCompare(b.due)),wk=addDays(TODAY,7),me=addDays(TODAY,31);
+ const groups=[["This week",t=>!t.done&&t.due<=wk],["Next few weeks",t=>!t.done&&t.due>wk&&t.due<=me],["Later",t=>!t.done&&t.due>me],["Done",t=>t.done]];
+ let h='<div class="pagehead"><div class="stack"><h2>My Planner</h2><p class="muted small">Seasonal tasks, a garden journal and project costs.</p></div></div><div class="cols3">';
+ h+='<div class="card"><h3>Tasks</h3>'+(tasks.length?groups.map(g=>{const ts=tasks.filter(g[1]);return ts.length?'<div><div class="lbl">'+g[0]+"</div>"+ts.map(taskRow).join("")+"</div>":""}).join(""):'<div class="empty"><p class="small">No tasks yet. Add your own below.</p></div>')+
+  '<form id="taskForm" class="stack"><label class="f">New task<input type="text" id="tfTitle" placeholder="e.g. Mulch the front bed" required></label><label class="f">Due<input type="date" id="tfDue" value="'+addDays(TODAY,7)+'"></label><button class="btn sm" type="submit">Add task</button></form></div>';
+ h+='<div class="card"><h3>Journal</h3><form id="jForm" class="stack"><label class="f">What happened?<textarea id="jfText" placeholder="Planted garlic, saw a monarch, water pooled by the fence…" required></textarea></label><div class="fields"><label class="f">Type<select id="jfKind"><option value="reported">Observation</option><option value="harvest">Harvest</option><option value="reported">Soil amendment</option></select></label><label class="f">Date<input type="date" id="jfDate" value="'+TODAY+'"></label></div><label class="f">Photo or video (optional)<input type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.mp4,.webm,.mov" id="jfMedia" aria-describedby="jfMediaHelp"></label><span class="tiny muted" id="jfMediaHelp">Pick one file from a folder. Photo location data is removed.</span><label class="f">Describe the photo or video<textarea id="jfAlt" placeholder="What it shows. For a video, also what is said or heard." aria-describedby="jfAltHelp"></textarea></label><span class="tiny muted" id="jfAltHelp">Required with a photo or video so people who can\'t see or hear it can follow along.</span><label class="f">Caption file for a video (optional, .vtt)<input type="file" accept=".vtt" id="jfVtt"></label><button class="btn sm" type="submit">Save entry</button></form>'+
+  (p.journal.length?'<div class="list">'+p.journal.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(journalRow).join("")+"</div>":'<p class="small muted">No entries yet.</p>')+"</div>";
+ const pl=p.budget.reduce((a,b)=>a+(b.planned||0),0),ac=p.budget.reduce((a,b)=>a+(b.actual||0),0);
+ h+='<div class="card"><h3>Project budget</h3>'+(p.budget.length?'<div class="tablewrap"><table><thead><tr><th>Item</th><th class="num">Planned</th><th class="num">Spent</th></tr></thead><tbody>'+p.budget.map(b=>"<tr><td>"+esc(b.item)+'</td><td class="num">$'+(b.planned||0)+'</td><td class="num">'+(b.actual!=null?"$"+b.actual:'<button class="btn link small" data-act="budget-paid" data-arg="'+b.id+'">Mark paid</button>')+"</td></tr>").join("")+'</tbody><tfoot><tr><th>Total</th><td class="num"><b>$'+pl+'</b></td><td class="num"><b>$'+ac+"</b></td></tr></tfoot></table></div>":'<p class="small muted">No items yet.</p>')+
+  '<form id="bForm" class="stack"><div class="fields"><label class="f">Item<input type="text" id="bfItem" placeholder="e.g. Drip hose kit" required></label><label class="f">Planned ($)<input type="number" id="bfCost" min="0" step="1" required></label></div><button class="btn sm" type="submit">Add item</button></form>'+(p.demo?'<span class="tiny muted">'+ev("demo")+" Example prices.</span>":"")+"</div>";
+ h+="</div>";$("#v-planner").innerHTML=h;
+}
+
+/* ---------- community ---------- */
+function sightingsFor(p){const mine=S.mySightings.filter(s=>s.propId===p.id).map(s=>Object.assign({mine:true,dist:0},s));return mine.concat(p.sightings||[]).filter(s=>daysFrom(s.date,TODAY)<=7)}
+const distLabel=d=>d<=.5?"Within ½ mi":d<=1?"Within 1 mi":d<=2?"1–2 mi away":"Over 2 mi away";
+function renderCommunity(){
+ const p=prop(),m=NOW.getMonth()+1,nm=m%12+1,sg=sightingsFor(p);
+ let h='<div class="pagehead"><div class="stack"><h2>Community</h2><p class="muted small">Local pest reports and seasonal forecasts. Public locations are coarse; your home is never shown.</p></div></div><div class="cols2"><div class="stack">';
+ h+='<div class="card"><div class="row between"><h3>Reports near you this week</h3>'+evDemo(p)+'</div><canvas id="coarseCv" width="300" height="300" style="width:100%;max-width:300px;height:auto;align-self:center" aria-label="Coarse grid of report counts around your area. Each square is about half a mile. Your home is not marked."></canvas><p class="tiny muted">Each square is about ½ mile. The center square is your general area, not your address.</p>';
+ h+=sg.length?'<div class="list">'+sg.map(s=>{const dd=daysFrom(s.date,TODAY);return'<div class="li"><div class="row between"><b>'+esc(s.pest)+'</b><span class="row">'+(s.mine?'<span class="pill">Your report</span>':"")+(s.private?'<span class="pill">Private</span>':s.status==="verified"?'<span class="pill good">✓ Verified</span>':'<span class="pill warn">? Unverified</span>')+'</span></div><span class="small">'+esc(s.note||"No details")+"</span>"+(s.photo?mediaHTML({id:s.id,photo:s.photo,alt:s.alt}):"")+'<span class="src">'+(s.mine?"Your area":distLabel(s.dist))+" · "+(dd===0?"today":dd===1?"yesterday":dd+" days ago")+(s.by?" · "+esc(s.by):s.status==="unverified"&&!s.private?" · single report, awaiting photo review":"")+"</span></div>"}).join("")+"</div>":'<div class="empty"><p class="small">No community reports near you yet.</p></div>';
+ h+="</div>";
+ h+='<div class="card"><div class="row between"><h3>Active in '+MONTHS[m-1]+'</h3>'+ev("modeled")+'</div><p class="tiny muted">From regional seasonal ranges for '+esc(REGIONS[p.loc.region])+".</p>"+pestsFor(p.loc.region,m).map(x=>'<div class="li"><div class="row between"><b>'+esc(x.n)+"</b>"+(x.m[x.m.length-1]===m?'<span class="pill warn">Last month of season</span>':'<span class="pill">Active</span>')+'</div><span class="small">'+esc(x.tip)+"</span></div>").join("")+'<div class="lbl">Starting in '+MONTHS[nm-1]+'</div><p class="small">'+(pestsFor(p.loc.region,nm).filter(x=>!x.m.includes(m)).map(x=>esc(x.n)).join(", ")||"Nothing new expected.")+"</p></div></div>";
+ h+='<div class="stack"><div class="card"><h3>Local alerts</h3><label class="check"><input type="checkbox" data-f="alerts.on" '+(S.alerts.on?"checked":"")+'> Alert me about nearby reports</label><label class="f">Within<select data-f="alerts.radius"><option value="0.5"'+(S.alerts.radius==.5?" selected":"")+'>½ mile</option><option value="1"'+(S.alerts.radius==1?" selected":"")+'>1 mile</option><option value="2"'+(S.alerts.radius==2?" selected":"")+'>2 miles</option></select></label><p class="small muted">Off until you turn it on. In the full app this sends a phone notification; here a banner appears at the top.</p></div>';
+ h+='<form class="card" id="sightForm"><h3>Report a sighting</h3><label class="f">What did you see?<select id="sgPest">'+PESTS.filter(x=>x.r==="all"||x.r.split(" ").includes(p.loc.region)).map(x=>"<option>"+esc(x.n)+"</option>").join("")+'<option>Something else</option></select></label><label class="f">Details<textarea id="sgNote" placeholder="e.g. Dozens on the south side of a garage"></textarea></label><label class="f">Photo (helps verification)<input type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.heic" id="sgPhoto"></label><span class="tiny muted">Pick one file from a folder. Location data inside the photo is removed before anything is stored.</span><label class="f">Describe the photo (needed if you add one)<input type="text" id="sgAlt" placeholder="e.g. Gray egg mass on tree bark, about 2 inches long"></label><fieldset class="stack" style="border:0;padding:0;margin:0;gap:6px"><legend class="small" style="font-weight:700;color:var(--muted);margin-bottom:6px">Who can see it</legend><label class="check small"><input type="radio" name="sgVis" value="public" checked> Neighbors, at about 1-mile precision</label><label class="check small"><input type="radio" name="sgVis" value="private"> Only me, in my journal</label></fieldset><button class="btn primary" type="submit">Submit report</button></form>';
+ h+='<div class="card"><h3>How verification works</h3><p class="small">A report is <b>unverified</b> until a moderator or extension partner confirms it from a photo. Alerts say which kind they are, so one unconfirmed report never reads like an outbreak.</p></div></div></div>';
+ $("#v-community").innerHTML=h;drawCoarse(sg);
+}
+function drawCoarse(sg){const cv=$("#coarseCv");if(!cv)return;const T=tok(),c=cv.getContext("2d"),n=5,s=60;c.clearRect(0,0,300,300);
+ for(let i=0;i<n;i++)for(let j=0;j<n;j++){c.fillStyle=(i+j)%2?T.sage:T.lawn;c.fillRect(i*s,j*s,s,s)}
+ c.strokeStyle=T.deep;c.lineWidth=3;c.setLineDash([6,4]);c.strokeRect(2*s+2,2*s+2,s-4,s-4);c.setLineDash([]);c.fillStyle=T.fg;c.font="700 11px "+T.font;c.textAlign="center";c.fillText("Your area",2.5*s,2*s+16);
+ const cnt={};sg.filter(x=>!x.private).forEach(x=>{const k=(x.cell||[2,2]).join(",");(cnt[k]=cnt[k]||{v:0,u:0})[x.status==="verified"?"v":"u"]++});
+ Object.entries(cnt).forEach(([k,v])=>{const [i,j]=k.split(",").map(Number),cx=i*s+s/2,cy=j*s+s/2+(i===2&&j===2?8:0),tot=v.v+v.u;c.beginPath();c.arc(cx,cy,10+tot*3,0,7);
+  if(v.v){c.fillStyle=T.tomato;c.fill()}else{c.fillStyle=T.surface;c.fill();c.strokeStyle=T.tomato;c.lineWidth=2.5;c.stroke()}c.fillStyle=v.v?T.surface:T.fg;c.font="800 12px "+T.font;c.fillText(String(tot),cx,cy+4)});
+ c.fillStyle=T.fg;c.font="600 10px "+T.font;c.textAlign="left";c.fillText("Filled: has a verified report · Hollow: unverified only",6,294)}
+
+/* ---------- setup wizard ---------- */
+function newWiz(){return{step:0,name:"My garden",kind:"Rowhouse yard",preset:0,lat:38.9,lon:-77.03,tz:-5,dst:true,region:"ma",face:180,lotWidth:20,lotDepth:90,houseWidth:20,houseDepth:40,houseHeight:28,setback:12,photos:{}}}
+function renderSetup(){
+ const w=S.wiz,steps=["Your space","Location","Orientation & size","Photos","Review"],wall=w.kind==="Patio or containers";
+ let h='<div class="wiz"><div class="row between"><button class="logo" data-act="go-home">Grow Where You Live</button><button class="btn sm" data-act="wiz-cancel">Cancel</button></div><div class="wsteps" aria-label="Setup steps">'+steps.map((s,i)=>'<span class="'+(i===w.step?"on":"")+'"'+(i===w.step?' aria-current="step"':"")+">"+(i+1)+". "+s+"</span>").join("")+"</div>";
+ if(w.step===0)h+='<div class="card"><h2>What are you growing in?</h2><label class="f">Name it<input type="text" id="wzName" value="'+esc(w.name)+'"></label><div class="chips" role="group" aria-label="Space type">'+["Rowhouse yard","Backyard","Patio or containers","Community plot"].map(k=>'<button class="chip" data-act="wiz-kind" data-arg="'+k+'" aria-pressed="'+(w.kind===k)+'">'+k+"</button>").join("")+"</div></div>";
+ if(w.step===1)h+='<div class="card"><h2>Where is it?</h2><p class="small muted">Pick the nearest city. The site never asks for your address or your device\'s location. The city is used only for plant-related things: sun times, planting season, native plants, pest seasons and weather.</p><label class="f">Nearest city<select id="wzPreset">'+PRESETS.map((p,i)=>'<option value="'+i+'"'+(w.preset===i?" selected":"")+">"+p.name+"</option>").join("")+'<option value="-1"'+(w.preset===-1?" selected":"")+'>Somewhere else (enter coordinates)</option></select></label>'+(w.preset===-1?'<div class="fields"><label class="f">Latitude<input type="number" id="wzLat" step="0.01" value="'+w.lat+'"></label><label class="f">Longitude<input type="number" id="wzLon" step="0.01" value="'+w.lon+'"></label><label class="f">UTC offset<input type="number" id="wzTz" step="0.5" value="'+w.tz+'"></label><label class="f">Plant region<select id="wzReg">'+Object.entries(REGIONS).map(([k,v])=>'<option value="'+k+'"'+(w.region===k?" selected":"")+">"+v+"</option>").join("")+'</select></label></div><label class="check small"><input type="checkbox" id="wzDst" '+(w.dst?"checked":"")+"> Observes daylight saving time</label>":"")+"</div>";
+ if(w.step===2)h+='<div class="card"><h2>Which way does the front face?</h2><div class="dial"><svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="54" fill="var(--sage)" stroke="var(--line)"/><text x="60" y="18" text-anchor="middle" font-size="12" font-weight="800" fill="var(--tomato)">N</text><text x="106" y="64" text-anchor="middle" font-size="11" fill="var(--muted)">E</text><text x="60" y="112" text-anchor="middle" font-size="11" fill="var(--muted)">S</text><text x="14" y="64" text-anchor="middle" font-size="11" fill="var(--muted)">W</text><g id="wzDialG" transform="rotate('+w.face+' 60 60)"><rect x="44" y="50" width="32" height="34" fill="var(--roof)"/><rect x="44" y="47" width="32" height="5" fill="var(--sun)"/><path d="M60 24l8 14h-16z" fill="var(--deep)"/></g></svg><label class="f" style="flex:1;min-width:200px">Front faces <b id="wzFaceLbl" style="color:var(--fg)">'+WORDS[dir16(w.face)]+" ("+w.face+'°)</b><input type="range" id="wzFace" min="0" max="355" step="5" value="'+w.face+'"></label></div><p class="small muted">Stand at your front door facing the street; that\'s the direction to set. A phone compass helps.</p>'+
+  '<h3>Sizes</h3><div class="fields"><label class="f">Lot width at the street (ft)<input type="number" id="wzLW" min="8" max="300" value="'+w.lotWidth+'"></label><label class="f">Lot depth (ft)<input type="number" id="wzLD" min="10" max="400" value="'+w.lotDepth+'"></label><label class="f">'+(wall?"Wall":"House")+' width (ft)<input type="number" id="wzHW" min="4" max="200" value="'+w.houseWidth+'"></label><label class="f">'+(wall?"Wall depth":"House depth")+' (ft)<input type="number" id="wzHD" min="1" max="200" value="'+w.houseDepth+'"></label><label class="f">Height to roof peak (ft)<input type="number" id="wzHH" min="6" max="120" value="'+w.houseHeight+'"></label><label class="f">Front setback (ft)<input type="number" id="wzSB" min="0" max="200" value="'+w.setback+'"></label></div><p class="tiny muted">The lot you draw is for planning only. It isn\'t a legal boundary.</p></div>';
+ if(w.step===3)h+='<div class="card"><h2>Add photos (optional)</h2><p class="small muted">Front, back and side shots help you check the shade model later. Choose a file from a folder on your device; the site never opens your photo library, camera or microphone. Location data is removed from each photo, and photos stay in this tab.</p><div class="photos">'+["front","back","left","right","overhead"].map(k=>'<label class="slot">'+(w.photos[k]?'<img alt="'+esc(w.photos[k].alt||k+" photo, no description yet")+'" src="'+w.photos[k].url+'">':"")+'<input type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.heic" data-wphoto="'+k+'"><span>'+(w.photos[k]?k+" ✓":"+ "+k)+"</span></label>").join("")+"</div>"+Object.keys(w.photos).map(k=>'<label class="f">Describe the '+k+' photo<input type="text" data-walt="'+k+'" value="'+esc(w.photos[k].alt||"")+'" placeholder="What the photo shows"></label>').join("")+"</div>";
+ if(w.step===4){const pr=w.preset>=0?PRESETS[w.preset].name:"Custom location",np=Object.keys(w.photos).length;h+='<div class="card"><h2>Ready to plan</h2><ul class="small"><li><b>'+esc(w.name)+"</b> · "+esc(w.kind)+"</li><li>"+esc(pr)+"</li><li>Front faces "+WORDS[dir16(w.face)]+"</li><li>Lot "+w.lotWidth+" × "+w.lotDepth+" ft · "+(wall?"wall":"house")+" "+w.houseWidth+" × "+w.houseDepth+" ft, "+w.houseHeight+" ft tall</li><li>"+np+" photo"+(np===1?"":"s")+"</li></ul>"+(canSave()?'<p class="small">This property will be saved on this device.</p>':'<div class="warnbox"><span aria-hidden="true">i</span><span>Saving is off, so this property lasts until you close the page. <button class="btn link small" data-act="privacy-choices">Turn on saving</button></span></div>')+"</div>"}
+ h+='<div class="row between">'+(w.step>0?'<button class="btn" data-act="wiz-back">Back</button>':"<span></span>")+(w.step<4?'<button class="btn primary" data-act="wiz-next">Next</button>':'<button class="btn primary" data-act="wiz-finish">Save and open my dashboard</button>')+"</div></div>";
+ $("#setup").innerHTML=h;
+}
+function readWiz(){const w=S.wiz,v=id=>$(id)?$(id).value:null;
+ if(w.step===0&&$("#wzName"))w.name=v("#wzName").trim()||"My garden";
+ if(w.step===1){w.preset=+v("#wzPreset");if(w.preset===-1&&$("#wzLat")){w.lat=+v("#wzLat");w.lon=+v("#wzLon");w.tz=+v("#wzTz");w.region=v("#wzReg");w.dst=$("#wzDst").checked}}
+ if(w.step===2){const n=(id,min,max,d)=>{const x=+v(id);return x>=min&&x<=max?x:d};w.face=+v("#wzFace");w.lotWidth=n("#wzLW",8,300,w.lotWidth);w.lotDepth=n("#wzLD",10,400,w.lotDepth);w.houseWidth=Math.min(n("#wzHW",4,200,w.houseWidth),w.lotWidth);w.houseDepth=n("#wzHD",1,200,w.houseDepth);w.houseHeight=n("#wzHH",6,120,w.houseHeight);w.setback=n("#wzSB",0,200,w.setback);if(w.setback+w.houseDepth>w.lotDepth)w.setback=Math.max(0,w.lotDepth-w.houseDepth)}}
+function finishWiz(){const w=S.wiz;let loc,locName;if(w.preset>=0){const pr=PRESETS[w.preset];loc={lat:pr.lat,lon:pr.lon,tz:pr.tz,dst:pr.dst,region:pr.region};locName=pr.name}else{if(!(Math.abs(w.lat)<=66&&Math.abs(w.lon)<=180)){toast("Enter a latitude between -66 and 66 and a longitude between -180 and 180.");w.step=1;renderSetup();return}loc={lat:w.lat,lon:w.lon,tz:w.tz,dst:w.dst,region:w.region};locName="Custom location"}
+ const m=makeMine(Object.assign({},w,{loc,locName}));S.props.mine=m;PHOTOS.mine={};Object.entries(w.photos).forEach(([k,v])=>PHOTOS.mine[k]=v);
+ S.propId="mine";S.wiz=null;S.sel=null;S.spot=null;S.Y=0;persist();go("dash");toast(canSave()?"Your garden is saved on this device.":"Your garden is ready. Saving is off, so it lasts until you leave.")}
+
+/* ---------- events ---------- */
+document.addEventListener("click",e=>{
+ const el=e.target.closest("[data-act]");if(!el)return;const act=el.dataset.act,arg=el.dataset.arg,p=prop();
+ if(act==="close-sheet"){if(el.classList.contains("sheet-bg")&&e.target!==el)return;$("#sheetHost").innerHTML="";return}
+ if(act==="task"){const t=p.tasks.find(x=>x.id===arg);if(t){t.done=el.checked;changed(p);if(S.tab==="planner")renderPlanner();else renderDash()}return}
+ switch(act){
+ case"go-home":S.view="home";$("#sheetHost").innerHTML="";stopPlay();renderChrome();window.scrollTo({top:0});break;
+ case"scroll":{const t=document.getElementById(arg);if(t){t.scrollIntoView({behavior:reduceMotion()?"auto":"smooth"});const h=t.querySelector("h2");if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}break}
+ case"login":openSheet("login");break;
+ case"start":$("#sheetHost").innerHTML="";S.wiz=newWiz();S.view="setup";renderChrome();renderSetup();window.scrollTo({top:0});break;
+ case"demo":$("#sheetHost").innerHTML="";S.propId="demo";go("dash");break;
+ case"demo-tab":{S.propId="demo";const [t,l]=arg.split(":");go(t,{layer:l||"shade"});break}
+ case"privacy-choices":$("#sheetHost").innerHTML="";consentOpen=true;renderConsent();setTimeout(()=>{const b=$("#consentT");if(b){b.tabIndex=-1;b.focus()}},0);break;
+ case"consent":setConsent(arg);break;
+ case"consent-close":consentOpen=false;renderConsent();break;
+ case"note-ok":noteOpen=false;renderConsent();break;
+ case"display":openDisplay();break;
+ case"a11y":{const [k,v]=arg.split(":");A11Y[k]=+v;applyA11y();persist();openDisplay();if(S.view==="app")renderChrome();break}
+ case"skip":{e.preventDefault();const t=S.view==="home"?$(".hero h1"):S.view==="setup"?$("#setup h2"):$("#v-"+S.tab+" h2");if(t){t.tabIndex=-1;t.focus()}break}
+ case"sheet":openSheet(arg);break;
+ case"tab":go(arg);break;
+ case"mode":S.dash.advanced=arg==="advanced";persist();renderChrome();break;
+ case"switch-prop":S.propId=arg;S.sel=null;S.spot=null;go("dash");break;
+ case"dash-customize":S.dash.customizing=!S.dash.customizing;renderDash();break;
+ case"dash-move":{const [id,dir]=arg.split(":"),vis=visWidgets(),i=vis.indexOf(id),j=i+(+dir);if(j<0||j>=vis.length)break;const o=S.dash.order,a=o.indexOf(id),b=o.indexOf(vis[j]);o[a]=vis[j];o[b]=id;persist();renderDash();const btn=$('[data-act="dash-move"][data-arg="'+id+":"+dir+'"]');if(btn&&!btn.disabled)btn.focus();break}
+ case"dash-hide":S.dash.hidden.push(arg);persist();renderDash();break;
+ case"dash-show":S.dash.hidden=S.dash.hidden.filter(x=>x!==arg);persist();renderDash();break;
+ case"goto-tool":S.tool=arg;S.sel=null;S.layer=(arg==="pool"||arg==="barrel")?"water":"shade";go("property");toast(arg==="pool"?"Tap the map where you saw water pool.":"Tap the map to place it.");break;
+ case"goto-layer":S.layer=arg;S.tool="select";go("property");break;
+ case"goto-years":S.Y=+arg;S.layer="shade";go("property");break;
+ case"select-obj":S.sel=arg;S.tool="select";if(S.layer!=="shade"&&S.layer!=="hours")S.layer="shade";if(S.tab!=="property")go("property");else renderProperty();setTimeout(()=>{const c=$("#selCard");if(c)c.scrollIntoView({block:"nearest"});const hi=$("#selH");if(hi)hi.focus({preventScroll:true})},30);break;
+ case"tool":S.tool=arg;if(arg==="pool"&&S.layer!=="water")S.layer="water";renderProperty();if(arg!=="select")toast(arg==="pool"?"Tap where you saw water pool.":"Tap the map to place it.");break;
+ case"layer":S.layer=arg;stopPlay();renderProperty();break;
+ case"years":S.Y=+arg;renderProperty();break;
+ case"undo":restore(UNDO,REDO);break;
+ case"redo":restore(REDO,UNDO);break;
+ case"date":S.date=arg==="today"?TODAY:NOW.getFullYear()+"-"+arg;HEAT.key="";renderProperty();break;
+ case"sel-clear":S.sel=null;renderSelCard();drawProp();break;
+ case"sel-delete":{const o=p.objects.find(x=>x.id===S.sel);if(o){pushUndo();p.objects=p.objects.filter(x=>x.id!==o.id);p.water.spouts.forEach(s=>{if(s.barrel===o.id)s.barrel=null});changed(p);toast(o.name+" deleted. Undo brings it back.")}S.sel=null;renderProperty();break}
+ case"sel-rotate":{const o=p.objects.find(x=>x.id===S.sel);if(o){pushUndo();o.rot=((o.rot||0)+90)%360;changed(p);renderProperty()}break}
+ case"rain":rain();break;
+ case"low-delete":pushUndo();p.water.lows=p.water.lows.filter(l=>l.id!==arg);changed(p);renderProperty();break;
+ case"match-bed":S.pf.bed=arg;S.pf.sun="any";S.pf.soil="any";renderGarden();{const t=$("#libHead");if(t)t.scrollIntoView({block:"start"})}break;
+ case"pf":{const [k,v]=arg.split(":");S.pf[k]=v;if(k==="cat")S.pf.type="any";renderGarden();break}
+ case"plant-add":{const b=p.objects.find(x=>x.id===S.pf.bed);if(b){b.plants=b.plants||[];if(!b.plants.includes(arg)){b.plants.push(arg);changed(p);toast(arg+" added to "+b.name+".")}else toast(arg+" is already in "+b.name+".");renderGarden()}break}
+ case"planting-remove":{const [bid,i]=arg.split(":"),b=p.objects.find(x=>x.id===bid);if(b){b.plants.splice(+i,1);changed(p);renderGarden()}break}
+ case"budget-paid":{const b=p.budget.find(x=>x.id===arg);if(b){b.actual=b.planned;changed(p);renderPlanner()}break}
+ case"wiz-kind":readWiz();S.wiz.kind=arg;renderSetup();break;
+ case"wiz-next":readWiz();S.wiz.step++;renderSetup();window.scrollTo({top:0});break;
+ case"wiz-back":readWiz();S.wiz.step--;renderSetup();break;
+ case"wiz-finish":finishWiz();break;
+ case"wiz-cancel":S.wiz=null;S.view="home";renderChrome();break;
+ }});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#sheetHost").innerHTML){$("#sheetHost").innerHTML=""}});
+document.addEventListener("change",e=>{
+ const el=e.target,f=el.dataset&&el.dataset.f,p=prop();
+ if(el.dataset&&el.dataset.photo){const file=el.files[0];if(!file)return;const k=el.dataset.photo;stripImage(file,(url,img)=>{(PHOTOS[p.id]=PHOTOS[p.id]||{})[k]={url,img};renderPhotos();drawProp();toast("Photo added. Location data removed.")});return}
+ if(el.dataset&&el.dataset.wphoto){const file=el.files[0];if(!file)return;const k=el.dataset.wphoto;stripImage(file,(url,img)=>{S.wiz.photos[k]={url,img};renderSetup();toast("Photo added. Location data removed.")});return}
+ if(el.id==="propSel"){if(el.value==="new"){S.wiz=newWiz();S.view="setup";renderChrome();renderSetup();return}S.propId=el.value;S.sel=null;S.spot=null;RAIN.ran=false;UNDO.length=0;REDO.length=0;renderChrome();return}
+ if(el.id==="wzPreset"){S.wiz.preset=+el.value;renderSetup();return}
+ if(el.dataset&&el.dataset.alt){const ph=(PHOTOS[p.id]||{})[el.dataset.alt];if(ph){ph.alt=el.value.trim();renderPhotos();toast("Description saved.")}return}
+ if(el.dataset&&el.dataset.walt){const ph=S.wiz&&S.wiz.photos[el.dataset.walt];if(ph){ph.alt=el.value.trim();const im=el.closest(".card").querySelectorAll(".slot img");im.forEach(i=>{if(i.getAttribute("src")===ph.url)i.alt=ph.alt||"Photo, no description yet"})}return}
+ if(f&&f.startsWith("a11y.")){A11Y[f.slice(5)]=el.checked;applyA11y();persist();return}
+ if(!f)return;
+ if(f.startsWith("sel.")){const o=p.objects.find(x=>x.id===S.sel);if(!o)return;const k=f.slice(4),num=parseFloat(el.value);pushUndo();
+  if(k==="name"){o.name=el.value.trim()||o.name}
+  else if(k==="h"){o.h=el.value===""||!(num>=0)?null:num}
+  else if(k==="cw"){if(num>0)o.r=num/2}else if(k==="mcw"){o.matureR=num>0?num/2:null}
+  else if(k==="matureH"){o.matureH=num>0?num:null}else if(k==="rate"){o.rate=num>=0?num:0}
+  else if(k==="planned"){o.planned=el.checked}
+  else if(k==="cap"){if(num>0)o.cap=num}
+  else if(k==="spout"){p.water.spouts.forEach(s=>{if(s.barrel===o.id)s.barrel=null});const s=p.water.spouts.find(x=>x.id===el.value);if(s)s.barrel=o.id}
+  else if(k==="w"||k==="d"){if(num>0){o[k]=num;if(o.type==="container"||o.type==="barrel")o.d=num}}
+  changed(p);renderSelCard();renderLayerDyn();drawProp();if(k==="h"&&o.h!=null)toast("Height saved. Shade estimates updated.");return}
+ if(f.startsWith("water.")){pushUndo();const k=f.slice(6);p.water[k]=k==="down"?+el.value:el.value;RAIN.ran=false;changed(p);renderLayerDyn();drawProp();return}
+ if(f==="spout.barrel"){const s=p.water.spouts.find(x=>x.id===el.dataset.arg);if(s){pushUndo();p.water.spouts.forEach(x=>{if(x!==s&&el.value&&x.barrel===el.value)x.barrel=null});s.barrel=el.value||null;changed(p);renderLayerDyn();drawProp()}return}
+ if(f==="spout.toGarden"){const s=p.water.spouts.find(x=>x.id===el.dataset.arg);if(s){s.toGarden=el.checked;changed(p);renderLayerDyn();drawProp()}return}
+ if(f==="fill"){p.water.fill={pct:+el.value,date:TODAY};changed(p);renderDash();toast("Barrel fill saved as a Reported observation.");return}
+ if(f==="pf.bed"){S.pf.bed=el.value;renderGarden();return}
+ if(f==="alerts.on"){S.alerts.on=el.checked;persist();renderChrome();return}
+ if(f==="alerts.radius"){S.alerts.radius=+el.value;persist();renderChrome();return}
+});
+document.addEventListener("input",e=>{if(e.target.id==="wzFace"){const v=+e.target.value;S.wiz.face=v;$("#wzFaceLbl").textContent=WORDS[dir16(v)]+" ("+v+"°)";const g=$("#wzDialG");if(g)g.setAttribute("transform","rotate("+v+" 60 60)")}});
+document.addEventListener("submit",e=>{
+ e.preventDefault();const p=prop(),id=e.target.id;
+ if(id==="soilForm"){const z=p.objects.find(o=>o.id===$("#sfZone").value);if(!z)return;const kind=$("#sfKind").value,num=v=>v===""?null:+v;
+  const t={id:nid("t"),kind:kind==="lab"||kind==="kit"?"measured":"reported",method:{lab:"Lab soil test",kit:"Home test kit",obs:"Jar test or observation",amend:"Amendment added"}[kind],source:kind==="lab"?"Lab report you entered":kind==="kit"?"Home kit you entered":"Your observation",date:$("#sfDate").value||TODAY,notes:$("#sfNotes").value.trim()};
+  let n=0;if($("#sfTex").value){t.tex=$("#sfTex").value;n++}const ph=num($("#sfPh").value);if(ph!=null&&ph>=3&&ph<=10){t.ph=ph;n++}const dr=num($("#sfDr").value);if(dr!=null&&dr>=0){t.drain=dr;n++}
+  ["n","p","k"].forEach(x=>{const v=$("#sf"+x).value;if(v){t[x]=v;n++}});if($("#sfLead").value){t.lead=$("#sfLead").value;n++}if($("#sfWet").value){t.wet=$("#sfWet").value;n++}
+  if(!n&&!t.notes){toast("Add at least one measurement or a note.");return}
+  pushUndo();z.tests=z.tests||[];z.tests.push(t);p.journal.push({id:nid("j"),date:t.date,kind:t.kind,text:t.method+" recorded for "+z.name+"."});changed(p);renderProperty();toast("Saved as "+(t.kind==="measured"?"Measured":"Reported")+".");return}
+ if(id==="taskForm"){const t=$("#tfTitle").value.trim();if(!t)return;p.tasks.push({id:nid("k"),title:t,due:$("#tfDue").value||TODAY,why:"",done:false});changed(p);renderPlanner();toast("Task added.");return}
+ if(id==="jForm"){const txt=$("#jfText").value.trim();if(!txt)return;const file=$("#jfMedia").files[0],alt=$("#jfAlt").value.trim(),vtt=$("#jfVtt").files[0];
+  if(file&&!alt){toast("Add a description of the photo or video first.");$("#jfAlt").focus();return}
+  const entry={id:nid("j"),date:$("#jfDate").value||TODAY,kind:$("#jfKind").value,text:txt};if(alt)entry.alt=alt;
+  const done=()=>{p.journal.push(entry);changed(p);renderPlanner();toast("Journal entry saved.")};
+  if(!file)done();else if(/^video\//.test(file.type)||/\.(mp4|webm|mov)$/i.test(file.name)){entry.video=URL.createObjectURL(file);if(vtt)entry.captions=URL.createObjectURL(vtt);done()}else stripImage(file,url=>{entry.photo=url;done()});return}
+ if(id==="bForm"){const it=$("#bfItem").value.trim(),c=+$("#bfCost").value;if(!it||!(c>=0))return;p.budget.push({id:nid("b"),item:it,planned:Math.round(c),actual:null});changed(p);renderPlanner();toast("Item added.");return}
+ if(id==="sightForm"){const vis=(document.querySelector('input[name="sgVis"]:checked')||{}).value;const s={id:nid("g"),propId:p.id,pest:$("#sgPest").value,note:$("#sgNote").value.trim(),date:TODAY,status:"unverified",private:vis==="private",cell:[2,2]};
+  const fin=()=>{S.mySightings.unshift(s);if(s.private){p.journal.push({id:nid("j"),date:TODAY,kind:"reported",text:"Saw "+s.pest.toLowerCase()+(s.note?": "+s.note:"")+"."});changed(p)}renderCommunity();toast(s.private?"Saved privately to your journal.":"Report submitted. It shows as unverified until a photo is reviewed.")};
+  const file=$("#sgPhoto").files[0],alt=$("#sgAlt").value.trim();if(file&&!alt){toast("Add a short description of the photo first.");$("#sgAlt").focus();return}if(alt)s.alt=alt;
+  if(file)stripImage(file,url=>{s.photo=url;fin()});else fin();return}
+});
+
+/* ---------- resize + theme ---------- */
+let rzT;window.addEventListener("resize",()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(S.view==="app"){if(S.tab==="property")drawProp();if(S.tab==="dash"){const mc=$("#miniCv");if(mc)drawMap(mc,prop(),{layer:"shade",minutes:S.minutes,Y:0,mini:true,maxH:420})}}},120)});
+const rethemed=()=>{HEAT.key="";if(S.view==="app")renderChrome()};
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rethemed);
+new MutationObserver(rethemed).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+/* ---------- init ---------- */
+document.documentElement.lang="en";
+applyA11y();
+renderHome();
+renderConsent();
+const hsh=(location.hash||"").slice(1);
+if(hsh==="demo"){S.propId="demo";S.view="app";S.tab="dash"}
+else if(["property","garden","planner","community"].includes(hsh)){S.view="app";S.tab=hsh}
+renderChrome();
+})();
+</script>
+
+</body>
+</html>
