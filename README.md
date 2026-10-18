@@ -17,6 +17,7 @@ To publish with GitHub Pages: **Settings → Pages → Deploy from a branch → 
 | Home dashboard: space banner, quick actions, topic tabs, and sections for Today, My spaces, Garden health, Upcoming tasks, Around you and From the folks (reorder or hide sections; Advanced adds More cards) | Working |
 | My Garden map with an At a glance panel (overview, weather, sun and shade, soil, water, plants, tasks, notes) | Working |
 | Search across plants, beds, tasks, notes and app sections, plus a 7-step guided tour | Working |
+| House & yard photos: top (drone, satellite screenshot or upstairs window), front, back, both sides and up to 24 more; line the top view up under the map; jump the map to the time a photo was taken to compare shadows; optionally keep photos in your profile on this device | Working |
 | My Garden: map editor, sun and shade by date and time, sun-hour heat map, soil records, rain and downspout planning, plant matching, calendar, journal, budget | Working |
 | Seasonal pest outlook | Working |
 | Live 7-day forecast, frost dates and approximate zone from [Open-Meteo](https://open-meteo.com/), fetched only on request | Prototype |
@@ -37,7 +38,8 @@ There are two fictional demo yards: a Southeast DC rowhouse and a Milwaukee dupl
 - No analytics, ad pixels, outside fonts or third-party scripts.
 - The only outside connection is Open-Meteo, and only when the visitor presses a live weather or frost button. It receives the city's location rounded to about 7 miles (and, like any website, the visitor's IP address), nothing about the person or their garden. Results aren't saved.
 - Never asks for camera, microphone, photo library or device location. Location is the nearest city the person picks, used only for plant-related information.
-- Photos are chosen one file at a time, and location data inside them is removed. Posts are private by default.
+- Photos are chosen from a folder, and location data inside them is removed. House photos are kept only if the person turns on saving and chooses "Keep my house photos in my profile"; they stay in that browser and are never uploaded. Posts are private by default.
+- The app never loads satellite maps itself; people add a satellite screenshot or drone photo as a file, so no address is sent anywhere.
 
 ## Accessibility
 
