@@ -670,6 +670,7 @@ const MONTHS=["January","February","March","April","May","June","July","August",
 const LS={get(k){try{const v=localStorage.getItem("gwyl_"+k);return v?JSON.parse(v):null}catch(e){return null}},
   set(k,v){try{localStorage.setItem("gwyl_"+k,JSON.stringify(v))}catch(e){}},
   del(k){try{localStorage.removeItem("gwyl_"+k)}catch(e){}}};
+const PRIVACY_VERSION="draft-0.3";
 let CONSENT=LS.get("consent");
 const canSave=()=>!!(CONSENT&&CONSENT.functional);
 
@@ -1044,27 +1045,43 @@ function renderHome(){
 function homeNatives(){const r=($("#homeRegion")||{}).value||"ma";$("#nativeRow").innerHTML=(PLANTS[r]||PLANTS.ma).slice(0,10).map(p=>"<li>"+esc(p.n)+"</li>").join("")}
 
 /* ---------- consent ---------- */
-let consentOpen=false,noteOpen=!CONSENT;
+// Show an actual opt-in banner on the first visit, and when choices need renewal.
+// A recorded rejection is a consent decision, not permission for tracking.
+let consentOpen=!CONSENT||CONSENT.v!==PRIVACY_VERSION,consentDetails=false,noteOpen=false;
 function renderConsent(){
- const note=$("#cookieNote");note.hidden=!(noteOpen&&!consentOpen);
- if(!note.hidden)note.innerHTML='<div class="wrap row between" style="max-width:900px"><p class="small" style="flex:1;min-width:220px"><b>Optional cookies are off.</b> Nothing is stored on your device unless you turn it on yourself. You can see exactly what each option would store.</p><div class="row"><button class="btn sm" data-act="privacy-choices">See what each option stores</button><button class="btn sm" data-act="note-ok">OK</button></div></div>';
+ const note=$("#cookieNote");note.hidden=true;note.innerHTML="";
  const el=$("#consent");el.hidden=!consentOpen;if(!consentOpen)return;
- const f=CONSENT?CONSENT.functional:false,a=CONSENT?CONSENT.analytics:false;
+ const hasChoice=!!CONSENT;
+ const f=CONSENT?!!CONSENT.functional:false;
  const opt=(id,on,dis,title,desc,stores,never)=>'<div class="copt"><input type="checkbox" id="'+id+'"'+(on?" checked":"")+(dis?" disabled":"")+' aria-describedby="'+id+'d"><div class="stack"><label for="'+id+'"><b>'+title+'</b></label><div class="stack" style="gap:4px" id="'+id+'d"><span class="small muted">'+desc+"</span>"+(stores?'<span class="small"><b>What it stores:</b></span><ul class="stores">'+stores.map(s=>"<li>"+s+"</li>").join("")+"</ul>":"")+(never?'<span class="small"><b>Never stores:</b> '+never+"</span>":"")+"</div></div></div>";
- el.innerHTML='<div class="wrap"><div class="row between"><h3 id="consentT">Privacy choices</h3><button class="btn sm" data-act="consent-close">Close</button></div><p class="small">Every optional setting starts off. Turn on only what you want. This is exactly what each one stores, and where.</p>'+
-  opt("cEss",true,true,"Essential · always on","Keeps the site working. It stores nothing at all until you turn on one of the options below.",["Your privacy choices: which options are on, the date you chose them and the policy version"],"anything about you, your garden or your device.")+
-  opt("cFun",f,false,"Save my garden on this device","Kept in this browser on this device only. Never sent to us or anyone else. Off means everything resets when you leave.",["Your property's name and the nearest city you picked","Lot and house sizes and which way the front faces","Beds, trees and other things you draw on the map","Soil records, tasks, journal text and photo descriptions, budget items","Dashboard layout and display settings"],"photos, videos, your street address or your device's location. Photos and videos only stay in the open tab.")+
-  opt("cAna",a,false,"Product analytics","Would show us which features people use, so we can improve them. No analytics are installed in this prototype, so nothing is collected either way.",["Which pages and features are opened, counted without names","Screen size and browser type","No identifier that follows you to other sites"],"your address or location, photos, journal text or soil data.")+
-  opt("cMkt",false,true,"Marketing and ads · not used","We don't use ad pixels, retargeting or cross-site tracking, so there is nothing to turn on.",null,null)+
-  '<div class="row"><button class="btn primary" data-act="consent" data-arg="save">Save my choices</button><button class="btn" data-act="consent" data-arg="off">Turn everything off</button></div>'+
-  (CONSENT?'<p class="tiny muted">Saved choice: '+esc(CONSENT.method)+", "+esc(new Date(CONSENT.ts).toLocaleString())+" · policy "+esc(CONSENT.v)+"</p>":'<p class="tiny muted">Nothing is stored on this device right now.</p>')+"</div>";
+ let h='<div class="wrap"><div class="row between"><h3 id="consentT" tabindex="-1">Your privacy, your choice</h3>'+
+  (hasChoice?'<button class="btn sm" data-act="consent-close">Close</button>':'')+
+  '</div><p class="small">No advertising, analytics or nonessential tracking runs when you arrive. Choose whether to save your garden on this device. You can use the site without optional storage.</p>'+
+  '<div class="cbtns" role="group" aria-label="Privacy decisions">'+
+    '<button class="btn primary" data-act="consent" data-arg="local">Allow local garden saving</button>'+
+    '<button class="btn" data-act="consent" data-arg="off">Reject optional storage</button>'+
+    '<button class="btn" data-act="consent-details" aria-expanded="'+consentDetails+'">'+(consentDetails?'Hide details':'Customize &amp; details')+'</button></div>'+
+  '<p class="tiny muted">Your decision is stored locally only after you choose, so the banner won’t keep returning. Change it any time through Privacy choices.</p>';
+ if(consentDetails){
+  h+='<div class="stack" id="privacyDetail">'+
+    opt("cEss",true,true,"Essential privacy choice · always on","After you decide, saves that decision so we respect it on your next visit.",["Your privacy choice, date and policy version"],"garden data, location, advertising identifiers or browsing activity.")+
+    opt("cFun",f,false,"Save my garden on this device","Optional. Your plans stay in this browser; they are not sent to a server.",["Nearest selected city, garden dimensions and garden-bed layouts","Soil records, journal text, plant and task notes, budget items","Dashboard and display preferences"],"photos, videos, street addresses, GPS coordinates or device identifiers. Media stays in the tab.")+
+    opt("cAna",false,true,"Analytics · not installed","The prototype has no analytics tools and cannot enable them.",null,"anything about your visits or behavior.")+
+    opt("cMkt",false,true,"Marketing and ads · not used","No ad pixels, retargeting or cross-site tracking are included.",null,null)+
+    '<div class="row"><button class="btn primary" data-act="consent" data-arg="save">Save my selected choices</button></div>'+
+    (CONSENT?'<p class="tiny muted">Previous choice: '+esc(CONSENT.method)+', '+esc(new Date(CONSENT.ts).toLocaleString())+'</p>':'')+
+    '</div>';
+ }
+ el.innerHTML=h+'</div>';
 }
 function setConsent(kind){
- const fun=kind==="save"&&$("#cFun").checked,ana=kind==="save"&&$("#cAna").checked,was=canSave();
- if(!fun&&!ana){CONSENT=null;LS.del("consent");LS.del("mine");LS.del("prefs")}
- else{CONSENT={v:"draft-0.2",ts:new Date().toISOString(),method:"Turned on: "+[fun&&"save my garden",ana&&"analytics"].filter(Boolean).join(" and "),functional:fun,analytics:ana};LS.set("consent",CONSENT);if(!fun){LS.del("mine");LS.del("prefs")}else persist()}
- consentOpen=false;noteOpen=false;renderConsent();renderChrome();
- toast(fun?(was?"Choices saved.":"Saving is on. Your garden stays on this device."):(was?"Saving is off. Stored garden data was erased from this device.":"Everything optional is off. Nothing is stored."));
+ const fun=kind==="local"||(kind==="save"&&$("#cFun")?.checked===true),was=canSave();
+ // No analytics collection exists in this prototype, regardless of choice.
+ CONSENT={v:PRIVACY_VERSION,ts:new Date().toISOString(),method:fun?"Local garden saving enabled":"Optional storage rejected",functional:fun,analytics:false};
+ LS.set("consent",CONSENT);
+ if(!fun){LS.del("mine");LS.del("prefs")}else persist();
+ consentOpen=false;consentDetails=false;noteOpen=false;renderConsent();renderChrome();
+ toast(fun?(was?"Privacy choices saved.":"Local garden saving is on."):(was?"Optional storage is off; saved garden data was removed.":"Optional storage is off. No tracking is enabled."));
 }
 const reduceMotion=()=>A11Y.motion||window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 function applyA11y(){const r=document.documentElement;r.style.setProperty("--ts",String(A11Y.ts));if(A11Y.contrast)r.setAttribute("data-contrast","high");else r.removeAttribute("data-contrast")}
@@ -1078,7 +1095,7 @@ function openDisplay(){const ch=(arg,label,on)=>'<button class="chip" data-act="
 /* ---------- toast, sheets ---------- */
 let toastT;function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3000)}
 const SHEETS={
- policy:["Privacy policy (draft)","<p>This is a draft for the prototype.</p><ul><li><b>Optional cookies are off by default.</b> Nothing is stored on your device until you turn something on in Privacy choices, which lists exactly what each option stores.</li><li>No analytics, ad pixels, session replay or fingerprinting are installed.</li><li>The page loads no outside fonts, maps or scripts, so no third party sees your visit.</li><li><b>Permissions we never ask for:</b> camera, microphone, photo library, contacts or your device's location.</li><li><b>Location:</b> you pick or type your nearest city. It is used only for plant-related things: sun times, planting season, native plants, pest seasons and weather.</li><li><b>Photos and videos:</b> you choose individual files from a folder on your device. Location data inside photos is removed. They stay in the open tab and are never saved or shared.</li><li>Pest reports show only a coarse area of about a mile, never your address.</li><li><b>Community posts and trades</b> stay on this device in the prototype, and posts are private by default.</li><li><b>Sound:</b> Garden Mood sounds are made in your browser and never start on their own. No music service is connected.</li></ul><p class='small muted'>Privacy and accessibility requirements need legal review for each jurisdiction before launch.</p>"],
+ policy:["Privacy policy (draft)","<p>This is a draft for the prototype.</p><ul><li><b>Optional cookies are off by default.</b> Only your privacy decision is stored after you make a choice; saving garden data is optional and off by default. Privacy choices explains exactly what each option stores.</li><li>No analytics, ad pixels, session replay or fingerprinting are installed.</li><li>The page loads no outside fonts, maps or scripts, so no third party sees your visit.</li><li><b>Permissions we never ask for:</b> camera, microphone, photo library, contacts or your device's location.</li><li><b>Location:</b> you pick or type your nearest city. It is used only for plant-related things: sun times, planting season, native plants, pest seasons and weather.</li><li><b>Photos and videos:</b> you choose individual files from a folder on your device. Location data inside photos is removed. They stay in the open tab and are never saved or shared.</li><li>Pest reports show only a coarse area of about a mile, never your address.</li><li><b>Community posts and trades</b> stay on this device in the prototype, and posts are private by default.</li><li><b>Sound:</b> Garden Mood sounds are made in your browser and never start on their own. No music service is connected.</li></ul><p class='small muted'>Privacy and accessibility requirements need legal review for each jurisdiction before launch.</p>"],
  a11y:["Accessibility","<ul><li>Text size, higher contrast and reduced motion are under Accessibility &amp; display at the top of every page.</li><li>Every photo you add asks for a short description. Screen readers read it aloud, and it shows as a caption for everyone.</li><li>Every video needs a written description or transcript before it's added, can carry a caption file (.vtt), never plays on its own and has no sound until you press play.</li><li>Every map has a text version (Map in words) and a sun-hours table.</li><li>Every slider works with arrow keys; dragging is never required.</li><li>Status uses words and shapes, not color alone, and notices are announced to screen readers.</li><li>Nothing on the site relies on sound.</li><li>The target is WCAG 2.2 AA.</li></ul>"],
  rules:["Community rules","<ul><li>Report what you saw and roughly where. The public map only ever shows a coarse area.</li><li>Add a photo when you can. Moderators verify reports from photos.</li><li>No addresses, faces or license plates in photos.</li><li>Unverified reports are labeled until someone confirms them.</li></ul>"],
  sources:["Data sources","<ul><li>Sun position: NOAA solar calculation (an approximation of the Solar Position Algorithm).</li><li>Soils: USDA NRCS soil survey (SSURGO), used as regional context only.</li><li>Native plants: starter lists by region; the Maryland Plant Atlas is a candidate source for the Mid-Atlantic.</li><li>Pests: seasonal ranges from extension guidance; sightings in the demo are examples.</li><li>Weather in the demo is example data. The full app needs a licensed forecast provider.</li></ul>"],
@@ -1676,9 +1693,10 @@ document.addEventListener("click",e=>{
  case"start":$("#sheetHost").innerHTML="";S.wiz=newWiz();S.view="setup";renderChrome();renderSetup();window.scrollTo({top:0});break;
  case"demo":$("#sheetHost").innerHTML="";S.propId="demo";go("dash");break;
  case"demo-tab":{S.propId="demo";const [t,l]=arg.split(":");go(t,{layer:l||"shade"});break}
- case"privacy-choices":$("#sheetHost").innerHTML="";consentOpen=true;renderConsent();setTimeout(()=>{const b=$("#consentT");if(b){b.tabIndex=-1;b.focus()}},0);break;
+ case"privacy-choices":$("#sheetHost").innerHTML="";consentOpen=true;consentDetails=true;renderConsent();setTimeout(()=>$("#consentT")?.focus(),0);break;
+ case"consent-details":consentDetails=!consentDetails;renderConsent();$("#consentT")?.focus();break;
  case"consent":setConsent(arg);break;
- case"consent-close":consentOpen=false;renderConsent();break;
+ case"consent-close":if(CONSENT){consentOpen=false;consentDetails=false;renderConsent()}else setConsent("off");break;
  case"note-ok":noteOpen=false;renderConsent();break;
  case"display":openDisplay();break;
  case"a11y":{const [k,v]=arg.split(":");A11Y[k]=+v;applyA11y();persist();openDisplay();if(S.view==="app")renderChrome();break}
