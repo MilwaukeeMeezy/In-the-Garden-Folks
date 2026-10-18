@@ -18,7 +18,7 @@ To publish with GitHub Pages: **Settings → Pages → Deploy from a branch → 
 | My Garden map with an At a glance panel (overview, weather, sun and shade, soil, water, plants, tasks, notes) | Working |
 | Search across plants, beds, tasks, notes and app sections, plus a 7-step guided tour | Working |
 | House & yard photos: top (drone, satellite screenshot or upstairs window), front, back, both sides and up to 24 more; line the top view up under the map; jump the map to the time a photo was taken to compare shadows; optionally keep photos in your profile on this device. Turn and size buttons for the top photo, "Line it up for me" (tap two front roof corners to size, turn and place the photo automatically), and a quick-turn button for sideways photos | Working |
-| Map zoom: +/−, Zoom to my house, Show everything, and pan buttons | Working |
+| Map toolbar right under the map: house orientation in words (updates with every turn, also shown on the map), house turn buttons, top-photo size/turn/move buttons, Move & resize by hand (drag, two-finger pinch to resize and turn, scroll wheel), zoom and pan | Working |
 | My Garden: map editor, sun and shade by date and time, sun-hour heat map, soil records, rain and downspout planning, plant matching, calendar, journal, budget | Working |
 | Seasonal pest outlook | Working |
 | Live 7-day forecast, frost dates and approximate zone from [Open-Meteo](https://open-meteo.com/), fetched only on request | Prototype |
