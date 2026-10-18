@@ -670,7 +670,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
       <div class="stack">
         <div class="chips" id="layers" role="group" aria-label="Map layer"></div>
         <div class="mapbox" id="propBox"><canvas id="propCv" aria-label="Map of your property. A text version is under the map."></canvas></div>
-        <div class="row between" id="zoomBar" role="group" aria-label="Map zoom"><div class="row"><button class="btn sm" data-act="zoom" data-arg="out" aria-label="Zoom out">−</button><span class="small mono" id="zoomLbl" aria-live="polite">100%</span><button class="btn sm" data-act="zoom" data-arg="in" aria-label="Zoom in">+</button><button class="btn sm" data-act="zoom" data-arg="house">Zoom to my house</button><button class="btn sm" data-act="zoom" data-arg="all">Show everything</button></div><div class="row" aria-label="Move the zoomed map"><button class="btn sm" data-act="pan" data-arg="0:-1" aria-label="Pan up">↑</button><button class="btn sm" data-act="pan" data-arg="0:1" aria-label="Pan down">↓</button><button class="btn sm" data-act="pan" data-arg="-1:0" aria-label="Pan left">←</button><button class="btn sm" data-act="pan" data-arg="1:0" aria-label="Pan right">→</button></div></div>
+        <div class="row between" id="zoomBar" role="group" aria-label="Map zoom"><div class="row"><button class="btn sm" data-act="zoom" data-arg="out" aria-label="Zoom out">−</button><span class="small mono" id="zoomLbl" aria-live="polite">100%</span><button class="btn sm" data-act="zoom" data-arg="in" aria-label="Zoom in">+</button><button class="btn sm" data-act="zoom" data-arg="house">Zoom to my house</button><button class="btn sm" data-act="zoom" data-arg="all">Show everything</button></div></div>
         <div id="mapTools" class="stack" style="gap:8px"></div>
         <div class="legend" id="propLegend"></div>
         <div class="chips" id="years" role="group" aria-label="Look ahead"></div>
@@ -1276,10 +1276,11 @@ function tok(){const cs=getComputedStyle(document.documentElement),g=n=>cs.getPr
 function hex(c){c=(c||"").trim();if(/^#[0-9a-f]{6}$/i.test(c))return[parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16)];return[128,128,128]}
 
 /* ---------- map drawing ---------- */
-function fit(cv,V,maxH,zoom,ctr){const box=cv.parentElement;let w=box.clientWidth||600,h=w*V.H/V.W;if(maxH&&h>maxH){h=maxH;w=h*V.W/V.H}
+function fit(cv,V,maxH,zoom,ctr,fill){const box=cv.parentElement;let w=box.clientWidth||600,h=w*V.H/V.W;if(fill&&h<Math.min(maxH||1e9,w*.62))h=Math.min(maxH||1e9,w*.62);if(maxH&&h>maxH){h=maxH;if(!fill)w=h*V.W/V.H}
  const dpr=Math.min(2,window.devicePixelRatio||1),W=Math.round(w*dpr),H=Math.round(h*dpr);if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}
- cv.style.width=w+"px";cv.style.height=h+"px";const z=Math.max(1,zoom||1),vw=V.W/z,vh=V.H/z,cx=ctr?ctr.x:V.W/2,cy=ctr?ctr.y:V.H/2;
- const g={w,h,dpr,k:w/V.W*z,z,ox:Math.max(0,Math.min(V.W-vw,cx-vw/2)),oy:Math.max(0,Math.min(V.H-vh,cy-vh/2))};cv._g=g;return g}
+ cv.style.width=w+"px";cv.style.height=h+"px";const k0=Math.min(w/V.W,h/V.H),z=Math.max(1,zoom||1),k=k0*z,vw=w/k,vh=h/k,cx=ctr?ctr.x:V.W/2,cy=ctr?ctr.y:V.H/2;
+ const cl=(c,v,M)=>v>=M?(M-v)/2:Math.max(0,Math.min(M-v,c-v/2));
+ const g={w,h,dpr,k,z,bw:w/k0,bh:h/k0,ox:cl(cx,vw,V.W),oy:cl(cy,vh,V.H)};cv._g=g;return g}
 const inWorld=(g,c)=>c.setTransform(g.dpr*g.k,0,0,g.dpr*g.k,-(g.ox||0)*g.k*g.dpr,-(g.oy||0)*g.k*g.dpr), inScreen=(g,c)=>c.setTransform(g.dpr,0,0,g.dpr,-(g.ox||0)*g.k*g.dpr,-(g.oy||0)*g.k*g.dpr), inFixed=(g,c)=>c.setTransform(g.dpr,0,0,g.dpr,0,0);
 function path(c,pts){c.beginPath();pts.forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.closePath()}
 const HEAT={key:"",cv:document.createElement("canvas"),step:1.5,cols:0,rows:0};
@@ -1297,12 +1298,12 @@ const RAIN={propId:null,parts:null,trail:document.createElement("canvas"),ran:fa
 const shadeLayer=document.createElement("canvas");
 
 function drawMap(cv,p,o){
- const T=tok(),g=fit(cv,p.view,o.maxH,o.zoom,o.ctr),c=cv.getContext("2d"),V=p.view,Y=o.Y||0;
- inWorld(g,c);c.clearRect(0,0,V.W,V.H);c.fillStyle=T.lawn;c.fillRect(0,0,V.W,V.H);
+ const T=tok(),g=fit(cv,p.view,o.maxH,o.zoom,o.ctr,o.fill),c=cv.getContext("2d"),V=p.view,Y=o.Y||0;
+ inFixed(g,c);c.clearRect(0,0,g.w,g.h);c.fillStyle=T.lawn;c.fillRect(0,0,g.w,g.h);inWorld(g,c);
  for(const gr of p.ground||[]){path(c,corners(gr));c.fillStyle=gr.type==="street"?T.street:T.paving;c.fill()}
  const ph=PHOTOS[p.id]&&PHOTOS[p.id].overhead;if(ph&&ph.img&&S.usePhoto){c.imageSmoothingEnabled=true;c.imageSmoothingQuality="high";const al=Object.assign({x:0,y:0,s:1,r:0,o:.85},p.photoAlign||{}),iw=V.W,ih=V.W*ph.img.height/ph.img.width;c.save();c.globalAlpha=al.o;c.translate(V.W/2+al.x,V.H/2+al.y);c.rotate(al.r*RAD);c.scale(al.s,al.s);c.drawImage(ph.img,-iw/2,-ih/2,iw,ih);c.restore()}
  const lp=lotPoly(p);
- if(lp&&!o.mini){c.save();c.beginPath();c.rect(0,0,V.W,V.H);lp.slice().reverse().forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.closePath();c.globalAlpha=.35;c.fillStyle=T.dim;c.fill();c.restore()}
+ if(lp&&!o.mini){c.save();c.beginPath();c.rect(-2000,-2000,V.W+4000,V.H+4000);lp.slice().reverse().forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.closePath();c.globalAlpha=.35;c.fillStyle=T.dim;c.fill();c.restore()}
  if(o.layer==="hours"){buildHeat(p,Y,T);c.save();if(lp){path(c,lp);c.clip()}c.imageSmoothingEnabled=true;c.drawImage(HEAT.cv,0,0,HEAT.cols*HEAT.step,HEAT.rows*HEAT.step);c.restore()}
  if(o.layer==="shade"){const sp=sunPos(o.minutes,S.date,p.loc),set=shadowSet(casters(p,Y,"known"),sp.az,sp.alt);
   if(!set){c.globalAlpha=.5;c.fillStyle=T.shade;c.fillRect(0,0,V.W,V.H);c.globalAlpha=1}
@@ -1686,7 +1687,7 @@ function renderGlance(){const p=prop(),el=$("#glance");if(!el)return;
  {const ph=PHOTOS[p.id]||{},nP=PSLOTS.filter(x=>ph[x[0]]).length+(ph.extra||[]).length;h+=A("photos","▣","#C9F25A","House photos",nP?nP+" photo"+(nP>1?"s":"")+(ph.overhead?" · top view on the map":""):"None yet · add top, front, back and sides",'<p class="small">Top view lines up under the map; side photos compare with the shade model.</p><button class="btn sm" data-act="go-photos">Open house photos</button>')}
  h+=A("notes","✎","#7B7CFB","Garden notes",j?esc(dshort(j.date))+": "+esc(j.text.length>48?j.text.slice(0,46)+"…":j.text):"No notes yet",(j?journalRow(j):"")+'<button class="btn sm" data-act="tab" data-arg="planner">Add a note</button>');
  el.innerHTML=h}
-function zoomFit(p,what){const o=p.objects.find(x=>x.type===what)||p.objects.find(x=>x.type==="lot");if(!o)return{z:1,c:null};let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;corners(o).forEach(q=>{x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1])});const m=what==="house"?1.5:1.12;return{z:Math.max(1,Math.min(6,Math.min(p.view.W/((x1-x0)*m),p.view.H/((y1-y0)*m)))),c:{x:(x0+x1)/2,y:(y0+y1)/2}}}
+function zoomFit(p,what){const o=p.objects.find(x=>x.type===what)||p.objects.find(x=>x.type==="lot");if(!o)return{z:1,c:null};let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;corners(o).forEach(q=>{x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1])});const m=what==="house"?1.5:1.12,g=($("#propCv")||{})._g,bw=g&&g.bw?g.bw:p.view.W,bh=g&&g.bh?g.bh:p.view.H;return{z:Math.max(1,Math.min(6,Math.min(bw/((x1-x0)*m),bh/((y1-y0)*m)))),c:{x:(x0+x1)/2,y:(y0+y1)/2}}}
 function zoomLabel(){const z=$("#zoomLbl"),p=prop();if(z)z.textContent=Math.round((S.zoom==null?zoomFit(p,"lot").z:S.zoom)*100)+"%"}
 function renderProperty(){
  const p=prop();
@@ -1702,8 +1703,8 @@ function renderProperty(){
  renderSelCard();renderLayerDyn();renderPhotos();drawProp();
 }
 function drawProp(){const p=prop();if(!isMap())return;
- const lotO=p.objects.find(o=>o.type==="lot");Object.assign(propOpts,{layer:S.layer,minutes:S.minutes,Y:S.Y,handle:true,maxH:Math.round(window.innerHeight*.72),zoom:S.zoom==null?zoomFit(p,"lot").z:S.zoom,ctr:S.zoom==null?zoomFit(p,"lot").c:(S.zoomCtr||(lotO?{x:lotO.x,y:lotO.y}:null))});
- drawMap($("#propCv"),p,propOpts);updateTimeText();
+ const lotO=p.objects.find(o=>o.type==="lot");Object.assign(propOpts,{layer:S.layer,minutes:S.minutes,Y:S.Y,handle:true,maxH:Math.round(window.innerHeight*.72),fill:true,zoom:S.zoom==null?zoomFit(p,"lot").z:S.zoom,ctr:S.zoom==null?zoomFit(p,"lot").c:(S.zoomCtr||(lotO?{x:lotO.x,y:lotO.y}:null))});
+ drawMap($("#propCv"),p,propOpts);if(S.zoom==null){const f=zoomFit(p,"lot");if(Math.abs(f.z-propOpts.zoom)>.01){propOpts.zoom=f.z;propOpts.ctr=f.c;drawMap($("#propCv"),p,propOpts)}zoomLabel()}updateTimeText();
  const leg=$("#propLegend");
  if(S.layer==="hours")leg.innerHTML=[["--h-full","6+ h full sun"],["--h-psun","4–6 h part sun"],["--h-pshade","2–4 h part shade"],["--h-shade","Under 2 h shade"]].map(x=>'<span><i style="background:var('+x[0]+')"></i>'+x[1]+"</span>").join("")+(unknownObjs(p).length?'<span><i style="background:var(--unknown)"></i>Needs a height</span>':"")+" "+ev("modeled");
  else if(S.layer==="shade")leg.innerHTML='<span><i style="background:var(--shade);opacity:.5"></i>Estimated shade at '+fmtT(S.minutes)+'</span><span><i style="background:var(--sun)"></i>Front of house</span><span>Dashed tree: planned or height unknown</span>';
@@ -2295,7 +2296,7 @@ document.addEventListener("click",e=>{
  case"go-roof":S.roofTap=[];renderPhotos();setTimeout(()=>{const r=$("#roofTap");if(r)r.scrollIntoView({block:"center",behavior:reduceMotion()?"auto":"smooth"})},40);break;
  case"zoom":{const z=S.zoom==null?zoomFit(p,"lot").z:S.zoom;if(arg==="in")S.zoom=Math.min(6,+(z*1.4).toFixed(2));else if(arg==="out")S.zoom=Math.max(1,+(z/1.4).toFixed(2));else if(arg==="all"){S.zoom=1;S.zoomCtr=null}else{const f=zoomFit(p,arg==="house"?"house":"lot");S.zoom=f.z;S.zoomCtr=f.c}
   if(S.zoom!=null&&S.zoom<=1)S.zoomCtr=null;drawProp();zoomLabel();break}
- case"pan":{const g=$("#propCv")._g;if(!g||g.z<=1){toast("Zoom in first, then move around.");break}const q=arg.split(":"),vw=p.view.W/g.z,vh=p.view.H/g.z;S.zoomCtr={x:g.ox+vw/2+(+q[0])*vw*.25,y:g.oy+vh/2+(+q[1])*vh*.25};drawProp();break}
+ case"pan":{const g=$("#propCv")._g;if(!g||g.z<=1){toast("Zoom in first, then move around.");break}const q=arg.split(":"),vw=g.w/g.k,vh=g.h/g.k;S.zoomCtr={x:g.ox+vw/2+(+q[0])*vw*.25,y:g.oy+vh/2+(+q[1])*vh*.25};drawProp();break}
  case"pal-turn":{p.photoAlign=Object.assign({x:0,y:0,s:1,r:0,o:.85},p.photoAlign||{});let r=p.photoAlign.r+(+arg);r=((r+180)%360+360)%360-180;p.photoAlign.r=r;changed(p);renderPhotos();renderMapTools();drawProp();const b=$('#mapTools [data-act="pal-turn"][data-arg="'+arg+'"]')||$('[data-act="pal-turn"][data-arg="'+arg+'"]');if(b)b.focus();break}
  case"pal-size":{p.photoAlign=Object.assign({x:0,y:0,s:1,r:0,o:.85},p.photoAlign||{});p.photoAlign.s=Math.max(.05,Math.min(4,p.photoAlign.s*(+arg)));changed(p);renderPhotos();renderMapTools();drawProp();const b=$('#mapTools [data-act="pal-size"][data-arg="'+arg+'"]')||$('[data-act="pal-size"][data-arg="'+arg+'"]');if(b)b.focus();break}
  case"pal-fit":{const ph=(PHOTOS[p.id]||{}).overhead;if(ph&&ph.img){p.photoAlign=fitToLot(p,ph.img);changed(p);renderPhotos();renderMapTools();drawProp();toast("Photo sized to your lot. Fine-tune with the buttons.")}break}
