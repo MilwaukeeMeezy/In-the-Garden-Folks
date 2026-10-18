@@ -473,6 +473,67 @@ figure.media img,figure.media video,.postart svg,.preview img,.preview video{bor
 .logo,.topbar .logo{font-family:var(--f-display);font-weight:900;text-transform:uppercase;color:var(--fg);font-size:1.35rem}
 .subnav,.tabs{background:var(--bg)}
 
+.dhero{background:#121412;color:#F3F6EE;border-radius:26px;padding:clamp(18px,3vw,28px);display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;align-items:center}
+@media(max-width:820px){.dhero{grid-template-columns:minmax(0,1fr)}}
+.dhero h2{color:#C9F25A;font-size:clamp(2.6rem,6vw,4.6rem);line-height:.86}
+.dhero p{color:#D3D8CF}
+.dhero-copy{gap:12px}
+.eyebrow-l{font-family:var(--f-data);font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#C9F25A}
+.dchips{display:flex;flex-wrap:wrap;gap:8px}.dchips span{background:#2C2E31;color:#F3F6EE;padding:7px 12px;font-weight:700;font-size:.84rem;border-radius:999px}
+.btn.tour{background:#F7C948;border-color:#F7C948;color:#121412}.btn.tour:hover{background:#FFD866}
+.btn.onink{background:transparent;color:#F3F6EE;border-color:#5A5F58}.btn.onink:hover{background:#2C2E31}
+.btn.onink[aria-pressed="true"]{background:#C9F25A;color:#121412;border-color:#C9F25A}
+.dhero-map{border-color:#2C2E31!important;max-height:300px}
+.qa{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.qa button{border:0;border-radius:20px;background:var(--surface);color:var(--fg);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;font-weight:800;cursor:pointer;font-size:.95rem}
+.qa button:hover{background:var(--sage)}
+.qa .ic{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #121412;color:#121412}
+.secnav{display:flex;gap:6px;overflow-x:auto;padding:3px;scrollbar-width:none}
+.secnav button{flex:none;border:2px solid var(--fg);background:var(--surface);color:var(--fg);font-weight:800;padding:9px 20px;border-radius:999px;cursor:pointer;min-height:44px}
+.secnav button[aria-current]{background:var(--deep);color:var(--on-deep);border-color:var(--deep)}
+.dsec{display:flex;flex-direction:column;gap:12px;padding-top:10px}
+.dsec-h{display:flex;align-items:baseline;gap:6px 14px;flex-wrap:wrap}
+.dsec-h h2{font-size:clamp(2rem,3.6vw,2.8rem)}
+.dsec-h .sub{color:var(--muted);font-size:.92rem}
+.dsec-h .end{margin-left:auto;display:flex;gap:6px;align-items:center}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:stretch}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
+@media(max-width:1180px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.g3{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:640px){.g4,.g2{grid-template-columns:minmax(0,1fr)}.qa{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.blk{border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0;background:var(--surface);color:var(--fg);border:0;text-align:left}
+.blk.ink{--deep:#121412;--on-deep:#C9F25A;--fg:#121412;--heading:#121412;--muted:#121412;--surface:#FAFAF6;--sage:#FAFAF6;--line:#121412;color:#121412}
+.blk.cy{background:#F7C948}.blk.cc{background:#FF6B52}.blk.cl{background:#C9F25A}.blk.cp{background:#7B7CFB}.blk.cb{background:#8FB8E8}.blk.cg{background:#7DD321}
+.blk.ink .btn.primary{background:#121412;border-color:#121412;color:#C9F25A}
+.blk h3{font-size:1.35rem}
+.big{font-family:var(--f-display);font-weight:900;font-size:3.4rem;line-height:.85}
+.tipbig{font-family:var(--f-display);font-weight:900;font-size:1.7rem;line-height:1;text-transform:uppercase}
+.ring{--v:0;width:88px;height:88px;flex:none;border-radius:50%;background:conic-gradient(#121412 calc(var(--v)*1%),rgba(18,20,18,.18) 0);display:grid;place-items:center}
+.ring b{width:64px;height:64px;border-radius:50%;background:#C9F25A;display:grid;place-items:center;font-family:var(--f-display);font-weight:900;font-size:1.6rem}
+.spaces{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.space.cur{box-shadow:inset 8px 0 0 #7DD321}
+.addspace{border:2.5px dashed var(--fg);background:transparent;align-items:center;justify-content:center;text-align:center;cursor:pointer;font:inherit;min-height:140px}
+.addspace:hover{background:var(--surface)}
+.attn{box-shadow:inset 8px 0 0 #FF6B52}
+.lightbar{display:flex;height:16px;border:2px solid var(--fg);overflow:hidden;border-radius:4px}.lightbar i{display:block;height:100%}
+.taskcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.taskcards .blk{padding:12px 16px}.taskcards .task{border:0;padding:0}
+.acc{background:var(--surface);border-radius:18px}
+.acc summary{display:flex;gap:12px;align-items:center;padding:12px 14px;cursor:pointer;list-style:none;min-height:56px}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"▾";margin-left:auto;font-weight:900;transition:transform .15s}
+.acc[open] summary::after{transform:rotate(180deg)}
+.acct{font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:1.15rem;letter-spacing:.01em}
+.aic{width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;border:2px solid #121412;color:#121412;font-size:1.1rem;font-weight:900}
+.accb{padding:0 14px 14px}
+.tsearch{display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--fg);padding:0 12px;min-height:42px;flex:1 1 220px;max-width:420px}
+.tsearch input{border:0!important;background:transparent!important;min-height:38px;padding:4px 0;outline:none}
+.tsearch:focus-within{box-shadow:0 0 0 4px #C9F25A}
+.searchhit{text-align:left;cursor:pointer;font:inherit;color:var(--fg);width:100%}
+.searchhit:hover{background:var(--sage)}
+@media(min-width:861px){.pgrid>.stack:first-child{position:sticky;top:64px;align-self:start}}
+.tourdots{display:flex;gap:6px}.tourdots i{width:10px;height:10px;border-radius:50%;background:var(--line)}.tourdots i.on{background:var(--fg);width:26px;border-radius:5px}
 label.btn:focus-within{outline:3px solid var(--fg);outline-offset:3px;box-shadow:0 0 0 6px var(--k-lime)}
 .mbars{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;align-items:end;text-align:center}
 .mbars div{display:flex;flex-direction:column;align-items:center;gap:2px;justify-content:flex-end;min-height:104px}
@@ -574,7 +635,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
   </nav>
   <div class="appmain">
     <header class="topbar">
-      <div class="row"><button class="logo phone-only" data-act="go-home" aria-label="Back to the welcome screen"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="23" cy="10" r="6.5" fill="var(--sun)"/><path d="M6 27h22v3H6z" fill="var(--soilbed)"/><path d="M17 27c0-7 0-10-4-14 6 1 8 5 8 10 1-4 4-6 8-6-3 2-5 5-5 10z" fill="var(--leaf)"/><circle cx="11" cy="22" r="2.4" fill="var(--tomato)"/></svg><span>In the Garden, Folks!</span></button><label class="tiny muted" for="propSel">Space</label><select id="propSel"></select><button class="savechip" id="saveChip" data-act="privacy-choices"></button></div>
+      <div class="row"><button class="logo phone-only" data-act="go-home" aria-label="Back to the welcome screen"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="23" cy="10" r="6.5" fill="var(--sun)"/><path d="M6 27h22v3H6z" fill="var(--soilbed)"/><path d="M17 27c0-7 0-10-4-14 6 1 8 5 8 10 1-4 4-6 8-6-3 2-5 5-5 10z" fill="var(--leaf)"/><circle cx="11" cy="22" r="2.4" fill="var(--tomato)"/></svg><span>In the Garden, Folks!</span></button><form id="searchForm" role="search" class="tsearch"><label class="sr" for="q">Search plants, tasks and notes</label><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Search plants, tasks, notes…" autocomplete="off"></form><label class="tiny muted" for="propSel">Space</label><select id="propSel"></select><button class="savechip" id="saveChip" data-act="privacy-choices"></button></div>
       <div class="row">
         <div class="chips" role="group" aria-label="Detail level"><button class="chip" data-act="mode" data-arg="starter" id="modeStarter">Starter</button><button class="chip" data-act="mode" data-arg="advanced" id="modeAdv">Advanced</button></div>
         <button class="btn sm" id="moodBtn" data-act="mood">Garden Mood: Off</button>
@@ -601,6 +662,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
         <details class="card" id="mapWords"><summary>Map in words</summary><div id="mapWordsBody" class="stack small"></div></details>
       </div>
       <div class="stack">
+        <div id="glance" class="stack" style="gap:8px"></div>
         <div id="selCard"></div>
         <div class="card" id="timeCard">
           <div class="row between" style="align-items:flex-end">
@@ -881,7 +943,7 @@ function makeMine(w){
 
 /* ---------- state ---------- */
 const WIDGETS=[["hello","Hello, gardener",0],["now","Right now",0],["actions","Quick action",0],["map","My space",0],["tasks","Next up",0],["around","Around you",0],["folks","From the Folks",0],["swap","Swap nearby",0],["soilwater","Soil + water",0],["journal","Journal",0],["globe","Garden Globe",0],["progress","My progress",0],["garden","Beds and plants",1],["zonesun","Sun hours by bed",1]];
-const S={view:"home",tab:"dash",propId:"demo",props:{demo:makeDemo(),demomke:makeDemoMke()},date:TODAY,minutes:840,Y:0,layer:"shade",tool:"select",sel:null,spot:null,
+const S={tour:0,view:"home",tab:"dash",propId:"demo",props:{demo:makeDemo(),demomke:makeDemoMke()},date:TODAY,minutes:840,Y:0,layer:"shade",tool:"select",sel:null,spot:null,
  dash:{order:WIDGETS.map(w=>w[0]),hidden:[],advanced:false,customizing:false},alerts:{on:false,radius:1},
  pf:{cat:"native",sun:"any",soil:"any",type:"any",bed:""},usePhoto:true,wiz:null,mySightings:[],gsub:"map",posts:[],saved:[],compose:null,trade:{mode:"swap",offers:[],circles:[]},globe:{lon:-60,lat:22,city:"Washington, DC",cmp:"Milwaukee, WI"},exf:{setup:"all",season:"all"},alertf:{scope:"neighborhood",topic:"all"}};
 const A11Y={ts:1,contrast:false,motion:false,captions:true,lowdata:false};
@@ -960,6 +1022,34 @@ function ppfdAt(p,pts,date,min){const smp=samples(p,0,"known",10,date);let best=
  if(!best||Math.abs(best.m-min)>15)return 0;const g=ghi(best.alt);let t=0;for(const pt of pts)t+=shaded(pt,best.set)?g*DIFF*SKY_SHADE:g;return t/pts.length*PAR_J}
 const dliClass=d=>d<6?"Low":d<12?"Medium":d<18?"High":"Very high";
 const midMonth=m=>{const y=NOW.getFullYear();return y+"-"+pad(m+1)+"-15"};
+/* ---------- guided tour ---------- */
+const TOUR=[
+ ["Welcome","This is your garden at a glance: today's weather and tip, your spaces, what needs a look and what's coming up.",null,null],
+ ["Map your yard","Draw your yard and add heights for the house, fences and trees. Then drag the sun around the map to see shade at any hour.","Show me the map",()=>{S.layer="shade";S.tool="select";go("property")}],
+ ["Light probe","Drag the lime pin anywhere to see sun hours and daily light (DLI), month by month. Sensor data can correct it.","Show me the probe",()=>{S.layer="hours";S.tool="select";go("property");setTimeout(()=>{if(!S.spot){const b=$('#probeCard [data-act="probe-drop"]');if(b)b.click()}},50)}],
+ ["Soil and water","Log soil tests, see where roof water goes, size a rain barrel and find a spot for a rain garden.","Show me water",()=>{S.layer="water";S.tool="select";go("property")}],
+ ["Plants and planner","Match native and edible plants to each bed's light, then follow seasonal tasks and keep a journal.","Show me plants",()=>go("plants")],
+ ["Your neighbors","Pest alerts, harvest swaps, crop circles and community posts. Anything you share stays private until you choose who sees it.","Show me alerts",()=>go("alerts")],
+ ["Where numbers come from","Every number carries a label: Measured (a lab or sensor), Modeled (an estimate), Reported (what you saw) or Demo (an example).",null,null]];
+function renderTour(){const i=S.tour,st=TOUR[i];
+ $("#sheetHost").innerHTML='<div class="sheet-bg" data-act="close-sheet"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetT"><div class="row between"><span class="eyebrow">Tour · '+(i+1)+" of "+TOUR.length+'</span><button class="btn sm" data-act="close-sheet">Close</button></div><h2 id="sheetT" tabindex="-1">'+st[0]+'</h2><p>'+st[1]+'</p><div class="tourdots" aria-hidden="true">'+TOUR.map((_,k)=>"<i"+(k===i?' class="on"':"")+"></i>").join("")+'</div><div class="row between">'+(i>0?'<button class="btn" data-act="tour-step" data-arg="-1">Back</button>':"<span></span>")+'<div class="row">'+(st[2]?'<button class="btn" data-act="tour-go">'+st[2]+"</button>":"")+(i<TOUR.length-1?'<button class="btn primary" data-act="tour-step" data-arg="1">Next</button>':'<button class="btn primary" data-act="close-sheet">Done</button>')+"</div></div></div></div>";
+ setTimeout(()=>{const t=$("#sheetT");if(t)t.focus()},0)}
+
+/* ---------- search ---------- */
+const HELP=[["Sun and shade map","Drag the sun, see shadows at any hour","layer","shade"],["Light probe and DLI","Sun hours and daily light anywhere in the yard","layer","hours"],["Soil records","Lab tests, home kits and observations","layer","soil"],["Rain and water","Runoff, rain barrels and rain gardens","layer","water"],["Plant library","Native and edible plants matched to your beds","tab","plants"],["Planner and journal","Tasks, calendar, journal and budget","tab","planner"],["Pest alerts","Seasonal outlook and nearby reports","tab","alerts"],["Trade","Harvest swaps and crop circles","tab","trade"],["Garden Globe","Compare seasons anywhere on Earth","tab","explore"],["Privacy and settings","What's stored, display and accessibility","tab","profile"]];
+const SUNW2={F:"full sun",FP:"full sun to part shade",P:"part sun",PS:"part shade to shade",S:"shade"};
+function openSearch(q){const p=prop(),k=q.toLowerCase();if(!k){toast("Type something to search for.");return}
+ const has=(...a)=>a.some(x=>x&&String(x).toLowerCase().includes(k));
+ const seen=new Set(),plants=[];Object.entries(PLANTS).forEach(([r,L])=>L.forEach(x=>{if(has(x.n,x.l,x.t,x.note)){const key=x.n+x.l;if(seen.has(key)){plants.find(y=>y.key===key).r.push(REGIONS[r]);return}seen.add(key);plants.push({key,x,r:[REGIONS[r]]})}}));
+ EDIBLES.forEach(x=>{if(has(x.n,x.l,x.t,x.note)&&!seen.has(x.n+x.l)){seen.add(x.n+x.l);plants.push({key:x.n+x.l,x,r:["Edible"]})}});
+ const beds=bedsOf(p).filter(b=>has(b.name,(b.plants||[]).join(" "))),tasks=p.tasks.filter(t=>has(t.title,t.why)),notes=p.journal.filter(j=>has(j.text)),help=HELP.filter(x=>has(x[0],x[1]));
+ const n=plants.length+beds.length+tasks.length+notes.length+help.length;
+ const grp=(t,items)=>items?'<h3>'+t+"</h3>"+items:"";
+ let h='<div class="sheet-bg" data-act="close-sheet"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetT"><div class="row between"><h2 id="sheetT" tabindex="-1">Search</h2><button class="btn sm" data-act="close-sheet">Close</button></div><p class="small" role="status">'+n+' result'+(n===1?"":"s")+" for “"+esc(q)+"”"+(n?"":". Try a plant name, a bed, or a word like shade or garlic.")+"</p>";
+ h+=grp("Plants",plants.length?'<div class="list">'+plants.slice(0,8).map(({x,r})=>'<div class="li"><div class="row between"><b>'+esc(x.n)+'</b><span class="tiny muted">'+esc(x.t)+'</span></div><span class="latin">'+esc(x.l)+'</span><span class="small">'+esc(x.note)+(SUNW2[x.s]?" · "+SUNW2[x.s]:"")+'</span><span class="tiny muted">'+esc(r.join(", "))+"</span></div>").join("")+'</div><div><button class="btn sm" data-act="search-go" data-arg="tab|plants">Open the plant library</button></div>':"");
+ h+=grp("In "+esc(p.name),(beds.length||tasks.length||notes.length)?'<div class="list">'+beds.map(b=>'<div class="li"><b class="small">'+esc(b.name)+'</b><span class="tiny muted">'+esc((b.plants||[]).join(", ")||"empty")+"</span></div>").join("")+tasks.slice(0,5).map(t=>'<div class="li"><b class="small">'+esc(t.title)+'</b><span class="tiny muted">Task · due '+dshort(t.due)+(t.done?" · done":"")+"</span></div>").join("")+notes.slice(0,5).map(j=>'<div class="li"><span class="small">'+esc(j.text)+'</span><span class="tiny muted">Journal · '+dshort(j.date)+"</span></div>").join("")+"</div>":"");
+ h+=grp("Parts of the app",help.length?'<div class="list">'+help.map(x=>'<button class="li searchhit" data-act="search-go" data-arg="'+x[2]+"|"+x[3]+'"><b class="small">'+x[0]+'</b><span class="tiny muted">'+x[1]+"</span></button>").join("")+"</div>":"");
+ $("#sheetHost").innerHTML=h+"</div></div>";setTimeout(()=>{const t=$("#sheetT");if(t)t.focus()},0)}
 /* ---------- light probe: drag anywhere to read a spot ---------- */
 let probeRAF=0;
 function probeLive(){if(probeRAF)return;probeRAF=requestAnimationFrame(()=>{probeRAF=0;const b=$("#probeBody");if(b)b.innerHTML=probeBody(prop())})}
@@ -1381,19 +1471,73 @@ function W(id,p){
   return'<div class="kv"><div><span class="lbl">Planned</span><b class="mono">$'+pl+'</b></div><div><span class="lbl">Spent</span><b class="mono">$'+ac+'</b></div></div><div class="meter money"><i style="width:'+Math.min(100,pl?ac/pl*100:0)+'%"></i></div><button class="btn sm" data-act="tab" data-arg="planner">Open the budget</button>'}
  }return""}
 function visWidgets(){const adv=S.dash.advanced;return S.dash.order.filter(id=>!S.dash.hidden.includes(id)&&(adv||!WIDGETS.find(w=>w[0]===id)[2]))}
+const SECTIONS=[["today","Today","A little progress goes a long way."],["spaces","My spaces","Different spaces, different stories."],["health","Garden health","What needs a look, from your own records."],["tasks","Upcoming tasks","Small steps, big gardens."],["around","Around you","Pests and reports near your area."],["folks","From the folks","Real people, real gardens. Nothing here is made up."],["more","More cards","Detailed cards for advanced mode.",1]];
+function secOrder(){const d=S.dash;if(!d.sorder||d.sorder.length!==SECTIONS.length)d.sorder=SECTIONS.map(x=>x[0]);if(!d.shidden)d.shidden=[];return d.sorder.filter(id=>!d.shidden.includes(id)&&(d.advanced||!SECTIONS.find(x=>x[0]===id)[3]))}
+const TIPS=[["Order seeds early.","Popular varieties sell out by spring."],["Check stored bulbs and roots.","Toss any dahlia or canna roots that turned soft."],
+ ["Start onions and leeks indoors.","They need 10–12 weeks before your last frost."],["Prune fruit trees while dormant.","Cuts heal fast once spring growth starts."],
+ ["Sow peas and spinach early.","Plant as soon as the soil can be worked."],["Clean and sharpen your tools.","Sharp blades make clean cuts that heal."],
+ ["Harden off seedlings.","Give them a week of outdoor time before planting."],["Leave old stems a little longer.","Wait for warm days so overwintering bees can leave."],
+ ["Plant warm crops after frost.","Tomatoes and peppers want nights above 50°F."],["Mulch once the soil warms.","It holds in water and keeps weeds down."],
+ ["Water deeply, not daily.","Deep watering grows deeper, sturdier roots."],["Hand-pick pests in the morning.","They're slow while it's cool."],
+ ["Water early in the day.","Leaves dry before night, which helps prevent disease."],["Sow a second round.","Beans and carrots still have time for a fall crop."],
+ ["Pick often.","Many crops slow down if ripe fruit stays on the plant."],["Start fall greens.","Kale, lettuce and spinach like cooler nights."],
+ ["Plant perennials and shrubs.","Cool air and warm soil help roots settle in."],["Save seeds.","Open-pollinated plants come back true next year."],
+ ["Plant garlic now.","Get cloves in 3–6 weeks before the ground freezes."],["Leave fallen leaves on beds.","They make free winter mulch and shelter insects."],
+ ["Disconnect hoses and barrels.","Do it before the first hard freeze."],["Mulch new perennials.","Wait until the ground starts to freeze."],
+ ["Plan next year's beds.","This year's notes are freshest now."],["Water evergreens if fall was dry.","Do it before the ground freezes."]];
+function tipFor(p){let m=NOW.getMonth();if(p.loc.lat<0)m=(m+6)%12;const d=Math.floor(NOW/864e5)%2;return TIPS[m*2+d]}
+const greet=()=>{const h=NOW.getHours();return h<12?"Good morning":h<17?"Good afternoon":"Good evening"};
+function lightMix(p,date){const r={F:0,P:0,PS:0,S:0,U:0,n:0};for(const b of bedsOf(p)){r.n++;const e=estimate(p,zonePts(b),S.Y);if(!e.ok){r.U++;continue}const c=sunClass(e.h).t;if(c==="Full sun")r.F++;else if(c==="Part sun")r.P++;else if(c==="Part shade")r.PS++;else r.S++}return r}
+function lightBar(m){if(!m.n)return'<p class="small muted">Add a bed to see its light.</p>';const seg=(v,c,l)=>v?'<i style="flex:'+v+';background:'+c+'" title="'+l+'"></i>':"";const pc=v=>Math.round(v/m.n*100)+"%";
+ return'<div class="lightbar" aria-hidden="true">'+seg(m.F,"#F7C948","Full sun")+seg(m.P,"#C9F25A","Part sun")+seg(m.PS,"#7DB88A","Part shade")+seg(m.S,"#3E6B55","Full shade")+seg(m.U,"repeating-linear-gradient(45deg,#9AA3A6 0 4px,transparent 4px 8px)","Needs a height")+'</div><p class="small">'+[m.F&&"Full sun "+pc(m.F),m.P&&"part sun "+pc(m.P),m.PS&&"part shade "+pc(m.PS),m.S&&"full shade "+pc(m.S),m.U&&"needs a height "+pc(m.U)].filter(Boolean).join(" · ").replace(/^./,c=>c.toUpperCase())+"</p>"}
+function attention(p){const out=[];
+ unknownObjs(p).forEach(o=>out.push({t:"Add the height of the "+o.name,s:"Shade estimates near it are hidden until then.",a:"select-obj",g:o.id}));
+ p.objects.filter(o=>(o.type==="bed")&&!(o.tests||[]).some(t=>t.kind==="measured")).slice(0,2).forEach(o=>out.push({t:o.name+" has no lab soil test",s:"A test shows pH, nutrients and lead before you plant food.",a:"goto-layer",g:"soil"}));
+ bedsOf(p).filter(o=>isWet(p,o)).forEach(o=>out.push({t:"Water pooling reported in "+o.name,s:"Raise the bed or pick plants that like wet feet.",a:"goto-layer",g:"water"}));
+ if(p.water.fill&&p.water.fill.pct>=90)out.push({t:"Rain barrel is nearly full",s:"Use the water or make sure overflow drains away from the house.",a:"goto-layer",g:"water"});
+ const od=p.tasks.filter(t=>!t.done&&t.due<TODAY).length;if(od)out.push({t:od+" overdue task"+(od>1?"s":""),s:"Catch up or reschedule them in the planner.",a:"tab",g:"planner"});
+ return out}
+function secHTML(id,p){const T=(k,v)=>'<button class="btn sm" data-act="'+k+'" data-arg="'+v+'">';
+ switch(id){
+ case"today":{const w=wxFor(p),t0=w&&w[0],tip=tipFor(p),done=p.tasks.filter(t=>t.done).length,tot=p.tasks.length,pct=tot?Math.round(done/tot*100):0;
+  return'<div class="g4"><article class="blk ink cy" aria-labelledby="tdW"><div class="row between"><h3 id="tdW">Weather</h3>'+(w?wxTag(p):"")+"</div>"+(t0?'<div class="row" style="gap:14px;align-items:flex-end"><span class="big mono">'+t0.hi+'°</span><span class="small">Low <b>'+t0.lo+'°</b><br>'+new Date(t0.date+"T12:00:00").toLocaleDateString("en-US",{weekday:"long"})+'</span></div><p class="small"><b class="mono">'+w.reduce((a,b)=>a+b.rain,0).toFixed(1)+" in</b> of rain expected this week.</p>":'<p class="small">No forecast loaded.</p>')+(()=>{const d=day(p),cl2=p.demo?null:climFor(p.loc.lat,p.loc.lon),len=d.set-d.rise;return'<p class="small">Sunrise <b class="mono">'+fmtT(d.rise)+'</b> · sunset <b class="mono">'+fmtT(d.set)+"</b> · "+Math.floor(len/60)+"h "+(len%60)+"m of daylight</p>"+(cl2?'<p class="small">'+(cl2.rare?"Frost is rare here.":"Last frost <b>"+cl2.last+"</b> · first frost <b>"+cl2.first+"</b> · zone about <b>"+cl2.zone+"</b>")+" "+ev("modeled")+"</p>":"")})()+(!p.demo&&(!w||!climFor(p.loc.lat,p.loc.lon))?liveBtn("all",p.loc.lat,p.loc.lon,w?"Get frost dates":"Get live weather and frost dates"):"")+"</article>"+
+  '<article class="blk" aria-labelledby="tdT"><div class="row between"><h3 id="tdT">Today\'s tip</h3><span class="pill">General tip</span></div><p class="tipbig">'+esc(tip[0])+'</p><p class="small muted">'+esc(tip[1])+"</p></article>"+
+  '<article class="blk ink cc" aria-labelledby="tdN"><h3 id="tdN">Quick journal</h3><form id="qnForm" class="stack" style="gap:8px"><label class="sr" for="qnText">What\'s happening in your garden today?</label><textarea id="qnText" rows="2" placeholder="What\'s happening in your garden today?"></textarea><div><button class="btn primary sm" type="submit">+ Add a note</button></div></form><span class="tiny">Saved to this space\'s journal'+(p.demo?" (demo resets when you leave)":canSave()?"":" for this visit")+".</span></article>"+
+  '<article class="blk ink cl" aria-labelledby="tdP"><h3 id="tdP">Progress</h3><div class="row" style="gap:14px"><div class="ring" style="--v:'+pct+'" role="img" aria-label="'+done+" of "+tot+' tasks done"><b>'+done+"/"+tot+'</b></div><span class="small"><b>Tasks done</b><br>'+(tot?pct+"% complete. "+(pct>=100?"All caught up!":"Keep going!"):"No tasks yet.")+"</span></div>"+T("tab","planner")+"Open the planner</button></article></div>"}
+ case"spaces":{const L=[S.props.demo,S.props.demomke,S.props.mine].filter(Boolean);
+  return'<div class="spaces">'+L.map(q=>{const nb=bedsOf(q).length,np=bedsOf(q).reduce((a,b)=>a+(b.plants||[]).length,0),nt=q.tasks.filter(t=>!t.done).length,cur=q.id===p.id;
+   return'<article class="blk space'+(cur?" cur":"")+'"><div class="row between"><h3>'+esc(q.name)+"</h3>"+(q.demo?ev("demo"):'<span class="pill">Private</span>')+'</div><span class="small muted">'+esc(q.place)+'</span><span class="small mono">'+nb+" beds · "+np+" plantings · "+nt+" open tasks</span>"+(cur?'<span class="pill good" style="align-self:flex-start">Open now</span>':'<div><button class="btn sm" data-act="switch-prop" data-arg="'+q.id+'">Open</button></div>')+"</article>"}).join("")+
+  (S.props.mine?"":'<button class="blk addspace" data-act="start"><span class="big" aria-hidden="true">+</span><b>Add your space</b><span class="small">Map your own yard, patio or plot</span></button>')+"</div>"+(S.props.mine?'<p class="tiny muted">This prototype keeps one space of your own per device.</p>':"")}
+ case"health":{const m=lightMix(p),at=attention(p),zs=zonesOf(p).filter(z=>z.type!=="container"),meas=zs.filter(z=>(z.tests||[]).some(t=>t.kind==="measured")).length,slow=zs.some(z=>(z.tests||[]).some(t=>t.drain!=null&&t.drain<.5)),house=p.objects.find(o=>o.type==="house"),gal=house?Math.round(house.w*house.d*.623):0,cap=p.objects.filter(o=>o.type==="barrel").reduce((a,b)=>a+(b.cap||0),0);
+  return'<div class="g3"><article class="blk" aria-labelledby="hL"><div class="row between"><h3 id="hL">Light mix</h3>'+ev("modeled")+'</div><span class="small muted">Beds by direct sun on '+dshort(S.date)+".</span>"+lightBar(m)+T("goto-layer","hours")+"See sun hours</button></article>"+
+  '<article class="blk attn" aria-labelledby="hA"><div class="row between"><h3 id="hA">Needs attention</h3><span class="pill'+(at.length?" bad":" good")+'">'+(at.length?at.length+" item"+(at.length>1?"s":""):"All clear")+"</span></div>"+(at.length?'<div class="list">'+at.slice(0,3).map(x=>'<div class="li"><b class="small">'+esc(x.t)+'</b><span class="tiny muted">'+esc(x.s)+'</span><div><button class="btn link small" data-act="'+x.a+'" data-arg="'+esc(x.g)+'">Fix this</button></div></div>').join("")+"</div>"+(at.length>3?'<span class="tiny muted">and '+(at.length-3)+" more</span>":""):'<p class="small">Nothing needs a look right now.</p>')+"</article>"+
+  '<article class="blk" aria-labelledby="hS"><div class="row between"><h3 id="hS">Soil + water</h3></div><div class="kv"><div><span class="lbl">Lab-tested beds</span><b class="mono">'+meas+" of "+zs.length+'</b></div><div><span class="lbl">Runoff per inch</span><b class="mono">'+gal+' gal</b></div><div><span class="lbl">Barrels</span><b class="mono">'+cap+" gal</b></div></div>"+(slow?'<p class="small">Slow drainage was reported. '+ev("reported")+"</p>":"")+'<div class="row">'+T("goto-layer","soil")+"Soil zones</button>"+T("goto-layer","water")+"Water</button></div></article></div>"}
+ case"tasks":{const open=p.tasks.filter(t=>!t.done).sort((a,b)=>a.due.localeCompare(b.due)).slice(0,4);
+  if(!open.length)return'<div class="empty"><p class="small">'+(p.tasks.length?"Everything's done. Nice work.":"No tasks yet. Add your own in the planner.")+'</p>'+T("tab","planner")+"Open the planner</button></div>";
+  return'<div class="taskcards">'+open.map(t=>'<article class="blk">'+taskRow(t)+"</article>").join("")+"</div>"}
+ case"around":return'<div class="g2" style="align-items:start"><article class="blk ink cc"><h3>Pests and reports</h3>'+W("around",p)+'</article><article class="blk ink cb"><h3>Swap nearby</h3>'+W("swap",p)+"</article></div>";
+ case"folks":{const mine=S.posts.filter(x=>x.propId===p.id);
+  return'<div class="g2"><article class="blk"><div class="row between"><h3>Your posts</h3><span class="pill">Private by default</span></div>'+(mine.length?'<div class="list">'+mine.slice(0,3).map(x=>'<div class="li"><b class="small">'+esc(x.title||x.type)+'</b><span class="tiny muted">'+AUD[x.aud]+"</span></div>").join("")+"</div>":'<p class="small">No community posts yet. When neighbors share their gardens, they show up here with no like or follower counts.</p>')+"</article>"+
+  '<article class="blk ink cg"><h3>Join the conversation</h3><p class="small">Share progress, ask questions and trade plants. Everything you share stays private until you choose who sees it.</p><div class="row"><button class="btn sm" data-act="compose">Share from my garden</button><button class="btn sm" data-act="tab" data-arg="explore">Explore</button></div></article></div>'}
+ case"more":return'<div class="dash">'+["weather","zonesun","garden","soilwater","journal","budget","globe"].map(id=>{const w=WIDGETS.find(x=>x[0]===id);return'<article class="w w-'+id+'"><div class="w-h"><h3>'+(w?w[1]:id==="weather"?"Weather":"Budget")+"</h3></div>"+W(id,p)+"</article>"}).join("")+"</div>"}
+ return""}
 function renderDash(){
- const p=prop(),adv=S.dash.advanced,cz=S.dash.customizing,vis=visWidgets();
- const first=p.demo?"":(!p.objects.some(o=>o.type==="bed")?'<div class="card"><h3>Your garden starts here.</h3><p>Add a garden bed to your map, or explore our sample Southeast DC yard to see how sunlight, soil and water can shape your plan.</p><div class="row"><button class="btn primary sm" data-act="goto-tool" data-arg="bed">Add a bed</button><button class="btn sm" data-act="switch-prop" data-arg="demo">Explore the sample yard</button></div></div>':"");
- let h='<div class="pagehead"><div class="stack"><span class="eyebrow">Welcome back</span><h2>'+esc(p.name)+'</h2><span class="small muted">'+esc(p.place)+" · "+esc(p.kind)+'</span></div><div class="row"><button class="btn sm" data-act="dash-customize" aria-pressed="'+cz+'">'+(cz?"Done customizing":"Customize")+"</button></div></div>"+first+'<div class="dash">';
- vis.forEach((id,i)=>{const w=WIDGETS.find(x=>x[0]===id);
-  h+='<article class="w w-'+id+'" aria-labelledby="wt-'+id+'"><div class="w-h"><h3 id="wt-'+id+'">'+w[1]+"</h3>"+(cz?'<span class="wctl"><button data-act="dash-move" data-arg="'+id+':-1" aria-label="Move '+w[1]+' earlier"'+(i===0?" disabled":"")+'>↑</button><button data-act="dash-move" data-arg="'+id+':1" aria-label="Move '+w[1]+' later"'+(i===vis.length-1?" disabled":"")+'>↓</button><button data-act="dash-hide" data-arg="'+id+'" aria-label="Hide '+w[1]+'">✕</button></span>':"")+"</div>"+W(id,p)+"</article>"});
- h+="</div>";
- const hid=S.dash.hidden.filter(id=>adv||!WIDGETS.find(w=>w[0]===id)[2]);
- if(hid.length)h+='<div class="row small"><span class="muted">Hidden:</span>'+hid.map(id=>'<button class="chip" data-act="dash-show" data-arg="'+id+'">Show '+WIDGETS.find(w=>w[0]===id)[1]+"</button>").join("")+"</div>";
- if(!adv)h+='<p class="small muted">Advanced mode adds sun hours by bed, a beds summary and sun-angle numbers.</p>';
+ const p=prop(),cz=S.dash.customizing,ord=secOrder(),lot=p.objects.find(o=>o.type==="lot"),c=nearestCity(p.loc.lat,p.loc.lon),cl=climFor(p.loc.lat,p.loc.lon),np=bedsOf(p).reduce((a,b)=>a+(b.plants||[]).length,0);
+ const chips=[cl?"Zone about "+cl.zone:c.zone?"Zone "+c.zone:null,lot?Math.round(lot.w*lot.d).toLocaleString()+" sq ft":null,p.kind,np+" plantings"].filter(Boolean);
+ let h='<section class="dhero" aria-labelledby="dheroT"><div class="stack dhero-copy"><span class="eyebrow-l">'+(p.demo?"Demo yard":"Your space")+" · "+greet()+'</span><h2 id="dheroT">'+esc(p.name)+'</h2><p>'+esc(p.place)+(p.demo?". A fictional sample to explore; edit anything.":". Private to you.")+'</p><div class="dchips">'+chips.map(x=>"<span>"+esc(x)+"</span>").join("")+'</div><div class="row"><button class="btn tour" data-act="tour">Take a tour <span aria-hidden="true">→</span></button><button class="btn onink" data-act="tab" data-arg="property">Open the map</button><button class="btn onink" data-act="dash-customize" aria-pressed="'+cz+'">'+(cz?"Done customizing":"Customize")+'</button></div></div><div class="mapbox mini dhero-map" data-act="tab" data-arg="property"><canvas id="miniCv" aria-label="Small map of this space. Opens the map editor."></canvas></div></section>';
+ const ic={bed:'<rect x="4" y="8" width="16" height="9" rx="2"/><path d="M8 8V5M12 8V4M16 8V5"/>',plant:'<path d="M12 21v-8M12 13c0-4-3-7-7-7 0 4 3 7 7 7zm0 0c0-4 3-7 7-7 0 4-3 7-7 7z"/>',note:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',photo:'<rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 6l2-3h4l2 3"/>'};
+ const qa=[["goto-tool","bed","Add a bed","#C9F25A","bed"],["tab","plants","Add a plant","#F7C948","plant"],["qa-note","","Add a note","#FF6B52","note"],["compose","","Share a photo","#7B7CFB","photo"]];
+ h+='<div class="qa" role="group" aria-label="Quick actions">'+qa.map(q=>'<button data-act="'+q[0]+'" data-arg="'+q[1]+'"><span class="ic" style="background:'+q[3]+'"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ic[q[4]]+"</svg></span>"+q[2]+"</button>").join("")+"</div>";
+ h+='<nav class="secnav" aria-label="Jump to a topic"><button aria-current="page">Overview</button><button data-act="goto-layer" data-arg="hours">Sun</button><button data-act="goto-layer" data-arg="soil">Soil</button><button data-act="goto-layer" data-arg="water">Water</button><button data-act="tab" data-arg="plants">Plants</button></nav>';
+ if(!p.demo&&!p.objects.some(o=>o.type==="bed"))h+='<div class="card"><h3>Your garden starts here.</h3><p>Add a garden bed to your map, or open a sample yard to see how sunlight, soil and water can shape your plan.</p><div class="row"><button class="btn primary sm" data-act="goto-tool" data-arg="bed">Add a bed</button><button class="btn sm" data-act="switch-prop" data-arg="demo">DC sample yard</button><button class="btn sm" data-act="switch-prop" data-arg="demomke">Milwaukee sample yard</button></div></div>';
+ ord.forEach((id,i)=>{const sc=SECTIONS.find(x=>x[0]===id);
+  h+='<section class="dsec" id="sec-'+id+'" aria-labelledby="sh-'+id+'"><div class="dsec-h"><h2 id="sh-'+id+'">'+sc[1]+'</h2><span class="sub">'+sc[2]+'</span><span class="end">'+(cz?'<button class="btn sm" data-act="sec-move" data-arg="'+id+':-1" aria-label="Move '+sc[1]+' up"'+(i===0?" disabled":"")+'>↑</button><button class="btn sm" data-act="sec-move" data-arg="'+id+':1" aria-label="Move '+sc[1]+' down"'+(i===ord.length-1?" disabled":"")+'>↓</button><button class="btn sm" data-act="sec-hide" data-arg="'+id+'" aria-label="Hide '+sc[1]+'">Hide</button>':"")+"</span></div>"+secHTML(id,p)+"</section>"});
+ const hid=(S.dash.shidden||[]).filter(id=>S.dash.advanced||!SECTIONS.find(x=>x[0]===id)[3]);
+ if(hid.length)h+='<div class="row small"><span class="muted">Hidden:</span>'+hid.map(id=>'<button class="chip" data-act="sec-show" data-arg="'+id+'">Show '+SECTIONS.find(x=>x[0]===id)[1]+"</button>").join("")+"</div>";
+ if(!S.dash.advanced)h+='<p class="small muted">Advanced mode adds a "More cards" section with sun hours by bed, a beds summary, the forecast, budget and more.</p>';
  h+='<p class="tiny muted">'+ev("measured")+" lab or sensor result · "+ev("modeled")+" software estimate · "+ev("reported")+" your observation · "+ev("demo")+" example only</p>";
  $("#v-dash").innerHTML=h;
- const mc=$("#miniCv");if(mc)drawMap(mc,p,{layer:"shade",minutes:S.minutes,Y:0,mini:true,maxH:420});
+ const mc=$("#miniCv");if(mc)drawMap(mc,p,{layer:"shade",minutes:S.minutes,Y:0,mini:true,maxH:300});
  const mg=$("#miniGlobe");if(mg)drawGlobe(mg,{mini:true});
 }
 
@@ -1405,8 +1549,24 @@ function snap(p){return JSON.stringify({objects:p.objects,water:p.water})}
 function pushUndo(){const p=prop();UNDO.push({id:p.id,s:snap(p)});if(UNDO.length>60)UNDO.shift();REDO.length=0}
 function restore(stackA,stackB){const e=stackA.pop();if(!e)return;const p=S.props[e.id];if(!p)return;stackB.push({id:p.id,s:snap(p)});const o=JSON.parse(e.s);p.objects=o.objects;p.water=o.water;if(S.sel&&!p.objects.find(x=>x.id===S.sel))S.sel=null;changed(p);renderProperty()}
 const propOpts={};
+function renderGlance(){const p=prop(),el=$("#glance");if(!el)return;
+ const lot=p.objects.find(o=>o.type==="lot"),c=nearestCity(p.loc.lat,p.loc.lon),cl=climFor(p.loc.lat,p.loc.lon),m=lightMix(p),zs=zonesOf(p).filter(z=>z.type!=="container"),meas=zs.filter(z=>(z.tests||[]).some(t=>t.kind==="measured")),ph=meas.map(z=>latestTest(z)).filter(t=>t&&t.ph!=null).map(t=>t.ph);
+ const nb=bedsOf(p).length,np=bedsOf(p).reduce((a,b)=>a+(b.plants||[]).length,0),open=p.tasks.filter(t=>!t.done).sort((a,b)=>a.due.localeCompare(b.due)),j=p.journal.slice().sort((a,b)=>b.date.localeCompare(a.date))[0],w=wxFor(p);
+ const pc=v=>m.n?Math.round(v/m.n*100)+"%":"–";
+ const A=(id,ico,col,t,sum,body,open)=>'<details class="acc" id="acc-'+id+'"'+(open?" open":"")+'><summary><span class="aic" style="background:'+col+'" aria-hidden="true">'+ico+'</span><span class="stack" style="gap:0"><b class="acct">'+t+'</b><span class="small muted">'+sum+'</span></span></summary><div class="accb stack">'+body+"</div></details>";
+ let h='<div class="row between"><h3>At a glance</h3>'+(p.demo?ev("demo"):"")+"</div>";
+ h+=A("ov","⌂","#C9F25A","Overview",[lot?Math.round(lot.w*lot.d).toLocaleString()+" sq ft":"",nb+" garden areas",cl?"zone about "+cl.zone:c.zone?"zone "+c.zone:""].filter(Boolean).join(" · "),'<p class="small">'+esc(p.kind)+" in "+esc(p.place)+". Front faces "+WORDS[dir16(p.face)]+'.</p><button class="btn link small" data-act="open-words">Read the map in words</button>');
+ h+=A("wx","☀","#F7C948","Weather",w?w[0].hi+"° high · "+w.reduce((a,b)=>a+b.rain,0).toFixed(1)+" in of rain this week":"No forecast loaded",wxBlock(p)||'<p class="small">Example weather for the demo yard.</p>');
+ h+=A("sun","◐","#FFE08A","Sun & shade",m.n?"Full sun "+pc(m.F)+" · part "+pc(m.P+m.PS)+" · shade "+pc(m.S)+(m.U?" · "+m.U+" need a height":""):"Add a bed to see its light",lightBar(m)+'<div class="row"><button class="btn sm" data-act="layer" data-arg="hours">Sun hours layer</button><button class="btn sm" data-act="probe-drop">Drop the light probe</button></div>');
+ h+=A("soil","♣","#B8E08C","Soil health",meas.length+" of "+zs.length+" lab-tested"+(ph.length?" · pH "+ph.map(x=>x.toFixed(1)).join(", "):""),'<div class="list">'+zs.slice(0,4).map(z=>{const t=latestTest(z);return'<div class="small"><b>'+esc(z.name)+":</b> "+(t?esc(testSummary(t))+" "+ev(t.kind):'<span class="muted">not tested</span>')+"</div>"}).join("")+'</div><button class="btn sm" data-act="layer" data-arg="soil">Soil zones layer</button>');
+ h+=A("water","💧","#8FB8E8","Water flow","Slopes toward the "+WORDS[dir16(p.water.down)]+" · "+({sandy:"sandy",silty:"silty or loam",clayey:"clay"}[p.water.soil]||p.water.soil)+" soil"+(p.water.lows.length?" · "+p.water.lows.length+" pooling report"+(p.water.lows.length>1?"s":""):""),'<p class="small">'+p.objects.filter(o=>o.type==="barrel").length+" rain barrel(s). "+(p.water.fill?"Last reported "+p.water.fill.pct+"% full.":"")+'</p><button class="btn sm" data-act="layer" data-arg="water">Water layer</button>');
+ h+=A("plants","✿","#FF9E8C","Plants",np+" plantings in "+nb+" beds and containers",'<div class="list">'+bedsOf(p).slice(0,5).map(b=>'<div class="small"><b>'+esc(b.name)+":</b> "+((b.plants||[]).length?esc(b.plants.join(", ")):'<span class="muted">empty</span>')+"</div>").join("")+'</div><button class="btn sm" data-act="tab" data-arg="plants">Beds & plants</button>');
+ h+=A("tasks","✓","#C9F25A","Today's tasks",open.length?open.length+" open · next: "+esc(open[0].title):"Nothing open",'<div>'+open.slice(0,3).map(taskRow).join("")+'</div><button class="btn sm" data-act="tab" data-arg="planner">All tasks</button>');
+ h+=A("notes","✎","#7B7CFB","Garden notes",j?esc(dshort(j.date))+": "+esc(j.text.length>48?j.text.slice(0,46)+"…":j.text):"No notes yet",(j?journalRow(j):"")+'<button class="btn sm" data-act="tab" data-arg="planner">Add a note</button>');
+ el.innerHTML=h}
 function renderProperty(){
  const p=prop();
+ renderGlance();
  $("#propSub").textContent=p.place+" · front faces "+WORDS[dir16(p.face)]+" · "+(p.demo?"fictional demo property":"private to you");
  $("#tools").innerHTML=TOOLS.map(t=>'<button class="chip" data-act="tool" data-arg="'+t[0]+'" aria-pressed="'+(S.tool===t[0])+'">'+t[1]+"</button>").join("")+'<span class="sep" aria-hidden="true"></span><button class="chip" data-act="undo"'+(UNDO.length?"":" disabled")+'>Undo</button><button class="chip" data-act="redo"'+(REDO.length?"":" disabled")+">Redo</button>";
  const L=[["shade","Shade now"],["hours","Sun hours"],["water","Water"],["soil","Soil zones"]];
@@ -1455,7 +1615,7 @@ function zoneTable(p){
  return'<div class="tablewrap"><table><thead><tr><th>Bed</th><th class="num">Direct sun</th><th>Light</th></tr></thead><tbody>'+zs.map(z=>{const e=estimate(p,zonePts(z),S.Y);const c=e.ok?sunClass(e.h):null;
   return"<tr><td>"+esc(z.name)+'</td><td class="num">'+(e.ok?e.h.toFixed(1)+" h":"–")+"</td><td>"+(e.ok?'<span class="pill" style="background:var('+c.c+');color:'+(c.t==="Full shade"?"#FFFFFF":"#1F2F26")+'">'+c.t+"</span>":'<button class="btn link small" data-act="select-obj" data-arg="'+e.need[0].id+'">Needs '+esc(e.need[0].name)+" height</button>")+"</td></tr>"}).join("")+"</tbody></table></div>"}
 function renderLayerDyn(){
- const p=prop(),el=$("#layerDyn");let h="";
+ const p=prop(),el=$("#layerDyn");let h="";renderGlance();
  if(S.layer==="shade"||S.layer==="hours"){
   const unk=unknownObjs(p);
   if(unk.length)h+='<div class="warnbox"><span aria-hidden="true">!</span><span><b>Shade model incomplete.</b> The '+unk.map(u=>esc(u.name)).join(", ")+" "+(unk.length===1?"needs":"need")+' a height. Beds it could shade show "Needs a height" instead of a number. <button class="btn link small" data-act="select-obj" data-arg="'+unk[0].id+'">Add it</button></span></div>';
@@ -1911,7 +2071,7 @@ function openMood(){$("#sheetHost").innerHTML='<div class="sheet-bg" data-act="c
 document.addEventListener("click",e=>{
  const el=e.target.closest("[data-act]");if(!el)return;const act=el.dataset.act,arg=el.dataset.arg,p=prop();
  if(act==="close-sheet"){if(el.classList.contains("sheet-bg")&&e.target!==el)return;$("#sheetHost").innerHTML="";return}
- if(act==="task"){const t=p.tasks.find(x=>x.id===arg);if(t){t.done=el.checked;changed(p);if(S.tab==="garden")renderPlanner();else renderDash()}return}
+ if(act==="task"){const t=p.tasks.find(x=>x.id===arg);if(t){t.done=el.checked;changed(p);if(S.tab==="garden"){if(S.gsub==="planner")renderPlanner();else renderGlance()}else renderDash()}return}
  switch(act){
  case"gsub":S.gsub=arg;stopPlay();renderGardenShell();break;
  case"exf":{const [k,v]=arg.split(":");S.exf[k]=v;renderExplore();break}
@@ -1952,6 +2112,15 @@ document.addEventListener("click",e=>{
  case"tab":go(arg);break;
  case"mode":S.dash.advanced=arg==="advanced";persist();renderChrome();break;
  case"switch-prop":S.propId=arg;S.sel=null;S.spot=null;go("dash");break;
+ case"sec-move":{const q=arg.split(":"),ord=secOrder(),i=ord.indexOf(q[0]),j2=i+(+q[1]);if(j2<0||j2>=ord.length)break;const o=S.dash.sorder,a=o.indexOf(q[0]),b=o.indexOf(ord[j2]);[o[a],o[b]]=[o[b],o[a]];persist();renderDash();const bt=$('[data-act="sec-move"][data-arg="'+arg+'"]');if(bt&&!bt.disabled)bt.focus();break}
+ case"sec-hide":S.dash.shidden=(S.dash.shidden||[]).concat(arg);persist();renderDash();break;
+ case"sec-show":S.dash.shidden=(S.dash.shidden||[]).filter(x=>x!==arg);persist();renderDash();break;
+ case"qa-note":{const t=$("#qnText");if(t){t.scrollIntoView({block:"center",behavior:reduceMotion()?"auto":"smooth"});t.focus()}else go("planner");break}
+ case"open-words":{const d=$("#mapWords");if(d){d.open=true;d.scrollIntoView({block:"start"});d.querySelector("summary").focus()}break}
+ case"tour":S.tour=0;renderTour();break;
+ case"tour-step":S.tour=Math.max(0,Math.min(TOUR.length-1,S.tour+(+arg)));renderTour();break;
+ case"tour-go":{const st=TOUR[S.tour];$("#sheetHost").innerHTML="";if(st[3])st[3]();break}
+ case"search-go":{const q=arg.split("|");$("#sheetHost").innerHTML="";if(q[0]==="layer"){S.layer=q[1];S.tool="select";go("property")}else go(q[1]);break}
  case"dash-customize":S.dash.customizing=!S.dash.customizing;renderDash();break;
  case"dash-move":{const [id,dir]=arg.split(":"),vis=visWidgets(),i=vis.indexOf(id),j=i+(+dir);if(j<0||j>=vis.length)break;const o=S.dash.order,a=o.indexOf(id),b=o.indexOf(vis[j]);o[a]=vis[j];o[b]=id;persist();renderDash();const btn=$('[data-act="dash-move"][data-arg="'+id+":"+dir+'"]');if(btn&&!btn.disabled)btn.focus();break}
  case"dash-hide":S.dash.hidden.push(arg);persist();renderDash();break;
@@ -2043,6 +2212,9 @@ document.addEventListener("submit",e=>{
  if(id==="circleForm"){const name=$("#ccName").value.trim();if(!name){toast("Give the circle a name.");$("#ccName").focus();return}
   S.trade.circles=[{id:nid("c"),name,area:$("#ccArea").value.trim()||cityName(p),max:Math.max(2,Math.min(12,+$("#ccMax").value||6)),rules:$("#ccRules").value.trim(),pledges:[]}];renderTrade();toast("Circle created. Add the first pledge.");return}
  if(id==="pledgeForm"){const ci=S.trade.circles[0];if(!ci)return;const hh=$("#plHH").value.trim()||"My household";ci.pledges.push({hh,crop:$("#plCrop").value,amt:$("#plAmt").value.trim(),sun:$("#plSun").value});renderTrade();toast("Pledge added.");return}
+ if(id==="qnForm"){const txt=$("#qnText").value.trim();if(!txt){toast("Write a note first.");$("#qnText").focus();return}
+  pushUndo();p.journal.push({id:nid("j"),date:TODAY,kind:"note",text:txt});changed(p);renderDash();toast("Note added to the journal.");return}
+ if(id==="searchForm"){openSearch($("#q").value.trim());return}
  if(id==="lightForm"){const z=p.objects.find(o=>o.id===$("#lfBed").value);if(!z)return;const val=+$("#lfVal").value,kind=$("#lfKind").value;
   if(!($("#lfVal").value!==""&&val>=0)){toast("Enter the reading from your meter.");$("#lfVal").focus();return}
   if(kind==="dli"&&val>80){toast("That's higher than full summer sun (about 65). Check the units.");$("#lfVal").focus();return}
