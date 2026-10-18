@@ -1058,7 +1058,7 @@ function renderConsent(){
   (hasChoice?'<button class="btn sm" data-act="consent-close">Close</button>':'')+
   '</div><p class="small">No advertising, analytics or nonessential tracking runs when you arrive. Choose whether to save your garden on this device. You can use the site without optional storage.</p>'+
   '<div class="cbtns" role="group" aria-label="Privacy decisions">'+
-    '<button class="btn primary" data-act="consent" data-arg="local">Allow local garden saving</button>'+
+    '<button class="btn" data-act="consent" data-arg="local">Allow local garden saving</button>'+
     '<button class="btn" data-act="consent" data-arg="off">Reject optional storage</button>'+
     '<button class="btn" data-act="consent-details" aria-expanded="'+consentDetails+'">'+(consentDetails?'Hide details':'Customize &amp; details')+'</button></div>'+
   '<p class="tiny muted">Your decision is stored locally only after you choose, so the banner won’t keep returning. Change it any time through Privacy choices.</p>';
@@ -1095,10 +1095,10 @@ function openDisplay(){const ch=(arg,label,on)=>'<button class="chip" data-act="
 /* ---------- toast, sheets ---------- */
 let toastT;function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3000)}
 const SHEETS={
- policy:["Privacy policy (draft)","<p>This is a draft for the prototype.</p><ul><li><b>Optional cookies are off by default.</b> Only your privacy decision is stored after you make a choice; saving garden data is optional and off by default. Privacy choices explains exactly what each option stores.</li><li>No analytics, ad pixels, session replay or fingerprinting are installed.</li><li>The page loads no outside fonts, maps or scripts, so no third party sees your visit.</li><li><b>Permissions we never ask for:</b> camera, microphone, photo library, contacts or your device's location.</li><li><b>Location:</b> you pick or type your nearest city. It is used only for plant-related things: sun times, planting season, native plants, pest seasons and weather.</li><li><b>Photos and videos:</b> you choose individual files from a folder on your device. Location data inside photos is removed. They stay in the open tab and are never saved or shared.</li><li>Pest reports show only a coarse area of about a mile, never your address.</li><li><b>Community posts and trades</b> stay on this device in the prototype, and posts are private by default.</li><li><b>Sound:</b> Garden Mood sounds are made in your browser and never start on their own. No music service is connected.</li></ul><p class='small muted'>Privacy and accessibility requirements need legal review for each jurisdiction before launch.</p>"],
+ policy:["Privacy policy (draft)","<p>This is a draft for the prototype.</p><ul><li><b>Optional cookies are off by default.</b> Only your privacy decision is stored after you make a choice; saving garden data is optional and off by default. Privacy choices explains exactly what each option stores.</li><li>No analytics, ad pixels, session replay or fingerprinting are installed.</li><li>The page loads no outside fonts, maps or scripts. <b>The only outside connection is Open-Meteo</b>, a free weather service, and only when you press a live weather or frost button. It receives your city's approximate location, rounded to about 7 miles, and, like any website, your IP address. It gets nothing about you or your garden, and the results aren't saved.</li><li><b>Permissions we never ask for:</b> camera, microphone, photo library, contacts or your device's location.</li><li><b>Location:</b> you pick or type your nearest city. It is used only for plant-related things: sun times, planting season, native plants, pest seasons and weather.</li><li><b>Photos and videos:</b> you choose individual files from a folder on your device. Location data inside photos is removed. They stay in the open tab and are never saved or shared.</li><li>Pest reports show only a coarse area of about a mile, never your address.</li><li><b>Community posts and trades</b> stay on this device in the prototype, and posts are private by default.</li><li><b>Sound:</b> Garden Mood sounds are made in your browser and never start on their own. No music service is connected.</li></ul><p class='small muted'>Privacy and accessibility requirements need legal review for each jurisdiction before launch.</p>"],
  a11y:["Accessibility","<ul><li>Text size, higher contrast and reduced motion are under Accessibility &amp; display at the top of every page.</li><li>Every photo you add asks for a short description. Screen readers read it aloud, and it shows as a caption for everyone.</li><li>Every video needs a written description or transcript before it's added, can carry a caption file (.vtt), never plays on its own and has no sound until you press play.</li><li>Every map has a text version (Map in words) and a sun-hours table.</li><li>Every slider works with arrow keys; dragging is never required.</li><li>Status uses words and shapes, not color alone, and notices are announced to screen readers.</li><li>Nothing on the site relies on sound.</li><li>The target is WCAG 2.2 AA.</li></ul>"],
  rules:["Community rules","<ul><li>Report what you saw and roughly where. The public map only ever shows a coarse area.</li><li>Add a photo when you can. Moderators verify reports from photos.</li><li>No addresses, faces or license plates in photos.</li><li>Unverified reports are labeled until someone confirms them.</li></ul>"],
- sources:["Data sources","<ul><li>Sun position: NOAA solar calculation (an approximation of the Solar Position Algorithm).</li><li>Soils: USDA NRCS soil survey (SSURGO), used as regional context only.</li><li>Native plants: starter lists by region; the Maryland Plant Atlas is a candidate source for the Mid-Atlantic.</li><li>Pests: seasonal ranges from extension guidance; sightings in the demo are examples.</li><li>Weather in the demo is example data. The full app needs a licensed forecast provider.</li></ul>"],
+ sources:["Data sources","<ul><li>Sun position: NOAA solar calculation (an approximation of the Solar Position Algorithm).</li><li>Soils: USDA NRCS soil survey (SSURGO), used as regional context only.</li><li>Native plants: starter lists by region; the Maryland Plant Atlas is a candidate source for the Mid-Atlantic.</li><li>Pests: seasonal ranges from extension guidance; sightings in the demo are examples.</li><li>Live forecasts and frost estimates: <a href='https://open-meteo.com/' target='_blank' rel='noopener noreferrer'>Open-Meteo.com</a> (CC BY 4.0), which combines national weather service models and ERA5 reanalysis. Fetched only when you ask. Frost dates and zones are estimates from 10 years of gridded daily lows and can differ from your yard; the official USDA zone map is the reference for zones.</li><li>Weather in the demo yard is example data.</li></ul>"],
  ask:["Garden assistant","<p>Planned. The assistant will answer questions using your saved garden records, and say plainly what is missing, what is a guess and what hasn't been verified.</p>"],
  contact:["Contact","<p>Contact details will be added before launch. For now, share feedback with the person who sent you this prototype.</p>"],
  login:["Log in","<p>Accounts aren't part of this prototype. You can explore the demo yard, or start your own garden on this device without an account.</p><div class='row'><button class='btn primary' data-act='start'>Start My Garden</button><button class='btn' data-act='demo'>Explore the demo yard</button></div>"]};
@@ -1141,7 +1141,7 @@ function testSummary(t){const bits=[];if(t.ph!=null)bits.push("pH "+t.ph);if(t.t
 function W(id,p){
  switch(id){
  case"hello":{const n=nextStep(p),d=new Date(S.date+"T12:00:00");return'<p class="small muted">'+d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})+" · "+esc(p.place)+'</p><div class="nextbox"><span class="lbl">Next useful step</span><p>'+esc(n.t)+'</p><div><button class="btn primary sm" data-act="'+n.act+'" data-arg="'+esc(n.arg)+'">'+n.btn+"</button></div></div>"}
- case"now":return W("sun",p)+(p.weather?'<div class="row between"><span class="small"><b class="mono">'+p.weather.reduce((a,b)=>a+b.rain,0).toFixed(1)+' in</b> of rain expected this week</span>'+ev("demo")+"</div>":'<p class="small muted">Weather connects in the full app. No forecast is shown until a real source is connected.</p>');
+ case"now":return W("sun",p)+wxBlock(p);
  case"around":{const m=NOW.getMonth()+1,risk=pestsFor(p.loc.region,m).filter(x=>x.r!=="all").slice(0,2),sg=sightingsFor(p).filter(s=>!s.mine),v=sg.filter(s=>s.status==="verified").length;
   return'<div class="li"><div class="row between"><b>Pests this month</b>'+ev("modeled")+'</div><span class="small">'+esc(risk.map(r=>r.n).join(", ")||"Quiet month")+'</span></div><div class="li"><div class="row between"><b>Nearby reports</b>'+evDemo(p)+'</div><span class="small">'+(sg.length?v+" verified, "+(sg.length-v)+" unverified this week":"No reports yet")+'</span></div><div class="li"><div class="row between"><b>Water and local rules</b>'+stat("planned")+'</div><span class="small">No verified alerts yet.</span></div><div><button class="btn sm" data-act="tab" data-arg="alerts">Open Alerts</button></div>'}
  case"folks":{const mine=S.posts.filter(x=>x.propId===p.id);return(mine.length?'<div class="list">'+mine.slice(0,3).map(x=>'<div class="small"><b>'+esc(x.title||x.type)+"</b> · "+AUD[x.aud]+"</div>").join("")+"</div>":'<p class="small">No community posts yet. Share a photo from your garden; it stays private unless you choose otherwise.</p>')+'<div class="row"><button class="btn sm" data-act="compose">Share from my garden</button><button class="btn sm" data-act="tab" data-arg="explore">Explore</button></div>'}
@@ -1151,9 +1151,9 @@ function W(id,p){
  case"progress":{const hv=p.journal.filter(j=>j.kind==="harvest").length,td=p.tasks.filter(t=>t.done).length,pl=p.budget.reduce((a,b)=>a+(b.planned||0),0),ac=p.budget.reduce((a,b)=>a+(b.actual||0),0);return'<div class="kv"><div><span class="lbl">Harvests logged</span><b>'+hv+'</b></div><div><span class="lbl">Tasks done</span><b>'+td+" of "+p.tasks.length+'</b></div><div><span class="lbl">Spent</span><b class="mono">$'+ac+'</b></div><div><span class="lbl">Planned</span><b class="mono">$'+pl+"</b></div></div>"+(pl?'<div class="meter money"><i style="width:'+Math.min(100,ac/pl*100)+'%"></i></div>':"")+'<div><button class="btn sm" data-act="tab" data-arg="planner">Open calendar &amp; journal</button></div>'}
  case"next":{const n=nextStep(p);return'<p>'+esc(n.t)+'</p><div><button class="btn primary sm" data-act="'+n.act+'" data-arg="'+esc(n.arg)+'">'+n.btn+"</button></div>"}
  case"map":return'<div class="mapbox mini" data-act="tab" data-arg="property"><canvas id="miniCv" aria-label="Small map of your property. Opens the map editor."></canvas></div><div class="row between"><span class="small muted">'+esc(p.place)+" · "+esc(p.kind)+'</span><button class="btn sm" data-act="tab" data-arg="property">Open the map editor</button></div><p class="tiny muted">Estimated shade at '+fmtT(S.minutes)+", "+dshort(S.date)+". Your address is never shown.</p>";
- case"weather":{if(!p.weather)return'<div class="empty"><p class="small">Forecasts connect in the full app. This prototype can\'t reach a weather service, so no numbers are shown for your property.</p></div>';
-  const tot=p.weather.reduce((a,b)=>a+b.rain,0),mx=Math.max(1,...p.weather.map(w=>w.rain));
-  return'<div class="row between"><span class="small"><b class="mono">'+tot.toFixed(1)+' in</b> of rain expected this week</span>'+ev("demo")+'</div><div class="forecast">'+p.weather.map(w=>'<div><div class="bar"><i style="height:'+Math.max(2,w.rain/mx*44)+'px"></i></div><div class="tiny mono">'+w.rain.toFixed(1)+'"</div><div class="tiny"><b>'+new Date(w.date+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"})+'</b></div><div class="tiny muted mono">'+w.hi+"°</div></div>").join("")+"</div>"}
+ case"weather":{if(!wxFor(p))return'<div class="stack">'+wxBlock(p)+"</div>";
+  const tot=wxFor(p).reduce((a,b)=>a+b.rain,0),mx=Math.max(1,...wxFor(p).map(w=>w.rain));
+  return'<div class="row between"><span class="small"><b class="mono">'+tot.toFixed(1)+' in</b> of rain expected this week</span>'+wxTag(p)+'</div><div class="forecast">'+wxFor(p).map(w=>'<div><div class="bar"><i style="height:'+Math.max(2,w.rain/mx*44)+'px"></i></div><div class="tiny mono">'+w.rain.toFixed(1)+'"</div><div class="tiny"><b>'+new Date(w.date+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"})+'</b></div><div class="tiny muted mono">'+w.hi+"°</div></div>").join("")+"</div>"}
  case"sun":{const d=day(p),beds=bedsOf(p).filter(b=>b.type==="bed");const len=d.set-d.rise;
   let best=null;for(const b of beds){const e=estimate(p,zonePts(b),0);if(e.ok&&(!best||e.h>best.e.h))best={b,e}}
   const sp=sunPos(S.minutes,S.date,p.loc);
@@ -1181,7 +1181,7 @@ function W(id,p){
   if(p.water.fill)h+='<div class="stack" style="gap:4px"><div class="row between"><span class="small">Barrel fill <b class="mono">'+p.water.fill.pct+'%</b></span>'+ev("reported")+'</div><div class="meter"><i style="width:'+p.water.fill.pct+'%"></i></div><span class="src">Updated '+dlong(p.water.fill.date)+"</span></div>";
   else h+='<p class="small muted">No fill level reported yet.</p>';
   h+='<label class="f">How full is it today?<input type="range" min="0" max="100" step="10" value="'+(p.water.fill?p.water.fill.pct:0)+'" data-f="fill" aria-label="Barrel fill percent"></label>';
-  if(p.weather){const tot=p.weather.reduce((a,b)=>a+b.rain,0),sp=p.water.spouts.find(s=>s.barrel),cap1=sp?roof*sp.share*.623*.9*tot:0;if(sp)h+='<p class="small">This week\'s forecast could send about <b class="mono">'+Math.round(cap1)+" gal</b> to the barrel. "+(cap1>cap*(1-(p.water.fill?p.water.fill.pct:0)/100)?"Expect overflow; make sure it drains away from the house.":"It should hold it.")+" "+ev("demo")+"</p>"}
+  if(wxFor(p)){const tot=wxFor(p).reduce((a,b)=>a+b.rain,0),sp=p.water.spouts.find(s=>s.barrel),cap1=sp?roof*sp.share*.623*.9*tot:0;if(sp)h+='<p class="small">This week\'s forecast could send about <b class="mono">'+Math.round(cap1)+" gal</b> to the barrel. "+(cap1>cap*(1-(p.water.fill?p.water.fill.pct:0)/100)?"Expect overflow; make sure it drains away from the house.":"It should hold it.")+" "+wxTag(p)+"</p>"}
   return h}
  case"journal":{if(!p.journal.length)return'<div class="empty"><p class="small">Nothing logged yet. Notes, photos, harvests and soil amendments go here.</p><button class="btn sm" data-act="tab" data-arg="planner">Add an entry</button></div>';
   return'<div class="list">'+p.journal.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,3).map(journalRow).join("")+"</div>"}
@@ -1569,6 +1569,56 @@ function attachGlobe(cv){if(!cv)return;let d=null;
  cv.addEventListener("pointercancel",()=>{d=null})}
 function dayLen(lat,lon,date){const loc={lat,lon,tz:Math.round(lon/15),dst:false},d=day({loc},date);if(d.rise===null)return sunPos(720,date,loc).alt>0?1440:0;return Math.min(1440,d.set-d.rise+5)}
 const hm=m=>Math.floor(m/60)+" h "+pad(Math.round(m%60))+" m";
+/* ---------- live weather + frost (Open-Meteo), fetched only when the person asks ---------- */
+const LIVE={wx:{},clim:{},busy:{},err:{}};
+const r1=x=>Math.round(x*10)/10;
+const lkey=(lat,lon)=>r1(lat).toFixed(1)+","+r1(lon).toFixed(1);
+async function getJSON(u){const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),15000);
+ try{const r=await fetch(u,{signal:ctl.signal,credentials:"omit",referrerPolicy:"no-referrer",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);return await r.json()}finally{clearTimeout(t)}}
+async function fetchWx(lat,lon){
+ const j=await getJSON("https://api.open-meteo.com/v1/forecast?latitude="+r1(lat)+"&longitude="+r1(lon)+"&daily=precipitation_sum,temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=auto&forecast_days=7"),d=j.daily;
+ if(!d||!d.time||!d.time.length)throw new Error("empty");
+ LIVE.wx[lkey(lat,lon)]={at:new Date(),days:d.time.map((t,i)=>({date:t,rain:+(d.precipitation_sum[i]||0),hi:Math.round(d.temperature_2m_max[i]),lo:Math.round(d.temperature_2m_min[i])}))}}
+async function fetchClim(lat,lon){const y1=NOW.getFullYear()-1,y0=y1-9;
+ const j=await getJSON("https://archive-api.open-meteo.com/v1/archive?latitude="+r1(lat)+"&longitude="+r1(lon)+"&start_date="+y0+"-01-01&end_date="+y1+"-12-31&daily=temperature_2m_min&temperature_unit=fahrenheit&timezone=auto");
+ if(!j.daily||!j.daily.time)throw new Error("empty");
+ LIVE.clim[lkey(lat,lon)]=climFrom(j.daily.time,j.daily.temperature_2m_min,lat,y0,y1)}
+// Frost dates: the last day at or below 32°F before mid-season and the first one after, for each season, then the median across seasons.
+function climFrom(times,mins,lat,y0,y1){const south=lat<0,yrs={};
+ times.forEach((t,i)=>{const v=mins[i];if(v==null)return;const y=+t.slice(0,4),m=+t.slice(5,7);
+  const sy=south?(m>=7?y:y-1):y,start=Date.UTC(sy,south?6:0,1),pos=Math.round((Date.parse(t+"T00:00:00Z")-start)/864e5);
+  const Y=yrs[sy]||(yrs[sy]={last:null,first:null,min:Infinity,n:0});Y.n++;if(v<Y.min)Y.min=v;
+  if(v<=32){if(pos<181)Y.last=pos;else if(Y.first==null)Y.first=pos}});
+ const full=Object.keys(yrs).filter(k=>yrs[k].n>=360).map(k=>yrs[k]);if(full.length<3)throw new Error("short");
+ const med=a=>{a=a.slice().sort((x,y)=>x-y);const m=a.length>>1;return a.length%2?a[m]:Math.round((a[m-1]+a[m])/2)};
+ const lab=pos=>new Date(Date.UTC(2001,south?6:0,1)+pos*864e5).toLocaleDateString("en-US",{month:"short",day:"numeric",timeZone:"UTC"});
+ const L=full.filter(y=>y.last!=null).map(y=>y.last),F=full.filter(y=>y.first!=null).map(y=>y.first);
+ const rare=L.length<full.length/2;
+ const both=full.filter(y=>y.last!=null&&y.first!=null).map(y=>y.first-y.last);
+ const avgMin=full.reduce((a,y)=>a+y.min,0)/full.length,z=Math.max(1,Math.min(13,Math.floor((avgMin+60)/10)+1)),half=((avgMin+60)%10+10)%10<5?"a":"b";
+ return{y0,y1,n:full.length,rare,last:rare?"rare":"around "+lab(med(L)),first:F.length<full.length/2?"rare":"around "+lab(med(F)),free:both.length?med(both):null,zone:z+half,avgMin:Math.round(avgMin)}}
+const wxFor=p=>p.demo?p.weather:((LIVE.wx[lkey(p.loc.lat,p.loc.lon)]||{}).days||null);
+const climFor=(lat,lon)=>LIVE.clim[lkey(lat,lon)]||null;
+const wxTag=p=>p.demo?ev("demo"):ev("modeled");
+const OM='<a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Weather data by Open-Meteo.com</a>';
+const liveNote='<p class="tiny muted">This sends only your city\'s approximate location (rounded to about 7 miles) to Open-Meteo, a free weather service. Nothing about you or your garden, and nothing is saved.</p>';
+function liveBtn(kind,lat,lon,label){const k=kind+":"+lkey(lat,lon);
+ if(LIVE.busy[k])return'<div><button class="btn sm" disabled aria-busy="true">Checking…</button></div>';
+ return'<div><button class="btn sm" data-act="live" data-arg="'+kind+":"+r1(lat)+":"+r1(lon)+'">'+label+"</button></div>"+(LIVE.err[k]?'<p class="small" role="alert"><b>'+esc(LIVE.err[k])+"</b></p>":"")}
+function climLine(c,where,nc){
+ return'<div class="row between"><span class="small">'+(c.rare?"<b>Frost is rare</b> here.":"Last spring frost <b>"+c.last+"</b> · first fall frost <b>"+c.first+"</b>"+(c.free?" · about <b class=\"mono\">"+c.free+"</b> frost-free days":""))+" · zone about <b>"+c.zone+"</b></span>"+ev("modeled")+'</div><p class="tiny muted">Typical dates for '+esc(where)+" from daily low temperatures, "+c.y0+"–"+c.y1+". A sheltered or open yard can differ by a week or more."+(nc?"":" "+OM)+"</p>"}
+function wxBlock(p){const w=wxFor(p);let h="";
+ if(w){h+='<div class="row between"><span class="small"><b class="mono">'+w.reduce((a,b)=>a+b.rain,0).toFixed(1)+" in</b> of rain expected this week</span>"+wxTag(p)+"</div>";
+  if(!p.demo){const at=(LIVE.wx[lkey(p.loc.lat,p.loc.lon)]||{}).at;h+='<p class="tiny muted">Forecast for the '+esc(p.place)+" area"+(at?", checked "+at.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}):"")+". "+OM+"</p>"}}
+ if(!p.demo){const c=climFor(p.loc.lat,p.loc.lon);if(c)h+=climLine(c,p.place,!!w);
+  if(!w||!c)h+='<div class="stack" style="gap:6px" data-live-out>'+liveBtn("all",p.loc.lat,p.loc.lon,w?"Get frost dates and zone":"Get live weather and frost dates")+liveNote+"</div>"}
+ return h}
+async function liveGet(kind,lat,lon){const k=kind+":"+lkey(lat,lon);if(LIVE.busy[k])return;LIVE.busy[k]=1;delete LIVE.err[k];renderChrome();
+ let ok=true;
+ try{if(kind==="clim")await fetchClim(lat,lon);else{const r=await Promise.allSettled([fetchWx(lat,lon),fetchClim(lat,lon)]);if(r.every(x=>x.status==="rejected"))throw r[0].reason;ok=r.every(x=>x.status==="fulfilled")}}
+ catch(e){ok=false;LIVE.err[k]="Couldn't reach the weather service. Check your connection and try again. Some previews block outside connections; the published site works."}
+ delete LIVE.busy[k];renderChrome();
+ toast(LIVE.err[k]?"Weather service unavailable.":ok?"Live weather and frost dates loaded.":"Some weather data loaded; try again for the rest.")}
 function nearestCity(lat,lon){let b=CITIES[0],bd=1e9;for(const c of CITIES){const d=Math.hypot(c.lat-lat,(c.lon-lon)*Math.cos(lat*RAD));if(d<bd){bd=d;b=c}}return b}
 const cityName=p=>p.demo?"Washington, DC":(p.place&&p.place!=="Custom location"?p.place:nearestCity(p.loc.lat,p.loc.lon).n);
 function cityPanel(p){
@@ -1580,12 +1630,13 @@ function cityPanel(p){
   row("Sun","Daylight today: "+hm(dl)+". Longest day: "+hm(longest)+". Shortest: "+hm(shortest)+".","modeled")+
   row("Plants",nat?"Natives to try: "+esc(nat)+".":"Native plant lists for this area aren't in the prototype yet.",nat?"modeled":"planned")+
   row("Community","No opted-in posts or crop circles here yet.","")+
-  row("Conditions","Weather, water notices and pests from public feeds.","planned")+'<p class="tiny muted">Climate notes are general. Local conditions vary year to year.</p></div>';
+  (climFor(c.lat,c.lon)?'<div class="li"><b>Frost and zone, from recent years</b>'+climLine(climFor(c.lat,c.lon),c.n)+"</div>":'<div class="li"><b>Frost and zone, from recent years</b><span class="small">The typical dates above are general. Check this city\'s actual frost dates from the last 10 years.</span>'+liveBtn("clim",c.lat,c.lon,"Check frost dates for "+esc(c.n))+'<p class="tiny muted">Sends only this city\'s location to Open-Meteo.</p></div>')+
+  row("Conditions","Water notices and pest feeds from public sources.","planned")+'<p class="tiny muted">Climate notes are general. Local conditions vary year to year.</p></div>';
  const me=p.demo?CITIES[0]:nearestCity(p.loc.lat,p.loc.lon),o=CITIES.find(x=>x.n===S.globe.cmp);
  h+='<label class="f">Compare my season with<select data-f="globe.cmp"><option value="">Choose a city</option>'+CITIES.map(x=>"<option"+(x.n===S.globe.cmp?" selected":"")+">"+esc(x.n)+"</option>").join("")+"</select></label>";
- if(o){const r=(l,a,b)=>"<tr><th scope=\"row\">"+l+"</th><td>"+a+"</td><td>"+b+"</td></tr>";
+ if(o){const CA=climFor(p.loc.lat,p.loc.lon),CB=climFor(o.lat,o.lon);const r=(l,a,b)=>"<tr><th scope=\"row\">"+l+"</th><td>"+a+"</td><td>"+b+"</td></tr>";
   h+='<div class="tablewrap"><table><caption class="sr">Season comparison</caption><thead><tr><th scope="col"></th><th scope="col">Your space<br><span class="tiny muted">near '+esc(me.n)+'</span></th><th scope="col">'+esc(o.n)+"</th></tr></thead><tbody>"+
-  r("Daylight today",hm(dayLen(p.loc.lat,p.loc.lon,S.date)),hm(dayLen(o.lat,o.lon,S.date)))+r("Hemisphere",p.loc.lat>=0?"Northern":"Southern",o.lat>=0?"Northern":"Southern")+r("Planting zone",me.zone||"–",o.zone||"–")+r("Last spring frost",esc(me.last),esc(o.last))+r("First fall frost",esc(me.first),esc(o.first))+"</tbody></table></div>"}
+  r("Daylight today",hm(dayLen(p.loc.lat,p.loc.lon,S.date)),hm(dayLen(o.lat,o.lon,S.date)))+r("Hemisphere",p.loc.lat>=0?"Northern":"Southern",o.lat>=0?"Northern":"Southern")+r("Planting zone",(CA?"about "+CA.zone:me.zone||"–"),(CB?"about "+CB.zone:o.zone||"–"))+r("Last spring frost",CA?CA.last:esc(me.last),CB?CB.last:esc(o.last))+r("First fall frost",CA?CA.first:esc(me.first),CB?CB.first:esc(o.first))+"</tbody></table></div>"}
  return h}
 
 /* ---------- Trade ---------- */
@@ -1631,7 +1682,7 @@ function renderAlerts(){const a=S.alertf,chip=(k,v,t)=>'<button class="chip" dat
 
 /* ---------- Profile ---------- */
 function renderProfile(){const saved=S.posts.filter(x=>S.saved.includes(x.id));
- const F=[["Sun and shade model, map editor","working"],["Soil records, rain and water planning","working"],["Plant matching, planner and journal","working"],["Seasonal pest outlook","working"],["Privacy controls, accessibility settings","working"],["Community posts (this device only)","prototype"],["Trade offers and crop circles (this device only)","prototype"],["Garden Globe","prototype"],["Garden Mood sounds","prototype"],["Pest sighting reports","prototype"],["Accounts and sync","planned"],["Shared community feed with moderation","planned"],["Verified policy, water and supply alerts","planned"],["Live weather","planned"],["Garden assistant","planned"],["Phone notifications","planned"],["Licensed music services","planned"]];
+ const F=[["Sun and shade model, map editor","working"],["Soil records, rain and water planning","working"],["Plant matching, planner and journal","working"],["Seasonal pest outlook","working"],["Privacy controls, accessibility settings","working"],["Community posts (this device only)","prototype"],["Trade offers and crop circles (this device only)","prototype"],["Garden Globe","prototype"],["Garden Mood sounds","prototype"],["Pest sighting reports","prototype"],["Accounts and sync","planned"],["Shared community feed with moderation","planned"],["Verified policy, water and supply alerts","planned"],["Live weather and frost dates (on request)","prototype"],["Garden assistant","planned"],["Phone notifications","planned"],["Licensed music services","planned"]];
  let h='<div class="pagehead"><div class="stack"><h2>Profile</h2><p class="muted small">Your privacy, settings, saved items and data.</p></div></div><div class="cols2"><div class="stack">';
  h+='<div class="card"><div class="row between"><h3>Account</h3>'+stat("planned")+'</div><p class="small">Accounts come in a later release, after a security and privacy review. For now everything stays on this device.</p></div>';
  h+='<div class="card"><h3>Privacy</h3><p class="small">'+(CONSENT?esc(CONSENT.method)+".":"Everything optional is off. Nothing is stored on this device.")+'</p><div><button class="btn sm" data-act="privacy-choices">Privacy choices</button></div></div>';
@@ -1697,6 +1748,7 @@ document.addEventListener("click",e=>{
  case"consent-details":consentDetails=!consentDetails;renderConsent();$("#consentT")?.focus();break;
  case"consent":setConsent(arg);break;
  case"consent-close":if(CONSENT){consentOpen=false;consentDetails=false;renderConsent()}else setConsent("off");break;
+ case"live":{const q=arg.split(":");liveGet(q[0],+q[1],+q[2]);break}
  case"note-ok":noteOpen=false;renderConsent();break;
  case"display":openDisplay();break;
  case"a11y":{const [k,v]=arg.split(":");A11Y[k]=+v;applyA11y();persist();openDisplay();if(S.view==="app")renderChrome();break}
