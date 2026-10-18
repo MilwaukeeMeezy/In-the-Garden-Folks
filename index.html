@@ -473,6 +473,11 @@ figure.media img,figure.media video,.postart svg,.preview img,.preview video{bor
 .logo,.topbar .logo{font-family:var(--f-display);font-weight:900;text-transform:uppercase;color:var(--fg);font-size:1.35rem}
 .subnav,.tabs{background:var(--bg)}
 
+label.btn:focus-within{outline:3px solid var(--fg);outline-offset:3px;box-shadow:0 0 0 6px var(--k-lime)}
+.mbars{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;align-items:end;text-align:center}
+.mbars div{display:flex;flex-direction:column;align-items:center;gap:2px;justify-content:flex-end;min-height:104px}
+.mbars i{display:block;width:80%;border-radius:3px 3px 0 0;border:1.5px solid var(--fg)}
+tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-size:.9rem;color:var(--fg);font-weight:700}
 /* bottom nav (phone) */
 @media (max-width:900px){
  .bottomnav{background:var(--k-ink);border-top:0}
@@ -486,6 +491,9 @@ figure.media img,figure.media video,.postart svg,.preview img,.preview video{bor
 <a class="skip" href="#main" data-act="skip">Skip to main content</a>
 
 <!-- ================= WELCOME ================= -->
+<div id="nojs" role="alert" style="background:#FF6B52;color:#121412;padding:14px 16px;font-weight:700;line-height:1.45;border-bottom:4px solid #121412">
+  Buttons and tabs won't work here. This looks like a file preview, which shows the page but doesn't run it. Open the site in Safari or Chrome instead, using its web address (for example, your GitHub Pages link).
+</div>
 <div id="home" class="fk">
   <header class="k-bar">
     <button class="k-word" data-act="go-home" aria-label="In the Garden, Folks! welcome screen">In the Garden, Folks!</button>
@@ -504,6 +512,7 @@ figure.media img,figure.media video,.postart svg,.preview img,.preview video{bor
       <h1 id="heroH">Grow where<br>you live</h1>
       <p class="k-sub">Discover your sun, understand your soil, plan your water and grow a garden that fits your space, whether it's a rowhouse yard, balcony or backyard. Then share what you grow with the folks on your block.</p>
       <div class="k-row"><button class="k-btn k-go" data-act="start">Start my garden</button><button class="k-btn k-blk" data-act="demo">Explore a demo yard</button></div>
+      <p class="k-tiny">Sample yards: <button data-act="demo">Southeast DC rowhouse</button> · <button data-act="demo" data-arg="mke">Milwaukee duplex</button></p>
       <p class="k-tiny">Optional cookies are off. <button data-act="privacy-choices">Privacy choices</button></p>
     </div>
     <figure class="k-frame-wrap" style="margin:0">
@@ -649,6 +658,7 @@ figure.media img,figure.media video,.postart svg,.preview img,.preview video{bor
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script>
+(function(){var n=document.getElementById("nojs");if(n)n.parentNode.removeChild(n)})();
 (function(){
 "use strict";
 const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
@@ -703,7 +713,7 @@ const PLANTS={
  ca:[P("California poppy","Eschscholzia californica","Flower","F","ds","Reseeds"),P("Douglas iris","Iris douglasiana","Flower","PS","c","Coastal spring bloom"),P("Spreading rush","Juncus patens","Grass","FP","cw","Bioswales"),P("Toyon","Heteromeles arbutifolia","Shrub","FP","cd","Winter berries"),P("Coast live oak","Quercus agrifolia","Tree","F","cd","Wildlife value")]};
 const EDIBLES=[P("Tomato","Solanum lycopersicum","Vegetable","F","","Needs 6–8 h of sun; stake or cage"),P("Pepper","Capsicum annuum","Vegetable","F","","Loves heat; great in containers"),P("Bush beans","Phaseolus vulgaris","Vegetable","F","","Fast; sow after last frost"),P("Garlic","Allium sativum","Vegetable","F","","Plant cloves in fall, harvest in summer"),P("Kale","Brassica oleracea","Vegetable","FP","","Handles part shade and cold"),P("Swiss chard","Beta vulgaris","Vegetable","FP","","Harvest leaves for months"),P("Lettuce","Lactuca sativa","Vegetable","P","","Prefers cool weather and some shade"),P("Strawberries","Fragaria × ananassa","Fruit","FP","","Good for raised beds"),P("Basil","Ocimum basilicum","Herb","F","","Warm weather; pinch flowers"),P("Thyme","Thymus vulgaris","Herb","F","ds","Likes dry, well-drained pots"),P("Parsley","Petroselinum crispum","Herb","FP","","Swallowtail caterpillar host"),P("Mint","Mentha spp.","Herb","PS","w","Keep in a pot; it spreads")];
 const PESTS=[
- {n:"Spotted lanternfly",r:"ma mw se",m:[7,8,9,10,11,12],tip:"Feeds on grapes, maples and tree-of-heaven. Scrape gray egg masses Sep–Jun and report sightings to your state agriculture department."},
+ {n:"Spotted lanternfly",r:"ma mw se",m:[7,8,9,10,11,12],tip:"Feeds on grapes, maples and tree-of-heaven. Scrape gray egg masses Sep–Jun and report sightings to your state agriculture department.",watch:{mw:"Not yet found in Wisconsin as of early 2026 (UW–Madison Extension), but it has been in Chicago since 2023. Learn the gray egg masses and report any sighting to your state agriculture department."}},
  {n:"Brown marmorated stink bug",r:"ma mw se pnw",m:[9,10,11],tip:"Gathers on sunny siding in fall looking for winter shelter. Seal gaps and drop them into soapy water."},
  {n:"Jumping worms",r:"ma mw se",m:[7,8,9,10,11],tip:"Soil looks like coffee grounds and worms thrash when touched. Bag and trash them; don't share mulch or plants from infested beds."},
  {n:"Boxelder bugs",r:"mw ma pl pnw sw",m:[9,10,11],tip:"Cluster on sunny south and west walls in fall. They don't hurt plants."},
@@ -717,10 +727,10 @@ const PESTS=[
  {n:"Fall armyworm",r:"se pl",m:[8,9,10],tip:"Brown lawn patches overnight. Check at dusk."},
  {n:"Whiteflies",r:"sw ca se",m:[5,6,7,8,9,10,11],tip:"Use yellow sticky cards and insecticidal soap."},
  {n:"Spider mites",r:"all",m:[6,7,8,9],tip:"Stippled leaves in hot, dry spells. Hose off leaf undersides."}];
-const pestsFor=(region,m)=>PESTS.filter(p=>(p.r==="all"||p.r.split(" ").includes(region))&&p.m.includes(m));
+const pestsFor=(region,m)=>PESTS.filter(p=>(p.r==="all"||p.r.split(" ").includes(region))&&p.m.includes(m)).map(p=>p.watch&&p.watch[region]?Object.assign({},p,{n:p.n+" (watch for)",tip:p.watch[region],w:true}):p);
 
 /* ---------- object types ---------- */
-const TYPES={house:"House",neighbor:"Neighbor's building",fence:"Fence",greenhouse:"Greenhouse",shed:"Shed",bed:"Garden bed",container:"Container",tree:"Tree",barrel:"Rain barrel",area:"Soil zone",lot:"Lot boundary"};
+const TYPES={house:"House",neighbor:"Neighbor's building",fence:"Fence",greenhouse:"Greenhouse",shed:"Shed",bed:"Garden bed",container:"Container",tree:"Tree",barrel:"Rain barrel",sensor:"Light sensor",area:"Soil zone",lot:"Lot boundary"};
 const SHADING={house:1,neighbor:1,fence:1,greenhouse:1,shed:1,tree:1};
 const ZONE_TYPES={bed:1,container:1,area:1};
 
@@ -787,6 +797,70 @@ function makeDemo(){
    {id:"g4",pest:"Jumping worms",note:"Found while turning a community garden bed",dist:1.7,date:addDays(T,-4),status:"verified",by:"Confirmed by the county extension office (example)",cell:[0,4]}]};
 }
 
+/* ---------- fictional Milwaukee demo property ---------- */
+function makeDemoMke(){
+ const T=TODAY;
+ return {id:"demomke",demo:true,name:"Sample Milwaukee duplex yard",place:"Milwaukee south side (fictional)",kind:"Duplex yard",
+  demoNote:"You're exploring a fictional sample yard on a Milwaukee duplex block. Edit anything; it resets when you leave.",
+  loc:{lat:43.00,lon:-87.93,tz:-6,dst:true,region:"mw",name:"Milwaukee, WI"},
+  face:270,rot:0,view:{W:140,H:54},_v:1,
+  ground:[{type:"street",x:3,y:27,w:6,d:54},{type:"paving",x:8,y:27,w:4,d:54},{type:"street",x:134,y:27,w:8,d:54},{type:"paving",x:118,y:27,w:20,d:6}],
+  objects:[
+   {id:"lot",type:"lot",name:"Your lot",x:70,y:27,w:120,d:30,rot:0},
+   {id:"house",type:"house",name:"Duplex",x:42,y:27,w:40,d:24,h:32,rot:0},
+   {id:"nbN",type:"neighbor",name:"North neighbor's duplex",x:42,y:-3,w:40,d:24,h:30,rot:0,fixed:true},
+   {id:"nbS",type:"neighbor",name:"South neighbor's duplex",x:42,y:57,w:40,d:24,h:32,rot:0,fixed:true},
+   {id:"gar",type:"shed",name:"Detached garage",x:118,y:27,w:20,d:22,h:14,rot:0},
+   {id:"nbGS",type:"neighbor",name:"South neighbor's garage",x:118,y:53,w:20,d:20,h:13,rot:0,fixed:true},
+   {id:"fN",type:"fence",name:"North chain-link fence",x:85,y:12.3,w:46,d:.6,h:4,rot:0},
+   {id:"fS",type:"fence",name:"South wood fence",x:85,y:41.7,w:46,d:.6,h:6,rot:0},
+   {id:"yard",type:"area",name:"Backyard",x:85,y:27,w:42,d:28,rot:0,tests:[
+     {id:"m3",kind:"modeled",method:"Regional soil survey",source:"USDA soil survey · regional context, not a test",date:"Survey data",tex:"Clay-rich glacial till, often mixed with urban fill",notes:"Heavy, slow-draining soil is common on older city lots."},
+     {id:"m4",kind:"reported",method:"Drainage (perc) test",source:"Your test",date:"2026-05-16",drain:.3,notes:"Slow: about 0.3 inches per hour."}]},
+   {id:"bedF",type:"bed",name:"Front foundation bed",x:17,y:27,w:6,d:16,h:0,rot:0,plants:["Purple coneflower","Wild bergamot","Prairie dropseed"],tests:[
+     {id:"m1",kind:"measured",method:"Lab soil test",source:"University soil lab (example report)",date:"2026-05-02",ph:7.3,om:"Medium",n:"Low",p:"OK",k:"OK",lead:"Elevated",notes:"Older house with painted siding. Grow flowers here and keep food crops in the raised beds."}]},
+   {id:"rb1",type:"bed",name:"Raised bed 1",x:84,y:20,w:10,d:4,h:1.5,rot:0,plants:["Kale","Garlic"],tests:[
+     {id:"m2",kind:"measured",method:"Lab soil test",source:"University soil lab (example report)",date:"2026-05-02",ph:6.8,om:"High",n:"OK",p:"High",k:"OK",lead:"Low",notes:"Bagged raised-bed mix with compost, over landscape fabric."}]},
+   {id:"rb2",type:"bed",name:"Raised bed 2",x:84,y:27,w:10,d:4,h:1.5,rot:0,plants:["Swiss chard"],tests:[]},
+   {id:"pots",type:"container",name:"Herb pots on the back steps",x:65,y:33,w:3,d:3,rot:0,plants:["Thyme","Parsley"],tests:[]},
+   {id:"barrel1",type:"barrel",name:"Rain barrel",x:63.6,y:37.6,w:2.2,d:2.2,rot:0,cap:55},
+   {id:"st",type:"tree",name:"Street tree (young linden that replaced an ash)",x:8,y:27,r:5,h:18,matureH:50,matureR:16,rate:1,rot:0},
+   {id:"nmaple",type:"tree",name:"Neighbor's silver maple",x:96,y:50,r:12,h:55,matureH:60,matureR:14,rate:.3,rot:0,fixed:true},
+   {id:"rasp",type:"bed",name:"Raspberry row (planned)",x:85,y:13.6,w:16,d:2,h:0,rot:0,plants:[],tests:[]}],
+  water:{down:90,slope:"gentle",soil:"clayey",
+   spouts:[{id:"s1",name:"Rear downspout (south)",x:62.6,y:38.6,share:.5,barrel:"barrel1",toGarden:false},
+           {id:"s2",name:"Rear downspout (north)",x:62.6,y:15.4,share:.5,barrel:null,toGarden:false}],
+   lows:[{id:"l1",x:100,y:38,date:addDays(T,-11),note:"Puddle along the south fence after the storm"}],
+   fill:{pct:35,date:addDays(T,-4)}},
+  weather:[.1,0,0,.4,.2,0,0].map((r,i)=>({date:addDays(T,i),rain:r,hi:[55,58,52,48,46,50,53][i],lo:[39,42,37,33,31,35,38][i]})),
+  tasks:[
+   {id:"q1",title:"Plant garlic cloves in Raised bed 1",due:addDays(T,2),why:"Plant 3–6 weeks before the ground freezes",done:false},
+   {id:"q2",title:"Plant spring bulbs in the front foundation bed",due:addDays(T,5),why:"Get them in while the soil is still workable",done:false},
+   {id:"q3",title:"Cover the kale with row cover on frosty nights",due:addDays(T,4),why:"Kale sweetens after light frosts but needs cover below the mid-20s",done:false},
+   {id:"q4",title:"Bag any jumping worms you find while cleaning beds",due:addDays(T,7),why:"Don't move soil or mulch from infested beds",done:false},
+   {id:"q5",title:"Leave coneflower and bergamot stems standing",due:addDays(T,10),why:"Seed heads feed birds and hollow stems shelter native bees",done:false},
+   {id:"q6",title:"Empty and disconnect the rain barrel",due:addDays(T,14),why:"Hard freezes usually start in early to mid-November here",done:false},
+   {id:"q7",title:"Mulch garlic with straw after the ground starts to freeze",due:addDays(T,30),why:"Keeps the soil from heaving in freeze–thaw cycles",done:false},
+   {id:"q0",title:"Pull the tomato vines after the first frost",due:addDays(T,-5),why:"Frost ended the season",done:true}],
+  journal:[
+   {id:"n1",date:addDays(T,-4),kind:"reported",text:"Rain barrel about a third full."},
+   {id:"n2",date:addDays(T,-11),kind:"reported",text:"Puddle stood along the south fence for most of a day after the storm."},
+   {id:"n3",date:"2026-08-24",kind:"harvest",text:"About 4 lb of cherry tomatoes from Raised bed 2 this week."},
+   {id:"n4",date:"2026-05-02",kind:"measured",text:"Lab results came back. Lead is elevated in the front bed, so it stays a flower bed."}],
+  budget:[
+   {id:"c1",item:"Rain barrel, 55 gal",planned:90,actual:85},
+   {id:"c2",item:"Garlic seed cloves",planned:20,actual:18},
+   {id:"c3",item:"Spring bulbs",planned:35,actual:null},
+   {id:"c4",item:"Row cover fabric",planned:22,actual:null},
+   {id:"c5",item:"Raspberry canes, 6",planned:48,actual:null},
+   {id:"c6",item:"Lab soil tests, 2 samples",planned:40,actual:40}],
+  sightings:[
+   {id:"h1",pest:"Jumping worms",note:"Coffee-ground-like soil in a backyard bed",dist:.3,date:addDays(T,-2),status:"verified",by:"Confirmed by the county extension office (example)",cell:[2,1]},
+   {id:"h2",pest:"Boxelder bugs",note:"Hundreds on a sunny south wall",dist:.5,date:addDays(T,-1),status:"unverified",cell:[3,2]},
+   {id:"h3",pest:"Brown marmorated stink bug",note:"A few around a window frame",dist:.8,date:addDays(T,-3),status:"unverified",cell:[1,3]},
+   {id:"h4",pest:"Emerald ash borer",note:"D-shaped exit holes on a dying ash in an alley",dist:1.4,date:addDays(T,-6),status:"verified",by:"Confirmed by a certified arborist (example)",cell:[4,0]}]};
+}
+
 function makeMine(w){
  const rot=w.face-270, t=rot*RAD, u=[Math.cos(t),Math.sin(t)], v=[-u[1],u[0]];
  const LW=w.lotDepth, LD=w.lotWidth;
@@ -807,7 +881,7 @@ function makeMine(w){
 
 /* ---------- state ---------- */
 const WIDGETS=[["hello","Hello, gardener",0],["now","Right now",0],["actions","Quick action",0],["map","My space",0],["tasks","Next up",0],["around","Around you",0],["folks","From the Folks",0],["swap","Swap nearby",0],["soilwater","Soil + water",0],["journal","Journal",0],["globe","Garden Globe",0],["progress","My progress",0],["garden","Beds and plants",1],["zonesun","Sun hours by bed",1]];
-const S={view:"home",tab:"dash",propId:"demo",props:{demo:makeDemo()},date:TODAY,minutes:840,Y:0,layer:"shade",tool:"select",sel:null,spot:null,
+const S={view:"home",tab:"dash",propId:"demo",props:{demo:makeDemo(),demomke:makeDemoMke()},date:TODAY,minutes:840,Y:0,layer:"shade",tool:"select",sel:null,spot:null,
  dash:{order:WIDGETS.map(w=>w[0]),hidden:[],advanced:false,customizing:false},alerts:{on:false,radius:1},
  pf:{cat:"native",sun:"any",soil:"any",type:"any",bed:""},usePhoto:true,wiz:null,mySightings:[],gsub:"map",posts:[],saved:[],compose:null,trade:{mode:"swap",offers:[],circles:[]},globe:{lon:-60,lat:22,city:"Washington, DC",cmp:"Milwaukee, WI"},exf:{setup:"all",season:"all"},alertf:{scope:"neighborhood",topic:"all"}};
 const A11Y={ts:1,contrast:false,motion:false,captions:true,lowdata:false};
@@ -863,15 +937,126 @@ function shadowSet(cs,az,alt){if(alt<=.3)return null;const t=Math.tan(alt*RAD),s
   const L=Math.min(c.h/t,400);return{poly:hull(c.poly.concat(c.poly.map(q=>[q[0]+s[0]*L,q[1]+s[1]*L])))}})}
 function shaded(pt,set){if(!set)return true;for(const s of set){if(s.poly){if(inPoly(pt,s.poly))return true}else if(segDist(pt,s.a,s.b)<s.r)return true}return false}
 const SC=new Map();
-function samples(p,Y,mode,step){const k=[p.id,p._v,S.date,Y,mode,step,p.loc.lat,p.loc.lon].join("|");if(SC.has(k))return SC.get(k);
- const cs=casters(p,Y,mode),out=[];for(const s of day(p).samples)if(s.m%step===0)out.push({m:s.m,set:shadowSet(cs,s.az,s.alt)});
- if(SC.size>60)SC.clear();SC.set(k,out);return out}
+function samples(p,Y,mode,step,date){date=date||S.date;const k=[p.id,p._v,date,Y,mode,step,p.loc.lat,p.loc.lon].join("|");if(SC.has(k))return SC.get(k);
+ const cs=casters(p,Y,mode),out=[];for(const s of day(p,date).samples)if(s.m%step===0)out.push({m:s.m,alt:s.alt,set:shadowSet(cs,s.az,s.alt)});
+ if(SC.size>200)SC.clear();SC.set(k,out);return out}
 function hoursAt(pt,smp,step){let n=0,f=null,l=null;for(const s of smp)if(!shaded(pt,s.set)){n++;if(f===null)f=s.m;l=s.m}return{h:n*step/60,first:f,last:l===null?null:l+step}}
 function avgHours(p,pts,Y,mode){const smp=samples(p,Y,mode,10);let h=0,f=null,l=null;for(const pt of pts){const r=hoursAt(pt,smp,10);h+=r.h;if(r.first!==null){f=f===null?r.first:Math.min(f,r.first);l=l===null?r.last:Math.max(l,r.last)}}return{h:h/pts.length,first:f,last:l}}
 function zonePts(o){if(o.type==="tree")return[[o.x,o.y]];const t=(o.rot||0)*RAD,u=[Math.cos(t),Math.sin(t)],v=[-u[1],u[0]];
  return[[0,0],[.25,.25],[-.25,.25],[.25,-.25],[-.25,-.25]].map(([a,b])=>[o.x+u[0]*a*o.w+v[0]*b*o.d,o.y+u[1]*a*o.w+v[1]*b*o.d])}
 function estimate(p,pts,Y){const unk=unknownObjs(p),a=avgHours(p,pts,Y||0,"known");if(!unk.length)return{ok:true,h:a.h,first:a.first,last:a.last};
  const b=avgHours(p,pts,Y||0,"worst");if(a.h-b.h<.25)return{ok:true,h:a.h,first:a.first,last:a.last};return{ok:false,lo:b.h,hi:a.h,need:unk}}
+/* ---------- daily light integral (DLI) ---------- */
+// Clear-sky sunlight from sun height (Haurwitz model), split into direct sun and open-sky light.
+// A shaded spot still gets part of the sky light. Sunlight to plant light (PAR): about 2.1 µmol per joule.
+const PAR_J=2.1,DIFF=.16,SKY_SHADE=.55;
+const ghi=alt=>{const s=Math.sin(alt*RAD);return s<=0?0:1098*s*Math.exp(-.057/s)};
+function dliRaw(p,pts,Y,mode,date){const smp=samples(p,Y,mode,10,date);let tot=0,open=0;
+ for(const s of smp){const g=ghi(s.alt);open+=g;for(const pt of pts)tot+=shaded(pt,s.set)?g*DIFF*SKY_SHADE:g}
+ const k=600*PAR_J/1e6;return{dli:tot/pts.length*k,open:open*k}}
+function dliEst(p,pts,Y,date){const a=dliRaw(p,pts,Y||0,"known",date),r={ok:true,dli:a.dli,open:a.open,frac:a.open?a.dli/a.open:0};
+ const unk=unknownObjs(p);if(!unk.length)return r;const b=dliRaw(p,pts,Y||0,"worst",date);if(a.dli-b.dli<1)return r;return{ok:false,lo:b.dli,hi:a.dli,need:unk}}
+function ppfdAt(p,pts,date,min){const smp=samples(p,0,"known",10,date);let best=null;for(const s of smp)if(!best||Math.abs(s.m-min)<Math.abs(best.m-min))best=s;
+ if(!best||Math.abs(best.m-min)>15)return 0;const g=ghi(best.alt);let t=0;for(const pt of pts)t+=shaded(pt,best.set)?g*DIFF*SKY_SHADE:g;return t/pts.length*PAR_J}
+const dliClass=d=>d<6?"Low":d<12?"Medium":d<18?"High":"Very high";
+const midMonth=m=>{const y=NOW.getFullYear();return y+"-"+pad(m+1)+"-15"};
+/* ---------- light probe: drag anywhere to read a spot ---------- */
+let probeRAF=0;
+function probeLive(){if(probeRAF)return;probeRAF=requestAnimationFrame(()=>{probeRAF=0;const b=$("#probeBody");if(b)b.innerHTML=probeBody(prop())})}
+const growMonths=lat=>lat>=0?[3,4,5,6,7,8]:[9,10,11,0,1,2];
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function spotMonths(p,pt){return MON.map((_,m)=>{const e=dliEst(p,pt,S.Y,midMonth(m));return e.ok?e.frac:null})}
+function nearSensor(p,x,y){let b=null;for(const o of p.objects)if(o.type==="sensor"&&(o.days||[]).some(d=>d.ok)){const d=Math.hypot(o.x-x,o.y-y);if(!b||d<b.d)b={o,d}}return b}
+function sensorStats(p,o){const ok=(o.days||[]).filter(d=>d.ok),C=climFor(p.loc.lat,p.loc.lon),fr=spotMonths(p,[[o.x,o.y]]),by={};
+ ok.forEach(d=>{const m=+d.date.slice(5,7)-1;(by[m]=by[m]||[]).push(d.dli)});
+ const months=Object.keys(by).map(Number).sort((a,b)=>a-b).map(m=>{const meas=by[m].reduce((a,b)=>a+b,0)/by[m].length,model=C&&C.swMonth&&C.swMonth[m]!=null&&fr[m]!=null?C.swMonth[m]*PAR_J*fr[m]:null;return{m,n:by[m].length,meas,model}});
+ const rs=months.filter(x=>x.n>=5&&x.model).map(x=>x.meas/x.model).sort((a,b)=>a-b),ratio=rs.length?(rs.length%2?rs[rs.length>>1]:(rs[rs.length/2-1]+rs[rs.length/2])/2):null;
+ return{ok,months,ratio,avg:ok.length?ok.reduce((a,d)=>a+d.dli,0)/ok.length:null}}
+function probeBody(p){const sp=S.spot,pt=[[sp.x,sp.y]];
+ if(buildings(p).some(b=>inPoly([sp.x,sp.y],b)))return'<p class="small">The probe is on a roof. Drag it onto the ground.</p>';
+ const e=estimate(p,pt,S.Y),d=dliEst(p,pt,S.Y,S.date),W=p.demo?null:LIVE.wx[lkey(p.loc.lat,p.loc.lon)],sw=W&&W.days.filter(x=>x.sw!=null),wk=sw&&sw.length?sw.reduce((a,x)=>a+x.sw,0)/sw.length*PAR_J:null,C=p.demo?null:climFor(p.loc.lat,p.loc.lon);
+ let h='<div class="kv"><div><span class="lbl">Direct sun</span><b class="mono">'+(e.ok?e.h.toFixed(1)+" h":e.lo.toFixed(1)+"–"+e.hi.toFixed(1)+" h")+'</b></div><div><span class="lbl">Clear-day DLI</span><b class="mono">'+(d.ok?d.dli.toFixed(1):d.lo.toFixed(0)+"–"+d.hi.toFixed(0))+"</b></div>"+(wk!=null&&d.ok?'<div><span class="lbl">This week</span><b class="mono">'+(wk*d.frac).toFixed(1)+"</b></div>":"")+'<div><span class="lbl">Sun window</span><b class="mono" style="font-size:1rem">'+(e.ok&&e.first!==null?fmtT(e.first)+"–"+fmtT(e.last):e.ok?"None":"?")+"</b></div></div>";
+ h+='<p class="tiny muted">'+dlong(S.date)+(S.Y?", "+S.Y+" years ahead":"")+'. DLI in mol/m²/day.'+(d.ok?"":" A range means a tree or building height is missing.")+"</p>";
+ if(C&&C.swMonth){const fr=spotMonths(p,pt),vals=C.swMonth.map((v,m)=>v==null||fr[m]==null?null:v*PAR_J*fr[m]),mx=Math.max(1,...vals.filter(v=>v!=null),...C.swMonth.filter(v=>v!=null).map(v=>v*PAR_J));
+  const ns=nearSensor(p,sp.x,sp.y),st=ns&&ns.d<=15?sensorStats(p,ns.o):null,adj=st&&st.ratio?st.ratio:null;
+  const gm=growMonths(p.loc.lat),gv=gm.map(m=>vals[m]).filter(v=>v!=null),gavg=gv.length?gv.reduce((a,b)=>a+b,0)/gv.length:null;
+  h+='<div class="stack" style="gap:4px"><div class="row between"><b class="small">Typical DLI here, by month</b>'+ev("modeled")+'</div><div class="mbars" role="img" aria-label="Typical daily light at this spot by month: '+vals.map((v,m)=>MON[m]+" "+(v==null?"unknown":v.toFixed(0))).join(", ")+'">'+vals.map((v,m)=>'<div><span class="mono tiny">'+(v==null?"?":v.toFixed(0))+'</span><i style="height:'+(v==null?2:Math.max(2,v/mx*70))+'px;background:'+(v==null?"var(--unknown)":v>=18?"#7DD321":v>=12?"#C9F25A":v>=6?"#F7C948":"#FF6B52")+'"></i><span class="tiny">'+MON[m][0]+"</span></div>").join("")+"</div>";
+  if(gavg!=null)h+='<p class="small">Growing season (' +MON[gm[0]]+"–"+MON[gm[5]]+') average: <b class="mono">'+gavg.toFixed(1)+"</b>, "+dliClass(gavg).toLowerCase()+" light."+(adj?' With your sensor\'s correction: <b class="mono">'+(gavg*adj).toFixed(1)+"</b>.":"")+"</p>";
+  h+='<p class="tiny muted">From 10 years of recorded sunlight for your area ('+C.y0+"–"+C.y1+"), scaled by this spot's shade on the 15th of each month. Bars: green 18+, lime 12–18, yellow 6–12, coral under 6. "+OM+"</p></div>";
+  if(st)h+='<div class="li"><div class="row between"><b>'+esc(ns.o.name)+" is "+Math.round(ns.d)+' ft away</b><span class="ev ev-measured">Measured</span></div><span class="small">'+st.ok.length+" full days logged, average <b class=\"mono\">"+st.avg.toFixed(1)+"</b>."+(st.ratio?" It reads <b>"+Math.round(st.ratio*100)+"%</b> of the estimate for its own spot, so estimates near it are adjusted by the same amount.":" Log at least 5 full days in a month to compare it with the estimate.")+"</span></div>";
+  else if(ns)h+='<p class="tiny muted">Nearest sensor with data is '+Math.round(ns.d)+" ft away. Within 15 ft, its readings are used to correct this spot.</p>"}
+ else if(!p.demo)h+='<div class="stack" style="gap:6px">'+liveBtn("all",p.loc.lat,p.loc.lon,"Load 10 years of sunlight for this spot")+liveNote+"</div>";
+ else h+='<p class="tiny muted">Month-by-month light from recorded sunlight works on your own garden. The demo yard uses example weather.</p>';
+ return h}
+function probeCard(p){
+ if(!S.spot)return'<div class="card" id="probeCard"><div class="row between"><h3>Light probe</h3>'+ev("modeled")+'</div><p class="small">Drop the probe, then drag it anywhere in your yard to see that spot\'s sun hours and daily light, month by month.</p><div><button class="btn primary sm" data-act="probe-drop">Drop the light probe</button></div></div>';
+ const e=estimate(p,[[S.spot.x,S.spot.y]],S.Y),d=dliEst(p,[[S.spot.x,S.spot.y]],S.Y,S.date);
+ const mv=(dx,dy,l,t)=>'<button class="btn sm" data-act="probe-move" data-arg="'+dx+":"+dy+'" aria-label="Move probe '+t+' 2 feet">'+l+"</button>";
+ return'<div class="card" id="probeCard"><div class="row between"><h3>Light probe</h3>'+ev("modeled")+'</div><p class="sr" role="status">Probe: '+(e.ok?e.h.toFixed(1)+" hours of direct sun":"sun hours need a height")+", "+(d.ok?"clear-day light "+d.dli.toFixed(1):"light needs a height")+'.</p><div id="probeBody" class="stack">'+probeBody(p)+'</div><div class="row" role="group" aria-label="Move the probe">'+mv(0,-2,"↑","up")+mv(0,2,"↓","down")+mv(-2,0,"←","left")+mv(2,0,"→","right")+'<span class="tiny muted">Or drag the lime pin on the map.</span></div></div>'}
+
+/* ---------- light sensors: import a log file, turn it into daily DLI ---------- */
+function parseTS(str){str=(str||"").trim();if(!str)return null;
+ if(/(Z|[+-]\d{2}:?\d{2})$/.test(str)&&/\d{4}-\d{2}-\d{2}T/.test(str)){const d=new Date(str);if(isNaN(d))return null;return{date:ymd(d),min:d.getHours()*60+d.getMinutes()}}
+ let m=str.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})(?:[ T]+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([ap]m)?)?/i),Y,M,D;
+ if(m){Y=+m[1];M=+m[2];D=+m[3]}else{m=str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ T,]+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([ap]m)?)?/i);if(!m)return null;M=+m[1];D=+m[2];Y=+m[3]}
+ if(M<1||M>12||D<1||D>31)return null;let H=m[4]!=null?+m[4]:null;const mi=m[5]!=null?+m[5]:0;if(H!=null&&m[7]){H=H%12+(/p/i.test(m[7])?12:0)}
+ return{date:Y+"-"+pad(M)+"-"+pad(D),min:H==null?null:H*60+mi}}
+function parseLightLog(txt,p){const lines=txt.split(/\r?\n/).filter(l=>l.trim());if(lines.length<2)throw new Error("The file has no rows.");
+ const h0=lines[0],sep=h0.includes("\t")?"\t":(h0.split(";").length>h0.split(",").length?";":",");
+ const split=l=>l.split(sep).map(x=>x.trim().replace(/^"|"$/g,""));
+ const head=split(lines[0]).map(x=>x.toLowerCase());
+ const di=head.findIndex(x=>/date|time|stamp/.test(x)),tj=head.findIndex((x,i)=>i!==di&&/^time$|^hour/.test(x));
+ let vi=-1,unit=null;const pick=(re,u)=>{if(vi<0){const i=head.findIndex(x=>re.test(x));if(i>=0){vi=i;unit=u}}};
+ pick(/ppfd|\bpar\b|µmol|umol/,"ppfd");pick(/\bdli\b|mol\/m[2²]?\/d/,"dli");pick(/w\/m|solar|radiation/,"wm2");pick(/lux|\blx\b|illuminance/,"lux");
+ if(di<0||vi<0)throw new Error("Couldn't find a date or time column and a light column (DLI, PPFD, lux or W/m²).");
+ const k={dli:1,ppfd:1,lux:.0185,wm2:PAR_J}[unit],by={};let rows=0;
+ for(const l of lines.slice(1)){const c=split(l),t=parseTS(tj>=0?c[di]+" "+c[tj]:c[di]),v=parseFloat(c[vi]);if(!t||!isFinite(v)||v<0)continue;rows++;(by[t.date]=by[t.date]||[]).push({min:t.min,v:v*k})}
+ if(!rows)throw new Error("No readable rows. Dates should look like 2026-10-18 13:00 or 10/18/2026 1:00 PM.");
+ const days=Object.keys(by).sort().map(date=>{const r=by[date];
+  if(unit==="dli")return{date,dli:r.reduce((a,x)=>a+x.v,0)/r.length,ok:true,cov:1};
+  const q=r.filter(x=>x.min!=null).sort((a,b)=>a.min-b.min);let area=0,cov=0;
+  for(let i=1;i<q.length;i++){const g=q[i].min-q[i-1].min;if(g>0&&g<=60){area+=(q[i].v+q[i-1].v)/2*g*60;cov+=g}}
+  const dd=day(p,date),len=dd.set!=null?dd.set-dd.rise:720,c=Math.min(1,cov/Math.max(60,len));
+  return{date,dli:area/1e6,ok:c>=.8,cov:c}});
+ const ok=days.filter(d=>d.ok).map(d=>d.dli).sort((x,y)=>x-y);if(ok.length&&ok[ok.length>>1]>80)throw new Error("Those totals are higher than full summer sun (about 65 a day). Check which unit the light column uses.");
+ return{days,unit,rows}}
+function sensorSection(p,o){const st=sensorStats(p,o),all=o.days||[];
+ let h='<div class="stack"><p class="small">Place this where your real sensor sits. Then load its log file from a folder on your device. The file is read here in the browser and never uploaded; only the daily totals are kept.</p>';
+ h+='<label class="btn sm" style="align-self:flex-start">Load sensor data (.csv)<input type="file" accept=".csv,.txt,.tsv" data-sensor-file="'+o.id+'" class="sr"></label>';
+ if(all.length){const ok=st.ok;h+='<p class="small"><span class="ev ev-measured">Measured</span> '+all.length+" days loaded, "+ok.length+" full"+(ok.length?", "+dlong(ok[0].date)+" to "+dlong(ok[ok.length-1].date):"")+(st.avg!=null?'. Average DLI <b class="mono">'+st.avg.toFixed(1)+"</b>.":".")+"</p>";
+  if(st.months.length)h+='<div class="tablewrap"><table><caption class="sr">Sensor readings by month</caption><thead><tr><th scope="col">Month</th><th scope="col" class="num">Full days</th><th scope="col" class="num">Measured</th><th scope="col" class="num">Estimate</th></tr></thead><tbody>'+st.months.map(x=>'<tr><th scope="row">'+MON[x.m]+'</th><td class="num">'+x.n+'</td><td class="num">'+x.meas.toFixed(1)+'</td><td class="num">'+(x.model?x.model.toFixed(1):"–")+"</td></tr>").join("")+"</tbody></table></div>"+(st.ratio?'<p class="small">This sensor reads <b>'+Math.round(st.ratio*100)+"%</b> of the estimate. The light probe uses that to correct spots within 15 ft.</p>":climFor(p.loc.lat,p.loc.lon)?'<p class="tiny muted">Needs 5 full days in a month to compare.</p>':'<p class="tiny muted">Load live sunlight (Right now card or the light probe) to compare with the estimate.</p>');
+  if(all.some(d=>!d.ok))h+='<p class="tiny muted">Days with readings for less than 80% of daylight are kept but left out of averages.</p>';
+  h+='<div><button class="btn sm" data-act="sensor-clear">Remove loaded data</button></div>'}
+ h+='<details><summary class="small"><b>What file works</b></summary><p class="small">Most light loggers and home weather stations can export a CSV. It needs a date or time column and one light column: PPFD (µmol/m²/s), lux, solar radiation (W/m²) or a daily DLI. Readings every 1 to 15 minutes work best.</p><pre class="tiny mono" style="white-space:pre-wrap;margin:0">time,ppfd\n2026-10-18 07:10,12\n2026-10-18 07:20,35\n...</pre></details></div>';
+ return h}
+function dliCard(p){const zs=bedsOf(p);
+ let h='<div class="card" id="dliCard"><div class="row between"><h3>Daily light (DLI)</h3>'+ev("modeled")+'</div><p class="small">DLI is the total plant-usable light a spot gets in a day, in mol/m²/day. Sun hours tell you when; DLI tells you how much, including the softer sky light a shaded bed still gets.</p>';
+ if(!zs.length)return h+'<p class="small muted">Add a bed to see its daily light.</p></div>';
+ const W=p.demo?null:LIVE.wx[lkey(p.loc.lat,p.loc.lon)],sw=W&&W.days.filter(d=>d.sw!=null),wkOpen=sw&&sw.length?sw.reduce((a,d)=>a+d.sw,0)/sw.length*PAR_J:null;
+ const C=p.demo?null:climFor(p.loc.lat,p.loc.lon);
+ const rows=zs.map(z=>({z,e:dliEst(p,zonePts(z),S.Y,S.date)}));
+ const last=z=>(z.light||[]).filter(r=>r.kind==="dli").slice(-1)[0];
+ h+='<div class="tablewrap"><table><caption class="sr">Daily light by bed</caption><thead><tr><th scope="col">Bed</th><th scope="col" class="num">Clear day<br><span class="tiny">'+dshort(S.date)+'</span></th>'+(wkOpen!=null?'<th scope="col" class="num">This week<br><span class="tiny">with forecast clouds</span></th>':"")+'<th scope="col">Level</th><th scope="col" class="num">Your meter</th></tr></thead><tbody>'+
+  rows.map(({z,e})=>{const L=last(z),v=e.ok?e.dli:null;return"<tr><th scope=\"row\">"+esc(z.name)+'</th><td class="num">'+(e.ok?e.dli.toFixed(1):e.lo.toFixed(0)+"–"+e.hi.toFixed(0))+"</td>"+(wkOpen!=null?'<td class="num">'+(e.ok?(wkOpen*e.frac).toFixed(1):"–")+"</td>":"")+"<td>"+(e.ok?'<span class="pill">'+dliClass(wkOpen!=null?wkOpen*e.frac:v)+"</span>":'<button class="btn link small" data-act="select-obj" data-arg="'+e.need[0].id+'">Needs '+esc(e.need[0].name)+" height</button>")+'</td><td class="num">'+(L?L.val.toFixed(1)+' <span class="ev ev-measured">Measured</span><br><span class="tiny muted">'+dshort(L.date)+"</span>":'<span class="muted">–</span>')+"</td></tr>"}).join("")+
+  "</tbody></table></div>";
+ h+='<p class="tiny muted">Clear day: estimate for a cloudless '+dlong(S.date)+(S.Y?", "+S.Y+" years ahead":"")+'. Open ground with no shade would get about <b class="mono">'+(rows[0].e.open||0).toFixed(1)+"</b>."+(wkOpen!=null?" This week: real forecast sunlight for your area, scaled by each bed's shade.":"")+" A range means a tree or building height is missing.</p>";
+ if(C&&C.swMonth){const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const fr=zs.map(z=>M.map((_,m)=>{const e=dliEst(p,zonePts(z),S.Y,midMonth(m));return e.ok?e.frac:null}));
+  h+='<details class="card" style="padding:12px"><summary>Typical DLI by month, with real cloud cover</summary><div class="tablewrap"><table class="cal" style="width:100%"><caption class="sr">Typical daily light by month</caption><thead><tr><th scope="col">Bed</th>'+M.map(m=>'<th scope="col">'+m+"</th>").join("")+'</tr></thead><tbody><tr><th scope="row">Open sky</th>'+C.swMonth.map(v=>'<td class="mono">'+(v==null?"–":(v*PAR_J).toFixed(0))+"</td>").join("")+"</tr>"+
+   zs.map((z,i)=>'<tr><th scope="row">'+esc(z.name)+"</th>"+C.swMonth.map((v,m)=>{const f=fr[i][m];return'<td class="mono">'+(v==null||f==null?"–":(v*PAR_J*f).toFixed(0))+"</td>"}).join("")+"</tr>").join("")+
+   '</tbody></table></div><p class="tiny muted">Monthly average sunlight for your area, '+C.y0+"–"+C.y1+", scaled by each bed's shade on the 15th of the month. "+OM+"</p></details>"}
+ else if(!p.demo)h+='<div class="stack" style="gap:6px">'+liveBtn("all",p.loc.lat,p.loc.lon,"Add real cloud cover to these numbers")+liveNote+"</div>";
+ h+='<details><summary class="small"><b>How much light plants need</b></summary><ul class="small" style="margin:6px 0 0;padding-left:18px"><li><b>Very high, 18 and up:</b> tomatoes, peppers, squash, cucumbers, melons, corn. Fruiting crops do best at 20–30.</li><li><b>High, 12–18:</b> lettuce, kale, chard, most herbs, strawberries, many sun-loving natives.</li><li><b>Medium, 6–12:</b> leafy greens get by, plus part-shade natives like columbine and wild ginger.</li><li><b>Low, under 6:</b> ferns, sedges and other shade plants.</li></ul><p class="tiny muted">General guide from greenhouse and extension research. Plants vary by variety and season.</p></details>';
+ h+=lightLog(p,zs)+"</div>";return h}
+function lightLog(p,zs){const all=[];zs.forEach(z=>(z.light||[]).forEach(r=>all.push({z,r})));all.sort((a,b)=>(b.r.date+(b.r.time||"")).localeCompare(a.r.date+(a.r.time||"")));
+ let h='<div class="sep"></div><h4>Light readings</h4><p class="small muted">Got a light meter or a light-meter app? Log what it says. The site never reads your phone\'s sensors or camera; you type the number in.</p>';
+ if(all.length)h+='<div class="list">'+all.slice(0,6).map(({z,r})=>{let t="";
+  if(r.kind==="dli")t="<b>"+r.val.toFixed(1)+"</b> mol/m²/day for the whole day";
+  else{const pp=r.kind==="lux"?r.val*.0185:r.val,mm=r.time?(+r.time.slice(0,2))*60+(+r.time.slice(3,5)):null,mod=mm!=null?ppfdAt(p,zonePts(z),r.date,mm):0;
+   t="<b>"+Math.round(pp)+"</b> µmol/m²/s at "+(r.time?fmtT(mm):"a time not given")+(r.kind==="lux"?" (from "+Math.round(r.val).toLocaleString()+" lux, sunlight conversion)":"")+(mod?". The clear-sky model expected about <b>"+Math.round(mod)+"</b> then.":"")}
+  return'<div class="li"><div class="row between"><b>'+esc(z.name)+'</b><span class="ev ev-measured">Measured</span></div><span class="small">'+t+'</span><span class="tiny muted">'+dlong(r.date)+(r.sky?" · "+esc(r.sky):"")+(r.notes?" · "+esc(r.notes):"")+"</span></div>"}).join("")+"</div>";
+ h+='<details><summary class="small"><b>Log a light reading</b></summary><form id="lightForm" class="stack" style="margin-top:8px"><div class="fields"><label class="f">Bed<select id="lfBed">'+zs.map(z=>'<option value="'+z.id+'">'+esc(z.name)+"</option>").join("")+'</select></label><label class="f">What you measured<select id="lfKind"><option value="dli">Whole-day total (DLI)</option><option value="ppfd">Spot reading, PPFD (µmol/m²/s)</option><option value="lux">Spot reading, lux</option></select></label><label class="f">Reading<input type="number" id="lfVal" min="0" step="any" inputmode="decimal" required></label><label class="f">Date<input type="date" id="lfDate" value="'+TODAY+'"></label><label class="f">Time (spot readings)<input type="time" id="lfTime" value="'+pad(NOW.getHours())+":"+pad(NOW.getMinutes())+'"></label><label class="f">Sky<select id="lfSky"><option>Clear</option><option>Partly cloudy</option><option>Cloudy</option></select></label></div><label class="f">Notes (optional)<input type="text" id="lfNotes" placeholder="e.g. meter held at leaf height"></label><div><button class="btn primary sm" type="submit">Save reading</button></div><p class="tiny muted">Lux is converted with a sunlight factor (1,000 lux ≈ 18.5 µmol/m²/s). It is less accurate under grow lights.</p></form></details>';
+ return h}
 const sunClass=h=>h>=6?{k:"F",t:"Full sun",c:"--h-full"}:h>=4?{k:"P",t:"Part sun",c:"--h-psun"}:h>=2?{k:"P",t:"Part shade",c:"--h-pshade"}:{k:"S",t:"Full shade",c:"--h-shade"};
 const zonesOf=p=>p.objects.filter(o=>ZONE_TYPES[o.type]);
 const bedsOf=p=>p.objects.filter(o=>o.type==="bed"||o.type==="container");
@@ -957,8 +1142,13 @@ function drawMap(cv,p,o){
    c.fillStyle=T.water;c.fillRect(s.x-1,s.y-1,2,2);c.strokeStyle=T.surface;c.lineWidth=px;c.strokeRect(s.x-1,s.y-1,2,2)}
   if(RAIN.propId===p.id&&RAIN.parts){c.fillStyle=T.water;for(const q of RAIN.parts){c.beginPath();c.arc(q.x,q.y,.5,0,7);c.fill()}}}
  const sel=S.sel&&p.objects.find(x=>x.id===S.sel);
- if(sel&&!o.mini){c.strokeStyle=T.sun;c.lineWidth=3*px;c.setLineDash([4*px,3*px]);if(sel.type==="tree"){c.beginPath();c.arc(sel.x,sel.y,treeAt(sel,Y).r+1,0,7)}else if(sel.type==="container"||sel.type==="barrel"){c.beginPath();c.arc(sel.x,sel.y,sel.w/2+1,0,7)}else path(c,corners(sel));c.stroke();c.setLineDash([])}
- if(S.spot&&!o.mini&&(o.layer==="shade"||o.layer==="hours")){c.strokeStyle=T.fg;c.lineWidth=2.5*px;c.beginPath();c.arc(S.spot.x,S.spot.y,2,0,7);c.stroke();c.fillStyle=T.surface;c.beginPath();c.arc(S.spot.x,S.spot.y,.8,0,7);c.fill()}
+ if(sel&&!o.mini){c.strokeStyle=T.sun;c.lineWidth=3*px;c.setLineDash([4*px,3*px]);if(sel.type==="tree"){c.beginPath();c.arc(sel.x,sel.y,treeAt(sel,Y).r+1,0,7)}else if(sel.type==="container"||sel.type==="barrel"){c.beginPath();c.arc(sel.x,sel.y,sel.w/2+1,0,7)}else if(sel.type==="sensor"){c.beginPath();c.arc(sel.x,sel.y,2.2,0,7)}else path(c,corners(sel));c.stroke();c.setLineDash([])}
+ for(const sn of p.objects){if(sn.type!=="sensor")continue;inScreen(g,c);const X=sn.x*g.k,Yy=sn.y*g.k,r=o.mini?4:7;c.beginPath();c.moveTo(X,Yy-r);c.lineTo(X+r,Yy);c.lineTo(X,Yy+r);c.lineTo(X-r,Yy);c.closePath();c.fillStyle="#7B7CFB";c.fill();c.strokeStyle="#121412";c.lineWidth=2;c.stroke();
+  if(!o.mini){c.fillStyle="#121412";c.font="800 9px "+T.font;c.textAlign="center";c.textBaseline="top";c.fillText("SENSOR",X,Yy+r+3)}inWorld(g,c)}
+ if(S.spot&&!o.mini&&(o.layer==="shade"||o.layer==="hours")){inScreen(g,c);const X=S.spot.x*g.k,Yy=S.spot.y*g.k;
+  c.strokeStyle="#121412";c.lineWidth=2;c.beginPath();c.moveTo(X-16,Yy);c.lineTo(X+16,Yy);c.moveTo(X,Yy-16);c.lineTo(X,Yy+16);c.stroke();
+  c.beginPath();c.arc(X,Yy,9,0,7);c.fillStyle="#C9F25A";c.fill();c.lineWidth=3;c.stroke();c.fillStyle="#121412";c.beginPath();c.arc(X,Yy,2.5,0,7);c.fill();
+  c.font="800 10px "+T.font;c.textAlign="center";c.textBaseline="bottom";const tw=c.measureText("PROBE").width;c.fillStyle="#121412";c.fillRect(X-tw/2-4,Yy-32,tw+8,14);c.fillStyle="#C9F25A";c.fillText("PROBE",X,Yy-20);inWorld(g,c)}
  inScreen(g,c);const cx2=g.w-30,cy2=28,cr=o.mini?14:19;c.fillStyle=T.surface;c.globalAlpha=.92;c.beginPath();c.arc(cx2,cy2,cr,0,7);c.fill();c.globalAlpha=1;c.strokeStyle=T.line;c.lineWidth=1;c.stroke();
  c.fillStyle=T.tomato;c.beginPath();c.moveTo(cx2,cy2-cr+5);c.lineTo(cx2-4,cy2);c.lineTo(cx2+4,cy2);c.closePath();c.fill();c.fillStyle=T.muted;c.beginPath();c.moveTo(cx2,cy2+cr-5);c.lineTo(cx2-4,cy2);c.lineTo(cx2+4,cy2);c.closePath();c.fill();
  c.fillStyle=T.fg;c.font="800 10px "+T.font;c.textAlign="center";c.textBaseline="middle";c.fillText("N",cx2-cr-7,cy2-cr+5);
@@ -1065,7 +1255,7 @@ function renderConsent(){
  if(consentDetails){
   h+='<div class="stack" id="privacyDetail">'+
     opt("cEss",true,true,"Essential privacy choice · always on","After you decide, saves that decision so we respect it on your next visit.",["Your privacy choice, date and policy version"],"garden data, location, advertising identifiers or browsing activity.")+
-    opt("cFun",f,false,"Save my garden on this device","Optional. Your plans stay in this browser; they are not sent to a server.",["Nearest selected city, garden dimensions and garden-bed layouts","Soil records, journal text, plant and task notes, budget items","Dashboard and display preferences"],"photos, videos, street addresses, GPS coordinates or device identifiers. Media stays in the tab.")+
+    opt("cFun",f,false,"Save my garden on this device","Optional. Your plans stay in this browser; they are not sent to a server.",["Nearest selected city, garden dimensions and garden-bed layouts","Soil records, light readings and sensor daily totals, journal text, plant and task notes, budget items","Dashboard and display preferences"],"photos, videos, street addresses, GPS coordinates or device identifiers. Media stays in the tab.")+
     opt("cAna",false,true,"Analytics · not installed","The prototype has no analytics tools and cannot enable them.",null,"anything about your visits or behavior.")+
     opt("cMkt",false,true,"Marketing and ads · not used","No ad pixels, retargeting or cross-site tracking are included.",null,null)+
     '<div class="row"><button class="btn primary" data-act="consent" data-arg="save">Save my selected choices</button></div>'+
@@ -1098,7 +1288,7 @@ const SHEETS={
  policy:["Privacy policy (draft)","<p>This is a draft for the prototype.</p><ul><li><b>Optional cookies are off by default.</b> Only your privacy decision is stored after you make a choice; saving garden data is optional and off by default. Privacy choices explains exactly what each option stores.</li><li>No analytics, ad pixels, session replay or fingerprinting are installed.</li><li>The page loads no outside fonts, maps or scripts. <b>The only outside connection is Open-Meteo</b>, a free weather service, and only when you press a live weather or frost button. It receives your city's approximate location, rounded to about 7 miles, and, like any website, your IP address. It gets nothing about you or your garden, and the results aren't saved.</li><li><b>Permissions we never ask for:</b> camera, microphone, photo library, contacts or your device's location.</li><li><b>Location:</b> you pick or type your nearest city. It is used only for plant-related things: sun times, planting season, native plants, pest seasons and weather.</li><li><b>Photos and videos:</b> you choose individual files from a folder on your device. Location data inside photos is removed. They stay in the open tab and are never saved or shared.</li><li>Pest reports show only a coarse area of about a mile, never your address.</li><li><b>Community posts and trades</b> stay on this device in the prototype, and posts are private by default.</li><li><b>Sound:</b> Garden Mood sounds are made in your browser and never start on their own. No music service is connected.</li></ul><p class='small muted'>Privacy and accessibility requirements need legal review for each jurisdiction before launch.</p>"],
  a11y:["Accessibility","<ul><li>Text size, higher contrast and reduced motion are under Accessibility &amp; display at the top of every page.</li><li>Every photo you add asks for a short description. Screen readers read it aloud, and it shows as a caption for everyone.</li><li>Every video needs a written description or transcript before it's added, can carry a caption file (.vtt), never plays on its own and has no sound until you press play.</li><li>Every map has a text version (Map in words) and a sun-hours table.</li><li>Every slider works with arrow keys; dragging is never required.</li><li>Status uses words and shapes, not color alone, and notices are announced to screen readers.</li><li>Nothing on the site relies on sound.</li><li>The target is WCAG 2.2 AA.</li></ul>"],
  rules:["Community rules","<ul><li>Report what you saw and roughly where. The public map only ever shows a coarse area.</li><li>Add a photo when you can. Moderators verify reports from photos.</li><li>No addresses, faces or license plates in photos.</li><li>Unverified reports are labeled until someone confirms them.</li></ul>"],
- sources:["Data sources","<ul><li>Sun position: NOAA solar calculation (an approximation of the Solar Position Algorithm).</li><li>Soils: USDA NRCS soil survey (SSURGO), used as regional context only.</li><li>Native plants: starter lists by region; the Maryland Plant Atlas is a candidate source for the Mid-Atlantic.</li><li>Pests: seasonal ranges from extension guidance; sightings in the demo are examples.</li><li>Live forecasts and frost estimates: <a href='https://open-meteo.com/' target='_blank' rel='noopener noreferrer'>Open-Meteo.com</a> (CC BY 4.0), which combines national weather service models and ERA5 reanalysis. Fetched only when you ask. Frost dates and zones are estimates from 10 years of gridded daily lows and can differ from your yard; the official USDA zone map is the reference for zones.</li><li>Weather in the demo yard is example data.</li></ul>"],
+ sources:["Data sources","<ul><li>Sun position: NOAA solar calculation (an approximation of the Solar Position Algorithm).</li><li>Daily light (DLI): clear-sky sunlight from the Haurwitz model, split into direct sun and sky light and converted to plant light at about 2.1 µmol per joule. With live data, it is scaled to measured sunlight totals.</li><li>Soils: USDA NRCS soil survey (SSURGO), used as regional context only.</li><li>Native plants: starter lists by region; the Maryland Plant Atlas is a candidate source for the Mid-Atlantic.</li><li>Pests: seasonal ranges from extension guidance; sightings in the demo are examples.</li><li>Live forecasts, sunlight and frost estimates: <a href='https://open-meteo.com/' target='_blank' rel='noopener noreferrer'>Open-Meteo.com</a> (CC BY 4.0), which combines national weather service models and ERA5 reanalysis. Fetched only when you ask. Frost dates and zones are estimates from 10 years of gridded daily lows and can differ from your yard; the official USDA zone map is the reference for zones.</li><li>Weather in the demo yard is example data.</li></ul>"],
  ask:["Garden assistant","<p>Planned. The assistant will answer questions using your saved garden records, and say plainly what is missing, what is a guess and what hasn't been verified.</p>"],
  contact:["Contact","<p>Contact details will be added before launch. For now, share feedback with the person who sent you this prototype.</p>"],
  login:["Log in","<p>Accounts aren't part of this prototype. You can explore the demo yard, or start your own garden on this device without an account.</p><div class='row'><button class='btn primary' data-act='start'>Start My Garden</button><button class='btn' data-act='demo'>Explore the demo yard</button></div>"]};
@@ -1109,14 +1299,14 @@ function renderChrome(){
  $("#home").hidden=S.view!=="home";$("#app").hidden=S.view!=="app";$("#setup").hidden=S.view!=="setup";
  if(S.view!=="app")return;
  const p=prop();
- $("#propSel").innerHTML='<option value="demo">Sample rowhouse yard (demo)</option>'+(S.props.mine?'<option value="mine">'+esc(S.props.mine.name)+"</option>":"")+'<option value="new">+ Add my property</option>';
+ $("#propSel").innerHTML='<option value="demo">Sample DC rowhouse yard (demo)</option><option value="demomke">Sample Milwaukee duplex yard (demo)</option>'+(S.props.mine?'<option value="mine">'+esc(S.props.mine.name)+"</option>":"")+'<option value="new">+ Add my property</option>';
  $("#propSel").value=S.propId;
  const sc=$("#saveChip");if(p.demo){sc.textContent="Demo · changes aren't saved";}else sc.textContent=canSave()?"Saved on this device":"Not saved · turn on saving";
  $("#modeStarter").setAttribute("aria-pressed",!S.dash.advanced);$("#modeAdv").setAttribute("aria-pressed",S.dash.advanced);
  $("#railNav").innerHTML=NAV.map(n=>'<button data-act="tab" data-arg="'+n[0]+'"'+(S.tab===n[0]?' aria-current="page"':"")+">"+navIcon(n[0])+n[1]+"</button>").join("");
  $("#bottomNav").innerHTML=NAV.slice(0,5).map(n=>'<button data-act="tab" data-arg="'+n[0]+'"'+(S.tab===n[0]?' aria-current="page"':"")+">"+navIcon(n[0])+"<span>"+(n[0]==="garden"?"Garden":n[1])+"</span></button>").join("");
  updMood();
- $("#demoBar").innerHTML=p.demo?'<div class="demobar">'+ev("demo")+"<span>You're exploring a fictional sample yard in a Southeast DC-style neighborhood. Edit anything; it resets when you leave.</span></div>":"";
+ $("#demoBar").innerHTML=p.demo?'<div class="demobar">'+ev("demo")+"<span>"+esc(p.demoNote||"You're exploring a fictional sample yard in a Southeast DC-style neighborhood. Edit anything; it resets when you leave.")+"</span></div>":"";
  const sg=sightingsFor(p).filter(s=>!s.mine&&s.dist<=S.alerts.radius),ver=sg.filter(s=>s.status==="verified");
  const ab=$("#alertBar");if(S.alerts.on&&sg.length){ab.hidden=false;ab.innerHTML='<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2 1 18h18z" fill="var(--tomato)"/><path d="M10 8v4M10 14.5v.5" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span><b>'+ver.length+" verified</b> and "+(sg.length-ver.length)+" unverified pest report"+(sg.length===1?"":"s")+" within "+S.alerts.radius+" mi this week. Nearest: "+esc(sg.slice().sort((a,b)=>a.dist-b.dist)[0].pest)+".</span>"}else ab.hidden=true;
  ["dash","garden","explore","trade","alerts","profile"].forEach(t=>$("#v-"+t).hidden=t!==S.tab);
@@ -1208,8 +1398,8 @@ function renderDash(){
 }
 
 /* ---------- property ---------- */
-const TOOLS=[["select","Select & move"],["bed","+ Bed"],["container","+ Container"],["tree","+ Tree"],["fence","+ Fence"],["greenhouse","+ Greenhouse"],["barrel","+ Rain barrel"],["pool","Mark where water pools"]];
-const NEWOBJ={bed:{w:8,d:4,h:1,name:"New bed",plants:[],tests:[]},container:{w:2.5,d:2.5,name:"New container",plants:[],tests:[]},tree:{r:5,h:null,matureH:null,matureR:null,rate:0,name:"New tree"},fence:{w:16,d:.6,h:6,name:"New fence"},greenhouse:{w:8,d:6,h:8,name:"Greenhouse"},barrel:{w:2.2,d:2.2,cap:55,name:"Rain barrel"}};
+const TOOLS=[["select","Select & move"],["bed","+ Bed"],["container","+ Container"],["tree","+ Tree"],["fence","+ Fence"],["greenhouse","+ Greenhouse"],["barrel","+ Rain barrel"],["sensor","+ Light sensor"],["pool","Mark where water pools"]];
+const NEWOBJ={bed:{w:8,d:4,h:1,name:"New bed",plants:[],tests:[]},container:{w:2.5,d:2.5,name:"New container",plants:[],tests:[]},tree:{r:5,h:null,matureH:null,matureR:null,rate:0,name:"New tree"},fence:{w:16,d:.6,h:6,name:"New fence"},greenhouse:{w:8,d:6,h:8,name:"Greenhouse"},barrel:{w:2.2,d:2.2,cap:55,name:"Rain barrel"},sensor:{w:1,d:1,name:"Light sensor",days:[]}};
 const UNDO=[],REDO=[];
 function snap(p){return JSON.stringify({objects:p.objects,water:p.water})}
 function pushUndo(){const p=prop();UNDO.push({id:p.id,s:snap(p)});if(UNDO.length>60)UNDO.shift();REDO.length=0}
@@ -1241,7 +1431,7 @@ function updateTimeText(){const p=prop();$("#timeLbl").textContent=fmtT(S.minute
  $("#sunInfo").innerHTML=(sp.alt>0?"The sun is in the <b>"+WORDS[dir16(sp.az)]+"</b>"+(S.dash.advanced?' (azimuth <span class="mono">'+Math.round(sp.az)+'°</span>, <span class="mono">'+Math.round(sp.alt)+"°</span> above the horizon)":", "+Math.round(sp.alt)+"° above the horizon")+". Shadows point "+WORDS[dir16(sp.az+180)]+".":"<b>The sun is down.</b> Slide into daylight.")+'<br><span class="muted mono tiny">Sunrise '+fmtT(d.rise)+" · Sunset "+fmtT(d.set)+"</span>"}
 function renderSelCard(){
  const p=prop(),o=S.sel&&p.objects.find(x=>x.id===S.sel),el=$("#selCard");if(!o){el.innerHTML="";return}
- const shade=SHADING[o.type],box=o.type!=="tree"&&o.type!=="container"&&o.type!=="barrel";
+ const shade=SHADING[o.type],box=o.type!=="tree"&&o.type!=="container"&&o.type!=="barrel"&&o.type!=="sensor";
  let h='<div class="card sel"><div class="row between"><h3>'+esc(o.name)+'</h3><span class="small muted">'+TYPES[o.type]+"</span></div>";
  if(o.fixed)h+='<p class="small muted">This is on a neighboring property, so it can\'t be moved. Its height still matters for your shade.</p>';
  else h+='<label class="f">Name<input type="text" data-f="sel.name" value="'+esc(o.name)+'"></label>';
@@ -1254,6 +1444,7 @@ function renderSelCard(){
  if(o.type==="barrel")h+='<label class="f">Capacity (gal)<input type="number" min="10" step="5" data-f="sel.cap" value="'+o.cap+'"></label>';
  h+="</div>";
  if(o.type==="tree"&&!o.fixed)h+='<label class="check small"><input type="checkbox" data-f="sel.planned" '+(o.planned?"checked":"")+"> Planned, not planted yet</label>";
+ if(o.type==="sensor")h+=sensorSection(p,o);
  if(o.type==="barrel"){h+='<label class="f">Connected downspout<select data-f="sel.spout"><option value="">Not connected</option>'+p.water.spouts.map(s=>'<option value="'+s.id+'"'+(s.barrel===o.id?" selected":"")+">"+esc(s.name)+"</option>").join("")+"</select></label>"}
  if(shade)h+=o.h==null?'<div class="warnbox"><span aria-hidden="true">?</span><span><b>Height unknown.</b> Sun-hour estimates near this '+(o.type==="tree"?"tree":"object")+" are hidden until you add it. A rough guess is fine.</span></div>":'<span class="src">'+ev("reported")+" Height entered by you</span>";
  h+='<div class="row">'+(box&&!o.fixed?'<button class="btn sm" data-act="sel-rotate">Turn 90°</button>':"")+(!o.fixed&&o.type!=="house"?'<button class="btn sm" data-act="sel-delete">Delete</button>':"")+'<button class="btn sm" data-act="sel-clear">Done</button></div></div>';
@@ -1268,10 +1459,8 @@ function renderLayerDyn(){
  if(S.layer==="shade"||S.layer==="hours"){
   const unk=unknownObjs(p);
   if(unk.length)h+='<div class="warnbox"><span aria-hidden="true">!</span><span><b>Shade model incomplete.</b> The '+unk.map(u=>esc(u.name)).join(", ")+" "+(unk.length===1?"needs":"need")+' a height. Beds it could shade show "Needs a height" instead of a number. <button class="btn link small" data-act="select-obj" data-arg="'+unk[0].id+'">Add it</button></span></div>';
-  if(S.spot){const inB=buildings(p).some(b=>inPoly([S.spot.x,S.spot.y],b));const e=inB?null:estimate(p,[[S.spot.x,S.spot.y]],S.Y);
-   h+='<div class="card"><div class="row between"><h3>Checked spot</h3>'+ev("modeled")+"</div>"+(inB?'<p class="small">That spot is on a roof. Tap the ground.</p>':e.ok?'<div class="kv"><div><span class="lbl">Direct sun</span><b class="mono">'+e.h.toFixed(1)+' h</b></div><div><span class="lbl">Sun window</span><b class="mono" style="font-size:1rem">'+(e.first!==null?fmtT(e.first)+"–"+fmtT(e.last):"No direct sun")+'</b></div></div><p class="small">'+sunClass(e.h).t+" on "+dlong(S.date)+(S.Y?", "+S.Y+" years from now":"")+'.</p><span class="src">Clear-sky estimate from sun position and the heights you entered.</span>':'<p class="small">Somewhere between '+e.lo.toFixed(1)+" and "+e.hi.toFixed(1)+" h depending on the "+esc(e.need[0].name)+'. <button class="btn link small" data-act="select-obj" data-arg="'+e.need[0].id+'">Add its height</button></p>')+"</div>"}
-  else h+='<p class="small muted">Tap the ground with Select &amp; move to check any spot. Drag the sun around the map edge to change the time.</p>';
-  h+='<div class="card"><div class="row between"><h3>Sun by bed</h3>'+ev("modeled")+'</div><p class="tiny muted">'+dlong(S.date)+(S.Y?" · "+S.Y+" years ahead":"")+' · clear sky. "Full sun" on plant tags means 6+ hours in the growing season, so check June too.</p>'+zoneTable(p)+"</div>";
+  h+=probeCard(p);
+  h+='<div class="card"><div class="row between"><h3>Sun by bed</h3>'+ev("modeled")+'</div><p class="tiny muted">'+dlong(S.date)+(S.Y?" · "+S.Y+" years ahead":"")+' · clear sky. "Full sun" on plant tags means 6+ hours in the growing season, so check June too.</p>'+zoneTable(p)+"</div>"+dliCard(p);
  }
  else if(S.layer==="water"){
   const house=p.objects.find(o=>o.type==="house"),roof=house.w*house.d,plan=gardenPlan(p),barrels=p.objects.filter(o=>o.type==="barrel");
@@ -1300,6 +1489,7 @@ function renderMapWords(p){
  lines.push("<p>Front of the house faces "+WORDS[dir16(p.face)]+". Ground slopes down toward the "+WORDS[dir16(p.water.down)]+".</p>");
  lines.push('<ul style="margin:0;padding-left:18px">'+ob.map(o=>{let s="<b>"+esc(o.name)+"</b> ("+TYPES[o.type].toLowerCase()+")";
   if(o.type==="tree"){const t=treeAt(o,S.Y);s+=": "+(t.h==null?"height unknown":Math.round(t.h)+" ft tall")+", canopy "+Math.round(t.r*2)+" ft"+(o.planned?", planned":"")}
+  else if(o.type==="sensor")s+=": "+((o.days||[]).length?(o.days.length+" days of light readings loaded"):"no data loaded yet");
   else if(o.type==="container"||o.type==="barrel")s+=": "+o.w+" ft across"+(o.cap?", "+o.cap+" gal":"");
   else s+=": "+o.w+" × "+o.d+" ft"+(SHADING[o.type]?", "+(o.h==null?"height unknown":o.h+" ft tall"):"");
   return"<li>"+s+"</li>"}).join("")+"</ul>");
@@ -1317,22 +1507,25 @@ function stripImage(file,cb){const rd=new FileReader();rd.onload=()=>{const img=
 /* map pointer */
 let drag=null;
 function toWorld(cv,e,V){const r=cv.getBoundingClientRect(),k=r.width/V.W;return{x:(e.clientX-r.left)/k,y:(e.clientY-r.top)/k,px:e.clientX-r.left,py:e.clientY-r.top}}
-function hitTest(p,pt){const pri=["barrel","container","tree","bed","greenhouse","shed","fence","house","neighbor"];if(S.layer==="soil")pri.push("area");
+function hitTest(p,pt){const pri=["sensor","barrel","container","tree","bed","greenhouse","shed","fence","house","neighbor"];if(S.layer==="soil")pri.push("area");
  for(const ty of pri)for(const o of p.objects.slice().reverse()){if(o.type!==ty)continue;
   if(ty==="tree"){if(Math.hypot(o.x-pt[0],o.y-pt[1])<Math.max(2,treeAt(o,S.Y).r))return o}
+  else if(ty==="sensor"){if(Math.hypot(o.x-pt[0],o.y-pt[1])<2)return o}
   else if(ty==="container"||ty==="barrel"){if(Math.hypot(o.x-pt[0],o.y-pt[1])<o.w/2+1)return o}
   else{const c=corners(o);if(inPoly(pt,c)||(ty==="fence"&&polyDist(pt,c)<1.2))return o}}return null}
 const cvP=$("#propCv");
 cvP.addEventListener("pointerdown",e=>{const p=prop(),w=toWorld(cvP,e,p.view);
  if(propOpts.sunPx&&Math.hypot(w.px-propOpts.sunPx[0],w.py-propOpts.sunPx[1])<26){drag={sun:true};cvP.setPointerCapture(e.pointerId);stopPlay();return}
+ if(S.tool==="select"&&S.spot&&(S.layer==="shade"||S.layer==="hours")){const k=cvP.getBoundingClientRect().width/p.view.W;if(Math.hypot(w.px-S.spot.x*k,w.py-S.spot.y*k)<22){drag={probe:true};cvP.setPointerCapture(e.pointerId);return}}
  if(S.tool==="select"){const o=hitTest(p,[w.x,w.y]);
   if(o){S.sel=o.id;if(!o.fixed&&o.type!=="area"&&!(o.type==="house"&&p.demo)){pushUndo();drag={id:o.id,dx:w.x-o.x,dy:w.y-o.y,moved:false};cvP.setPointerCapture(e.pointerId)}renderSelCard();drawProp();return}
-  S.sel=null;S.spot={x:w.x,y:w.y};renderSelCard();renderLayerDyn();drawProp();return}
+  S.sel=null;S.spot={x:w.x,y:w.y};drag={probe:true};cvP.setPointerCapture(e.pointerId);renderSelCard();renderLayerDyn();drawProp();return}
  if(S.tool==="pool"){pushUndo();p.water.lows.push({id:nid("l"),x:w.x,y:w.y,date:TODAY,note:"Water pooled here"});changed(p);S.tool="select";if(S.layer!=="water")S.layer="water";toast("Marked as a Reported observation for "+dshort(TODAY)+".");renderProperty();return}
  const base=NEWOBJ[S.tool];if(base){pushUndo();const o=Object.assign({id:nid("o"),type:S.tool,x:w.x,y:w.y,rot:p.rot||0},JSON.parse(JSON.stringify(base)));p.objects.push(o);changed(p);S.sel=o.id;S.tool="select";
   toast(o.type==="tree"?"Tree added. Add its height so the shade estimate can use it.":TYPES[o.type]+" added. Drag to place it.");renderProperty();if(o.type==="tree"){const hi=$("#selH");if(hi)hi.focus()}}});
 cvP.addEventListener("pointermove",e=>{if(!drag)return;const p=prop(),w=toWorld(cvP,e,p.view);
  if(drag.sun){const r=cvP.getBoundingClientRect(),ang=(Math.atan2(w.px-r.width/2,-(w.py-r.height/2))*DEG+360)%360;let best=null,bd=1e9;for(const s of day(p).samples){let d=Math.abs(s.az-ang);d=Math.min(d,360-d);if(d<bd){bd=d;best=s}}if(best){S.minutes=best.m;$("#timeSlider").value=S.minutes;drawProp()}return}
+ if(drag.probe){S.spot={x:Math.max(0,Math.min(p.view.W,w.x)),y:Math.max(0,Math.min(p.view.H,w.y))};drag.moved=true;drawProp();probeLive();return}
  const o=p.objects.find(x=>x.id===drag.id);if(!o)return;const nx=Math.max(0,Math.min(p.view.W,w.x-drag.dx)),ny=Math.max(0,Math.min(p.view.H,w.y-drag.dy));
  if(o.type==="house"){const dx=nx-o.x,dy=ny-o.y;p.water.spouts.forEach(s=>{s.x+=dx;s.y+=dy})}o.x=nx;o.y=ny;drag.moved=true;if(S.layer!=="hours")p._v++;drawProp()});
 function endDrag(){if(!drag)return;const p=prop();if(drag.id){if(drag.moved){changed(p);renderLayerDyn()}else UNDO.pop()}else renderLayerDyn();drag=null;drawProp()}
@@ -1433,7 +1626,7 @@ function renderCommunity(){
  h+='<div class="card"><div class="row between"><h3>Reports near you this week</h3>'+evDemo(p)+'</div><canvas id="coarseCv" width="300" height="300" style="width:100%;max-width:300px;height:auto;align-self:center" aria-label="Coarse grid of report counts around your area. Each square is about half a mile. Your home is not marked."></canvas><p class="tiny muted">Each square is about ½ mile. The center square is your general area, not your address.</p>';
  h+=sg.length?'<div class="list">'+sg.map(s=>{const dd=daysFrom(s.date,TODAY);return'<div class="li"><div class="row between"><b>'+esc(s.pest)+'</b><span class="row">'+(s.mine?'<span class="pill">Your report</span>':"")+(s.private?'<span class="pill">Private</span>':s.status==="verified"?'<span class="pill good">✓ Verified</span>':'<span class="pill warn">? Unverified</span>')+'</span></div><span class="small">'+esc(s.note||"No details")+"</span>"+(s.photo?mediaHTML({id:s.id,photo:s.photo,alt:s.alt}):"")+'<span class="src">'+(s.mine?"Your area":distLabel(s.dist))+" · "+(dd===0?"today":dd===1?"yesterday":dd+" days ago")+(s.by?" · "+esc(s.by):s.status==="unverified"&&!s.private?" · single report, awaiting photo review":"")+"</span></div>"}).join("")+"</div>":'<div class="empty"><p class="small">No community reports near you yet.</p></div>';
  h+="</div>";
- h+='<div class="card"><div class="row between"><h3>Active in '+MONTHS[m-1]+'</h3>'+ev("modeled")+'</div><p class="tiny muted">From regional seasonal ranges for '+esc(REGIONS[p.loc.region])+".</p>"+pestsFor(p.loc.region,m).map(x=>'<div class="li"><div class="row between"><b>'+esc(x.n)+"</b>"+(x.m[x.m.length-1]===m?'<span class="pill warn">Last month of season</span>':'<span class="pill">Active</span>')+'</div><span class="small">'+esc(x.tip)+"</span></div>").join("")+'<div class="lbl">Starting in '+MONTHS[nm-1]+'</div><p class="small">'+(pestsFor(p.loc.region,nm).filter(x=>!x.m.includes(m)).map(x=>esc(x.n)).join(", ")||"Nothing new expected.")+"</p></div></div>";
+ h+='<div class="card"><div class="row between"><h3>Active in '+MONTHS[m-1]+'</h3>'+ev("modeled")+'</div><p class="tiny muted">From regional seasonal ranges for '+esc(REGIONS[p.loc.region])+".</p>"+pestsFor(p.loc.region,m).map(x=>'<div class="li"><div class="row between"><b>'+esc(x.n)+"</b>"+(x.w?'<span class="pill warn">Watch for</span>':x.m[x.m.length-1]===m?'<span class="pill warn">Last month of season</span>':'<span class="pill">Active</span>')+'</div><span class="small">'+esc(x.tip)+"</span></div>").join("")+'<div class="lbl">Starting in '+MONTHS[nm-1]+'</div><p class="small">'+(pestsFor(p.loc.region,nm).filter(x=>!x.m.includes(m)).map(x=>esc(x.n)).join(", ")||"Nothing new expected.")+"</p></div></div>";
  h+='<div class="stack"><div class="card"><h3>Local alerts</h3><label class="check"><input type="checkbox" data-f="alerts.on" '+(S.alerts.on?"checked":"")+'> Alert me about nearby reports</label><label class="f">Within<select data-f="alerts.radius"><option value="0.5"'+(S.alerts.radius==.5?" selected":"")+'>½ mile</option><option value="1"'+(S.alerts.radius==1?" selected":"")+'>1 mile</option><option value="2"'+(S.alerts.radius==2?" selected":"")+'>2 miles</option></select></label><p class="small muted">Off until you turn it on. In the full app this sends a phone notification; here a banner appears at the top.</p></div>';
  h+='<form class="card" id="sightForm"><h3>Report a sighting</h3><label class="f">What did you see?<select id="sgPest">'+PESTS.filter(x=>x.r==="all"||x.r.split(" ").includes(p.loc.region)).map(x=>"<option>"+esc(x.n)+"</option>").join("")+'<option>Something else</option></select></label><label class="f">Details<textarea id="sgNote" placeholder="e.g. Dozens on the south side of a garage"></textarea></label><label class="f">Photo (helps verification)<input type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.heic" id="sgPhoto"></label><span class="tiny muted">Pick one file from a folder. Location data inside the photo is removed before anything is stored.</span><label class="f">Describe the photo (needed if you add one)<input type="text" id="sgAlt" placeholder="e.g. Gray egg mass on tree bark, about 2 inches long"></label><fieldset class="stack" style="border:0;padding:0;margin:0;gap:6px"><legend class="small" style="font-weight:700;color:var(--muted);margin-bottom:6px">Who can see it</legend><label class="check small"><input type="radio" name="sgVis" value="public" checked> Neighbors, at about 1-mile precision</label><label class="check small"><input type="radio" name="sgVis" value="private"> Only me, in my journal</label></fieldset><button class="btn primary" type="submit">Submit report</button></form>';
  h+='<div class="card"><h3>How verification works</h3><p class="small">A report is <b>unverified</b> until a moderator or extension partner confirms it from a photo. Alerts say which kind they are, so one unconfirmed report never reads like an outbreak.</p></div></div></div>';
@@ -1576,13 +1769,15 @@ const lkey=(lat,lon)=>r1(lat).toFixed(1)+","+r1(lon).toFixed(1);
 async function getJSON(u){const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),15000);
  try{const r=await fetch(u,{signal:ctl.signal,credentials:"omit",referrerPolicy:"no-referrer",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);return await r.json()}finally{clearTimeout(t)}}
 async function fetchWx(lat,lon){
- const j=await getJSON("https://api.open-meteo.com/v1/forecast?latitude="+r1(lat)+"&longitude="+r1(lon)+"&daily=precipitation_sum,temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=auto&forecast_days=7"),d=j.daily;
+ const j=await getJSON("https://api.open-meteo.com/v1/forecast?latitude="+r1(lat)+"&longitude="+r1(lon)+"&daily=precipitation_sum,temperature_2m_max,temperature_2m_min,shortwave_radiation_sum&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=auto&forecast_days=7"),d=j.daily;
  if(!d||!d.time||!d.time.length)throw new Error("empty");
- LIVE.wx[lkey(lat,lon)]={at:new Date(),days:d.time.map((t,i)=>({date:t,rain:+(d.precipitation_sum[i]||0),hi:Math.round(d.temperature_2m_max[i]),lo:Math.round(d.temperature_2m_min[i])}))}}
+ LIVE.wx[lkey(lat,lon)]={at:new Date(),days:d.time.map((t,i)=>({date:t,rain:+(d.precipitation_sum[i]||0),hi:Math.round(d.temperature_2m_max[i]),lo:Math.round(d.temperature_2m_min[i]),sw:d.shortwave_radiation_sum?d.shortwave_radiation_sum[i]:null}))}}
 async function fetchClim(lat,lon){const y1=NOW.getFullYear()-1,y0=y1-9;
- const j=await getJSON("https://archive-api.open-meteo.com/v1/archive?latitude="+r1(lat)+"&longitude="+r1(lon)+"&start_date="+y0+"-01-01&end_date="+y1+"-12-31&daily=temperature_2m_min&temperature_unit=fahrenheit&timezone=auto");
+ const j=await getJSON("https://archive-api.open-meteo.com/v1/archive?latitude="+r1(lat)+"&longitude="+r1(lon)+"&start_date="+y0+"-01-01&end_date="+y1+"-12-31&daily=temperature_2m_min,shortwave_radiation_sum&temperature_unit=fahrenheit&timezone=auto");
  if(!j.daily||!j.daily.time)throw new Error("empty");
- LIVE.clim[lkey(lat,lon)]=climFrom(j.daily.time,j.daily.temperature_2m_min,lat,y0,y1)}
+ const c=climFrom(j.daily.time,j.daily.temperature_2m_min,lat,y0,y1),sw=j.daily.shortwave_radiation_sum;
+ if(sw){const t=Array(12).fill(0),n=Array(12).fill(0);j.daily.time.forEach((d,i)=>{if(sw[i]!=null){const m=+d.slice(5,7)-1;t[m]+=sw[i];n[m]++}});c.swMonth=t.map((v,m)=>n[m]?v/n[m]:null)}
+ LIVE.clim[lkey(lat,lon)]=c}
 // Frost dates: the last day at or below 32°F before mid-season and the first one after, for each season, then the median across seasons.
 function climFrom(times,mins,lat,y0,y1){const south=lat<0,yrs={};
  times.forEach((t,i)=>{const v=mins[i];if(v==null)return;const y=+t.slice(0,4),m=+t.slice(5,7);
@@ -1632,7 +1827,7 @@ function cityPanel(p){
   row("Community","No opted-in posts or crop circles here yet.","")+
   (climFor(c.lat,c.lon)?'<div class="li"><b>Frost and zone, from recent years</b>'+climLine(climFor(c.lat,c.lon),c.n)+"</div>":'<div class="li"><b>Frost and zone, from recent years</b><span class="small">The typical dates above are general. Check this city\'s actual frost dates from the last 10 years.</span>'+liveBtn("clim",c.lat,c.lon,"Check frost dates for "+esc(c.n))+'<p class="tiny muted">Sends only this city\'s location to Open-Meteo.</p></div>')+
   row("Conditions","Water notices and pest feeds from public sources.","planned")+'<p class="tiny muted">Climate notes are general. Local conditions vary year to year.</p></div>';
- const me=p.demo?CITIES[0]:nearestCity(p.loc.lat,p.loc.lon),o=CITIES.find(x=>x.n===S.globe.cmp);
+ const me=nearestCity(p.loc.lat,p.loc.lon),o=CITIES.find(x=>x.n===S.globe.cmp);
  h+='<label class="f">Compare my season with<select data-f="globe.cmp"><option value="">Choose a city</option>'+CITIES.map(x=>"<option"+(x.n===S.globe.cmp?" selected":"")+">"+esc(x.n)+"</option>").join("")+"</select></label>";
  if(o){const CA=climFor(p.loc.lat,p.loc.lon),CB=climFor(o.lat,o.lon);const r=(l,a,b)=>"<tr><th scope=\"row\">"+l+"</th><td>"+a+"</td><td>"+b+"</td></tr>";
   h+='<div class="tablewrap"><table><caption class="sr">Season comparison</caption><thead><tr><th scope="col"></th><th scope="col">Your space<br><span class="tiny muted">near '+esc(me.n)+'</span></th><th scope="col">'+esc(o.n)+"</th></tr></thead><tbody>"+
@@ -1644,7 +1839,7 @@ const CROPS=[{n:"Collards",cat:"Greens",sun:"FP",plant:[3,8],harvest:[6,11]},{n:
 const CROP=Object.fromEntries(CROPS.map(c=>[c.n,c])),CATS=["Greens","Fruiting","Roots","Alliums","Herbs","Legumes"];
 const sunWord=s=>s==="F"?"full sun":s==="FP"?"full or part sun":s==="P"?"part sun":"any light";
 const inR=(m,r)=>r[0]<=r[1]?m>=r[0]&&m<=r[1]:(m>=r[0]||m<=r[1]);
-function sampleCircle(){return{id:nid("c"),demo:true,name:"Sample circle",area:"Southeast DC (fictional)",max:6,rules:"Grow what you pledge if you can. Share extras freely. Hand off at a public spot unless both people agree otherwise.",
+function sampleCircle(){return{id:nid("c"),demo:true,name:"Sample circle",area:((S.props[S.propId]||{}).demo?S.props[S.propId].place:"Southeast DC (fictional)"),max:6,rules:"Grow what you pledge if you can. Share extras freely. Hand off at a public spot unless both people agree otherwise.",
  pledges:[{hh:"Household A",crop:"Tomatoes",amt:"4 plants",sun:"F"},{hh:"Household A",crop:"Basil",amt:"6 plants",sun:"F"},{hh:"Household B",crop:"Collards",amt:"1 bed",sun:"P"},{hh:"Household B",crop:"Lettuce",amt:"2 rows",sun:"P"},{hh:"Household B",crop:"Tomatoes",amt:"2 plants",sun:"P"},{hh:"Household C",crop:"Sweet potatoes",amt:"10 slips",sun:"F"},{hh:"Household C",crop:"Green beans",amt:"2 rows",sun:"F"}]}}
 function circleFlags(ci){const f=[],by={};ci.pledges.forEach(pl=>{(by[pl.crop]=by[pl.crop]||[]).push(pl)});
  Object.entries(by).forEach(([crop,arr])=>{const hh=[...new Set(arr.map(a=>a.hh))];if(hh.length>1)f.push(["warn","Duplicate: "+hh.join(" and ")+" both pledged "+crop.toLowerCase()+". Fine if you want a lot; otherwise one household could switch."])});
@@ -1737,12 +1932,12 @@ document.addEventListener("click",e=>{
  case"data-copy":{const data={exported:new Date().toISOString(),myProperty:S.props.mine?JSON.parse(JSON.stringify(S.props.mine,NO_MEDIA)):null,posts:JSON.parse(JSON.stringify(S.posts,NO_MEDIA)),trade:S.trade,settings:{display:A11Y,dashboard:S.dash}};$("#dataOut").innerHTML='<label class="f">Your data as text<textarea id="dataTxt" readonly rows="8" class="mono">'+esc(JSON.stringify(data,null,2))+'</textarea></label><div><button class="btn sm" data-act="data-copy-btn">Copy to clipboard</button></div>';break}
  case"data-copy-btn":{const ta=$("#dataTxt");if(!ta)break;const sel=()=>{ta.focus();ta.select();toast("Selected. Press Ctrl+C or Cmd+C to copy.")};try{navigator.clipboard.writeText(ta.value).then(()=>toast("Copied."),sel)}catch(err){sel()}break}
  case"data-delete":{if(!el.dataset.armed){el.dataset.armed="1";el.textContent="Tap again to delete everything";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="Delete my garden data"}},4000);break}
-  delete S.props.mine;S.posts=[];S.saved=[];S.trade={mode:"swap",offers:[],circles:[]};S.mySightings=[];LS.del("mine");S.propId="demo";S.props.demo=makeDemo();toast("Your garden data was deleted from this device.");renderChrome();break}
+  delete S.props.mine;S.posts=[];S.saved=[];S.trade={mode:"swap",offers:[],circles:[]};S.mySightings=[];LS.del("mine");S.propId="demo";S.props.demo=makeDemo();S.props.demomke=makeDemoMke();toast("Your garden data was deleted from this device.");renderChrome();break}
  case"go-home":S.view="home";$("#sheetHost").innerHTML="";stopPlay();renderChrome();window.scrollTo({top:0});break;
  case"scroll":{const t=document.getElementById(arg);if(t){t.scrollIntoView({behavior:reduceMotion()?"auto":"smooth"});const h=t.querySelector("h2");if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}break}
  case"login":openSheet("login");break;
  case"start":$("#sheetHost").innerHTML="";S.wiz=newWiz();S.view="setup";renderChrome();renderSetup();window.scrollTo({top:0});break;
- case"demo":$("#sheetHost").innerHTML="";S.propId="demo";go("dash");break;
+ case"demo":$("#sheetHost").innerHTML="";S.propId=arg==="mke"?"demomke":"demo";go("dash");break;
  case"demo-tab":{S.propId="demo";const [t,l]=arg.split(":");go(t,{layer:l||"shade"});break}
  case"privacy-choices":$("#sheetHost").innerHTML="";consentOpen=true;consentDetails=true;renderConsent();setTimeout(()=>$("#consentT")?.focus(),0);break;
  case"consent-details":consentDetails=!consentDetails;renderConsent();$("#consentT")?.focus();break;
@@ -1771,6 +1966,11 @@ document.addEventListener("click",e=>{
  case"undo":restore(UNDO,REDO);break;
  case"redo":restore(REDO,UNDO);break;
  case"date":S.date=arg==="today"?TODAY:NOW.getFullYear()+"-"+arg;HEAT.key="";renderProperty();break;
+ case"probe-drop":{const l=p.objects.find(x=>x.type==="lot"),B=buildings(p);let best=null;
+  if(l){const t=(l.rot||0)*RAD,u=[Math.cos(t),Math.sin(t)],v=[-u[1],u[0]];for(let i=1;i<6;i++)for(let j=1;j<6;j++){const a=(i/6-.5)*l.w,b2=(j/6-.5)*l.d,q=[l.x+u[0]*a+v[0]*b2,l.y+u[1]*a+v[1]*b2];if(B.some(bb=>inPoly(q,bb)))continue;const e=estimate(p,[q],S.Y),h=e.ok?e.h:e.hi;if(!best||h>best.h)best={q,h}}}
+  S.spot=best?{x:best.q[0],y:best.q[1]}:{x:p.view.W/2,y:p.view.H/2};renderLayerDyn();drawProp();const b=$('[data-act="probe-move"]');if(b)b.focus();break}
+ case"probe-move":{const q=arg.split(":");S.spot={x:Math.max(0,Math.min(p.view.W,S.spot.x+(+q[0]))),y:Math.max(0,Math.min(p.view.H,S.spot.y+(+q[1])))};renderLayerDyn();drawProp();const b=$('[data-act="probe-move"][data-arg="'+arg+'"]');if(b)b.focus();break}
+ case"sensor-clear":{const o=p.objects.find(x=>x.id===S.sel);if(o){pushUndo();o.days=[];changed(p);renderSelCard();renderLayerDyn();toast("Sensor data removed.")}break}
  case"sel-clear":S.sel=null;renderSelCard();drawProp();break;
  case"sel-delete":{const o=p.objects.find(x=>x.id===S.sel);if(o){pushUndo();p.objects=p.objects.filter(x=>x.id!==o.id);p.water.spouts.forEach(s=>{if(s.barrel===o.id)s.barrel=null});changed(p);toast(o.name+" deleted. Undo brings it back.")}S.sel=null;renderProperty();break}
  case"sel-rotate":{const o=p.objects.find(x=>x.id===S.sel);if(o){pushUndo();o.rot=((o.rot||0)+90)%360;changed(p);renderProperty()}break}
@@ -1790,6 +1990,11 @@ document.addEventListener("click",e=>{
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#sheetHost").innerHTML){$("#sheetHost").innerHTML=""}});
 document.addEventListener("change",e=>{
  const el=e.target,f=el.dataset&&el.dataset.f,p=prop();
+ if(el.dataset&&el.dataset.sensorFile){const file=el.files[0],o=p.objects.find(x=>x.id===el.dataset.sensorFile);if(!file||!o)return;
+  if(file.size>15e6){toast("That file is over 15 MB. Export a shorter date range.");return}
+  const rd=new FileReader();rd.onload=()=>{try{const r=parseLightLog(String(rd.result),p),m={};(o.days||[]).forEach(d=>m[d.date]=d);r.days.forEach(d=>m[d.date]=d);
+   pushUndo();o.days=Object.keys(m).sort().slice(-730).map(k=>m[k]);changed(p);renderSelCard();renderLayerDyn();drawProp();
+   toast(r.days.length+" days loaded from "+r.rows.toLocaleString()+" readings ("+{dli:"daily DLI",ppfd:"PPFD",lux:"lux",wm2:"solar radiation"}[r.unit]+").")}catch(err){toast(err.message||"Couldn't read that file.")}};rd.readAsText(file);el.value="";return}
  if(el.dataset&&el.dataset.photo){const file=el.files[0];if(!file)return;const k=el.dataset.photo;stripImage(file,(url,img)=>{(PHOTOS[p.id]=PHOTOS[p.id]||{})[k]={url,img};renderPhotos();drawProp();toast("Photo added. Location data removed.")});return}
  if(el.dataset&&el.dataset.wphoto){const file=el.files[0];if(!file)return;const k=el.dataset.wphoto;stripImage(file,(url,img)=>{S.wiz.photos[k]={url,img};renderSetup();toast("Photo added. Location data removed.")});return}
  if(el.id==="propSel"){if(el.value==="new"){S.wiz=newWiz();S.view="setup";renderChrome();renderSetup();return}S.propId=el.value;S.sel=null;S.spot=null;RAIN.ran=false;UNDO.length=0;REDO.length=0;renderChrome();return}
@@ -1838,6 +2043,11 @@ document.addEventListener("submit",e=>{
  if(id==="circleForm"){const name=$("#ccName").value.trim();if(!name){toast("Give the circle a name.");$("#ccName").focus();return}
   S.trade.circles=[{id:nid("c"),name,area:$("#ccArea").value.trim()||cityName(p),max:Math.max(2,Math.min(12,+$("#ccMax").value||6)),rules:$("#ccRules").value.trim(),pledges:[]}];renderTrade();toast("Circle created. Add the first pledge.");return}
  if(id==="pledgeForm"){const ci=S.trade.circles[0];if(!ci)return;const hh=$("#plHH").value.trim()||"My household";ci.pledges.push({hh,crop:$("#plCrop").value,amt:$("#plAmt").value.trim(),sun:$("#plSun").value});renderTrade();toast("Pledge added.");return}
+ if(id==="lightForm"){const z=p.objects.find(o=>o.id===$("#lfBed").value);if(!z)return;const val=+$("#lfVal").value,kind=$("#lfKind").value;
+  if(!($("#lfVal").value!==""&&val>=0)){toast("Enter the reading from your meter.");$("#lfVal").focus();return}
+  if(kind==="dli"&&val>80){toast("That's higher than full summer sun (about 65). Check the units.");$("#lfVal").focus();return}
+  const r={id:nid("l"),kind,val,date:$("#lfDate").value||TODAY,time:kind==="dli"?null:($("#lfTime").value||null),sky:$("#lfSky").value,notes:$("#lfNotes").value.trim()};
+  pushUndo();z.light=z.light||[];z.light.push(r);p.journal.push({id:nid("j"),date:r.date,kind:"measured",text:"Light reading logged for "+z.name+"."});changed(p);renderProperty();toast("Light reading saved as Measured.");return}
  if(id==="soilForm"){const z=p.objects.find(o=>o.id===$("#sfZone").value);if(!z)return;const kind=$("#sfKind").value,num=v=>v===""?null:+v;
   const t={id:nid("t"),kind:kind==="lab"||kind==="kit"?"measured":"reported",method:{lab:"Lab soil test",kit:"Home test kit",obs:"Jar test or observation",amend:"Amendment added"}[kind],source:kind==="lab"?"Lab report you entered":kind==="kit"?"Home kit you entered":"Your observation",date:$("#sfDate").value||TODAY,notes:$("#sfNotes").value.trim()};
   let n=0;if($("#sfTex").value){t.tex=$("#sfTex").value;n++}const ph=num($("#sfPh").value);if(ph!=null&&ph>=3&&ph<=10){t.ph=ph;n++}const dr=num($("#sfDr").value);if(dr!=null&&dr>=0){t.drain=dr;n++}
@@ -1869,7 +2079,7 @@ applyA11y();
 renderHome();
 renderConsent();
 const hsh=(location.hash||"").slice(1);
-if(hsh==="demo"){S.propId="demo";S.view="app";S.tab="dash"}
+if(hsh==="demo"||hsh==="demo-mke"){S.propId=hsh==="demo"?"demo":"demomke";S.view="app";S.tab="dash"}
 else if(["garden","explore","trade","alerts","profile"].includes(hsh)){S.view="app";S.tab=hsh}
 renderChrome();
 })();
