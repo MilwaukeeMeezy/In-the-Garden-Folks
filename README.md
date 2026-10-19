@@ -51,6 +51,7 @@ There are two fictional demo yards: a Southeast DC rowhouse and a Milwaukee dupl
 
 - **Views:** picture tiles above the map switch between Sun & shade now, Sun hours, Water and Soil zones.
 - **Live compass:** tap the compass on the map to make it follow your phone (its N needle points to real north). It only reads the phone's orientation after you turn it on, and stops when you turn it off or leave the map.
+- **Compass snapshot:** turn on the live compass (on the map, or under the orientation dial in setup), stand in your front doorway facing the street, and tap "📸 Set my front to this". The exact reading becomes your front direction (corrected to true north).
 - **Front door wrong?** A house outline looks the same with its front on either side, so under the turn buttons you can pick which way the front door really faces (the outline stays where it is), tap your front door on the map, or use the live compass while standing in the doorway. The same choice is in setup.
 - **House & yard photos** stay hidden until you tap "Open house photos" in the At a glance panel.
 - **Beds & plants:** add a bed or container (raised, in-ground or pot) with its size; the app places it in the sunniest, part-sun or shadiest open spot, and you can drag it on the map. Add plants to any bed by typing them (with a count) or tap "Search the library".
