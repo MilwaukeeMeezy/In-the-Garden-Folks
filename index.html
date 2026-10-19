@@ -735,7 +735,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
 <div id="setup" class="wrap" hidden></div>
 <div id="acct" class="wrap" hidden></div>
 
-<footer class="site-f wrap">
+<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Oct 19, 12:35 PM</p>
   <span class="small muted">In the Garden, Folks! · working prototype</span>
   <div class="row small">
     <button class="btn link" data-act="sheet" data-arg="contact">Contact</button>
@@ -2293,7 +2293,7 @@ function renderSetup(){
   (w.satBusy?'<p class="small" role="status">Getting the satellite view…</p>':"")+(w.satErr?'<p class="small" role="alert"><b>'+esc(w.satErr)+"</b></p>":"")+(w.pics==="sat"&&w.photos.overhead&&w.photos.overhead.sat?'<p class="small" role="status">✓ Satellite view ready. You\'ll see it in the next step.</p>':"")+
   '<p class="tiny muted">Satellite imagery: when you choose it, the app asks Esri\'s World Imagery service for the map squares around your home. That shares your home\'s approximate map position with Esri. Imagery can be months or years old. Imagery © Esri, Maxar, Earthstar Geographics.</p></div>'}
  if(w.step===2){const o=w.photos.overhead,L=wzLoc(w);
-  h+='<div class="card stack"><h2>Photos</h2><p class="small muted">Choose files from a folder on your device; the site never opens your photo library, camera or microphone. Location data is removed from each photo. Photos are kept in your profile only if you choose to keep them.</p><h3>Find your home orientation</h3>';
+  h+='<div class="card stack"><h2>Photos</h2><p class="tiny muted" style="margin:0">Version Oct 19, 12:35 PM</p><p class="small muted">Choose files from a folder on your device; the site never opens your photo library, camera or microphone. Location data is removed from each photo. Photos are kept in your profile only if you choose to keep them.</p><h3>Find your home orientation</h3>';
   let R='';
   if(o&&!o.sat)R+='<div class="ctlgrp"><span class="small"><b>1. Turn the photo</b> until north is at the top of the dial.</span><div class="row" role="group" aria-label="Turn the top photo">'+[[-90,"↺ 90°"],[-15,"↺ 15°"],[-1,"↺ 1°"],[1,"↻ 1°"],[15,"↻ 15°"],[90,"↻ 90°"]].map(b2=>'<button class="btn sm" type="button" data-act="wz-prot" data-arg="'+b2[0]+'" aria-label="Turn the photo '+Math.abs(b2[0])+" degrees "+(b2[0]<0?"left":"right")+'">'+b2[1]+"</button>").join("")+"</div></div>";
   else if(o&&o.sat)R+='<p class="tiny muted">Satellite pictures already have north at the top. Imagery © Esri, Maxar, Earthstar Geographics.</p>';
