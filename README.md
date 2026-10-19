@@ -33,7 +33,17 @@ To publish with GitHub Pages: **Settings → Pages → Deploy from a branch → 
 
 There are two fictional demo yards: a Southeast DC rowhouse and a Milwaukee duplex on a narrow lot with an alley garage. Open the Milwaukee one directly with `index.html#demo-mke`. The demo yards are fictional. Demo weather, pest sightings and the sample crop circle are labeled as examples. There are no invented posts, offers or alerts.
 
+## Accounts (prototype)
+
+- **Create an account:** username, email *or* phone number (only if you want your garden saved), date of birth, and city or ZIP code. Then verify with a 6-digit code and go straight into building your space; the city carries over into setup.
+- **Sign in** with your email or phone number and a one-time code. No passwords.
+- **Under 13:** account creation is blocked (COPPA). The date of birth is checked once and is not stored.
+- **Just trying it:** choose "No thanks" and nothing is saved when you leave.
+- **Prototype limit:** no email or text is actually sent. The code is shown on screen, and the account is stored only on the device where it was made. Going live needs a sign-in service (for example Firebase Authentication, Supabase Auth or Auth0) plus an email/SMS sender; text messages cost a small amount per code. Only the verify step needs to change.
+
 ## Privacy
+
+- Account details (username, email or phone, city) are used only to run your account; email/phone only for sign-in codes, never marketing. Date of birth is not kept.
 
 - On the first visit, a privacy pop-up asks the visitor to allow or reject saving their garden on the device. Allow and Reject look the same, and nothing optional runs before a choice. Only the choice itself is remembered, so the pop-up doesn't keep returning. Privacy choices lists exactly what each option stores and can be changed any time.
 - No analytics, ad pixels, outside fonts or third-party scripts.
