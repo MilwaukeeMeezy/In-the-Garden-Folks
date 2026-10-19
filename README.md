@@ -33,6 +33,14 @@ To publish with GitHub Pages: **Settings → Pages → Deploy from a branch → 
 
 There are two fictional demo yards: a Southeast DC rowhouse and a Milwaukee duplex on a narrow lot with an alley garage. Open the Milwaukee one directly with `index.html#demo-mke`. The demo yards are fictional. Demo weather, pest sightings and the sample crop circle are labeled as examples. There are no invented posts, offers or alerts.
 
+## Setting up a garden
+
+1. **Your space:** name it and pick every place you grow: front yard, back yard, greenhouse, patio, containers, community plot, row house yard, indoor (by a window), indoor (in a sun room).
+2. **Location:** the city from sign-up is filled in. Optionally type the street address: the app finds the building on OpenStreetMap, works out which way the front faces, and estimates house and yard size from nearby buildings. Then choose a top-of-house picture: satellite imagery (Esri World Imagery, opt-in), your own pictures, or none.
+3. **Photos:** a compass dial shows the top view, which way the home faces, and today's sun path with sunrise and sunset. Turn your own top photo until north is up, turn the house, or use the phone compass. Add front, back and side photos (each can be turned).
+4. **Size:** measure from the top photo by tapping the yard corners (satellite pictures have a known scale; your own photos use the house width as a ruler), or type your own measurements. Spaces without a yard (patio, containers, indoor) get growing-space fields instead.
+5. **Review**, then the dashboard. The same orientation dial and a "Sunlight tells a story" card (modeled direct-sun hours for each side of the home) appear in My Garden.
+
 ## Accounts (prototype)
 
 - **Create an account:** username, email *or* phone number (only if you want your garden saved), date of birth, and city or ZIP code. Then verify with a 6-digit code and go straight into building your space; the city carries over into setup.
@@ -67,6 +75,8 @@ Big Shoulders (headlines), Instrument Sans (body text) and JetBrains Mono (label
 All three are released under the SIL Open Font License 1.1 (https://openfontlicense.org).
 
 ## Data sources
+
+- **Satellite imagery:** Esri World Imagery tiles (Imagery © Esri, Maxar, Earthstar Geographics), loaded only when the user opts in during setup. Fine for a prototype; a public launch at scale needs an ArcGIS Location Platform account (or a public-domain source such as USGS NAIP for U.S. addresses).
 
 - Weather forecasts and frost estimates: [Open-Meteo.com](https://open-meteo.com/), licensed CC BY 4.0. The free API is for non-commercial use; a commercial launch needs an Open-Meteo subscription or another provider.
 - Frost dates are the median last and first 32°F days from the past 10 years of daily lows; the zone is estimated from the average yearly lowest temperature. Both are estimates; the official USDA map is the reference for zones.
