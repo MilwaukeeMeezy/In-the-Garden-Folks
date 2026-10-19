@@ -89,7 +89,7 @@ button{font:inherit}
 .ev-demo{border:1px dashed var(--muted);color:var(--muted)}
 .src{font-size:.76rem;color:var(--muted)}
 label.f{display:flex;flex-direction:column;gap:4px;font-size:.84rem;font-weight:700;color:var(--muted);min-width:0}
-input[type=text],input[type=number],input[type=date],select,textarea{font:inherit;font-weight:400;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;min-height:42px;width:100%;min-width:0}
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date],select,textarea{font:inherit;font-weight:400;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;min-height:42px;width:100%;min-width:0}
 textarea{min-height:64px;resize:vertical}
 input[type=range]{width:100%;accent-color:var(--deep)}
 input[type=checkbox],input[type=radio]{width:20px;height:20px;accent-color:var(--deep);flex:none}
@@ -417,7 +417,7 @@ details.card summary{font-family:var(--f-display);font-weight:900;text-transform
 .btn.link:hover{background:none}
 .chip{border-radius:0;border:2px solid var(--fg);background:var(--surface);color:var(--fg);font-weight:800;min-height:38px}
 .chip[aria-pressed="true"]{background:var(--deep);color:var(--on-deep);border-color:var(--deep)}
-input[type=text],input[type=number],input[type=date],select,textarea{border-radius:0;border:2px solid var(--fg);background:var(--surface)}
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date],select,textarea{border-radius:0;border:2px solid var(--fg);background:var(--surface)}
 input[type=range],input[type=checkbox],input[type=radio]{accent-color:var(--k-green)}
 .savechip{border-radius:0;border:2px solid var(--fg);color:var(--fg);font-weight:800}
 .wctl button{border-radius:0;border:2px solid var(--fg);background:var(--surface)}
@@ -559,6 +559,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
  .rail{margin-left:0}
 }
 </style>
+
 </head>
 <body>
 <a class="skip" href="#main" data-act="skip">Skip to main content</a>
@@ -713,6 +714,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
 
 <!-- ================= SETUP ================= -->
 <div id="setup" class="wrap" hidden></div>
+<div id="acct" class="wrap" hidden></div>
 
 <footer class="site-f wrap">
   <span class="small muted">In the Garden, Folks! · working prototype</span>
@@ -1140,6 +1142,70 @@ function peMove(e){if(!PE.pts.has(e.pointerId))return false;const p=prop(),g=cvP
  if(a.length>1&&b.d>4){const d=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y),ang=Math.atan2(a[1].y-a[0].y,a[1].x-a[0].x);al.s=Math.max(.02,Math.min(6,b.al.s*d/b.d));let r=b.al.r+(ang-b.ang)*DEG;al.r=((r+180)%360+360)%360-180}
  p.photoAlign=al;drawProp();e.preventDefault();return true}
 function peUp(e){if(!PE.pts.has(e.pointerId))return false;PE.pts.delete(e.pointerId);const p=prop();if(PE.pts.size)peSnap(p);else{changed(p);renderMapTools();renderPhotos()}return true}
+/* ---------- accounts: sign up, verify, sign in (prototype: codes shown on screen) ---------- */
+S.acct=LS.get("acct")||null;S.session=!!(S.acct&&LS.get("session"));S.guest=false;
+const maskContact=a=>a.via==="email"?a.contact.replace(/^(.)[^@]*(@.*)$/,"$1•••$2"):"•••• "+a.contact.slice(-4);
+function normContact(via,v){v=(v||"").trim();if(via==="email")return/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)?v.toLowerCase():null;const d=v.replace(/[^\d+]/g,"");if(/^\+\d{8,15}$/.test(d))return d;const n=d.replace(/\D/g,"");if(n.length===10)return"+1"+n;if(n.length===11&&n[0]==="1")return"+"+n;return null}
+function ageFrom(dob){const d=new Date(dob+"T12:00:00");if(isNaN(d))return null;let a=NOW.getFullYear()-d.getFullYear();const m=NOW.getMonth()-d.getMonth();if(m<0||(m===0&&NOW.getDate()<d.getDate()))a--;return a}
+function newCode(){const c=String(Math.floor(100000+Math.random()*900000));return{c,exp:Date.now()+10*60000,tries:0}}
+async function geoSearch(q){const zip=/^\d{5}(-\d{4})?$/.test(q),u="https://geocoding-api.open-meteo.com/v1/search?name="+encodeURIComponent(zip?q.slice(0,5):q.replace(/,.*$/,"").trim())+"&count=8&language=en&format=json"+(zip?"&countryCode=US":"");
+ const j=await getJSON(u),hint=q.includes(",")?q.split(",").slice(1).join(",").trim().toLowerCase():"";let R=(j.results||[]).filter(r=>r.latitude!=null&&Math.abs(r.latitude)<=66);
+ const hit=r=>hint&&((r.admin1||"").toLowerCase().startsWith(hint)||(r.country_code||"").toLowerCase()===hint||(ST_ABBR[hint.toUpperCase()]||"")===r.admin1)?1:0;if(hint)R.sort((a,b)=>hit(b)-hit(a));
+ const out=R.slice(0,5).map(r=>{const tp=r.timezone?tzParts(r.timezone):{tz:Math.round(r.longitude/15),dst:false},z=zip?q.slice(0,5):"";return{key:r.id+"",lat:r.latitude,lon:r.longitude,tzName:r.timezone||null,tz:tp.tz,dst:tp.dst,region:regionFor(r),short:r.name+(r.admin1?", "+r.admin1:""),label:[r.name,r.admin1,r.country].filter(Boolean).join(", ")+(z?" (ZIP "+z+")":"")}});
+ return{out,auto:out.length===1||(hint&&R[0]&&hit(R[0])&&!hit(R[1]||{}))}}
+const PROTO_NOTE=c=>'<div class="note small" role="status"><b>Prototype:</b> no email or text message is actually sent yet. Your code is <b class="mono" style="font-size:1.1rem">'+c+'</b>. The real app will send it to you.</div>';
+function renderAcct(){const a=S.ac,el=$("#acct");if(!el||!a)return;
+ let h='<div class="wiz"><div class="row between"><button class="logo" data-act="go-home">In the Garden, Folks!</button><button class="btn sm" data-act="go-home">Cancel</button></div><div class="wsteps" aria-label="Account steps"><span class="'+(a.step==="details"?"on":"")+'">1. Your account</span><span class="'+(a.step==="verify"?"on":"")+'">2. Verify</span><span>3. Build your space</span></div>';
+ if(a.step==="details"){const L=a.loc;
+  h+='<form id="acForm" class="card stack" novalidate><h2>Create your account</h2><p class="small">Already have one? <button class="btn link small" type="button" data-act="login">Sign in</button></p>'+
+   '<label class="f">Username<input type="text" id="acUser" value="'+esc(a.user||"")+'" autocomplete="username" maxlength="20" placeholder="e.g. tomato_tamer"><span class="tiny muted">3 to 20 letters, numbers or underscores. Shown on anything you choose to share, so it doesn\'t need to be your real name.</span></label>'+
+   '<fieldset class="stack" style="border:0;padding:0;margin:0;gap:8px"><legend class="small"><b>Save my garden and sign in later?</b></legend><label class="check small"><input type="radio" name="acSave" data-acsave="1"'+(a.save?" checked":"")+'> Yes, save my garden. I\'ll sign in with my email or phone.</label><label class="check small"><input type="radio" name="acSave" data-acsave="0"'+(!a.save?" checked":"")+"> No thanks, just try it. Nothing is saved when I leave.</label></fieldset>"+
+   (a.save?'<div class="stack" style="gap:8px"><div class="chips" role="group" aria-label="Sign in with"><button type="button" class="chip" data-act="ac-via" data-arg="email" aria-pressed="'+(a.via==="email")+'">Email</button><button type="button" class="chip" data-act="ac-via" data-arg="phone" aria-pressed="'+(a.via==="phone")+'">Phone number</button></div><label class="f">'+(a.via==="email"?"Email":"Phone number")+'<input type="'+(a.via==="email"?"email":"tel")+'" id="acContact" value="'+esc(a.contact||"")+'" autocomplete="'+(a.via==="email"?"email":"tel")+'" placeholder="'+(a.via==="email"?"you@example.com":"(414) 555-0123")+'"></label><span class="tiny muted">Used only to sign you in with a one-time code. No marketing, and it\'s never shown to anyone.</span></div>':"")+
+   '<label class="f">Date of birth<input type="date" id="acDob" value="'+esc(a.dob||"")+'" max="'+TODAY+'"><span class="tiny muted">Only used to confirm you\'re 13 or older. The date itself isn\'t kept.</span></label>'+
+   '<div class="stack" style="gap:6px"><div class="row" style="align-items:flex-end"><label class="f" style="flex:1;min-width:200px">City or ZIP code<input type="text" id="acQ" value="'+esc(a.q||"")+'" placeholder="e.g. Milwaukee, WI or 53207"></label><button class="btn sm" type="button" data-act="ac-find"'+(a.finding?" disabled":"")+'>'+(a.finding?"Finding…":"Find")+"</button></div>"+
+   (a.results&&a.results.length>1?'<fieldset class="stack" style="border:0;padding:0;margin:0"><legend class="small"><b>Pick the right place</b></legend>'+a.results.map((r,i)=>'<label class="check small"><input type="radio" name="acPick" data-acpick="'+i+'"'+(L&&L.key===r.key?" checked":"")+"> "+esc(r.label)+"</label>").join("")+"</fieldset>":"")+
+   (a.findErr?'<p class="small" role="alert"><b>'+esc(a.findErr)+"</b></p>":"")+'<details'+(a.findErr||a.preset>=0?" open":"")+'><summary class="small">No internet? Pick a nearby city</summary><label class="f">Nearby city<select id="acPreset"><option value="-1">Choose a city</option>'+PRESETS.map((pr,i)=>'<option value="'+i+'"'+(a.preset===i?" selected":"")+">"+pr.name+"</option>").join("")+"</select></label></details>"+
+   '<span class="small" role="status">'+(L?"Selected: <b>"+esc(L.label)+"</b>":a.preset>=0?"Selected: <b>"+esc(PRESETS[a.preset].name)+"</b>":"")+'</span><span class="tiny muted">Used only for plant things like sun times, planting season and native plants.</span></div>'+
+   (a.err?'<p class="small" role="alert" style="color:var(--tomato-ink)"><b>'+esc(a.err)+"</b></p>":"")+
+   '<div class="row between"><button class="btn" type="button" data-act="go-home">Back</button><button class="btn primary" type="submit">'+(a.save?"Create account":"Continue")+"</button></div></form>"}
+ else if(a.step==="verify"){
+  h+='<form id="acVerify" class="card stack"><h2>Check your '+(a.via==="email"?"email":"texts")+'</h2><p>We sent a 6-digit code to <b>'+esc(maskContact({via:a.via,contact:a.norm}))+"</b>.</p>"+PROTO_NOTE(a.code.c)+'<label class="f">Enter the code<input type="text" id="acCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6 digits"></label>'+(a.err?'<p class="small" role="alert" style="color:var(--tomato-ink)"><b>'+esc(a.err)+"</b></p>":"")+'<div class="row between"><div class="row"><button class="btn sm" type="button" data-act="ac-resend">Send a new code</button><button class="btn sm" type="button" data-act="ac-back">Change '+(a.via==="email"?"email":"number")+'</button></div><button class="btn primary" type="submit">Verify</button></div></form>'}
+ else if(a.step==="young"){h+='<div class="card stack"><h2>Sorry, you need to be 13 or older</h2><p>To protect kids\' privacy, accounts are for people 13 and up. You can still explore the sample yards; nothing about you is saved.</p><div class="row"><button class="btn primary" data-act="demo">Explore a sample yard</button><button class="btn" data-act="go-home">Back to the home page</button></div></div>'}
+ el.innerHTML=h+"</div>";const f=el.querySelector("input:not([type=radio]),select");if(a.focus){const t=$("#"+a.focus);if(t)t.focus();a.focus=null}}
+function readAcct(){const a=S.ac,v=id=>(($("#"+id)||{}).value||"");a.user=v("acUser").trim();if($("#acContact"))a.contact=v("acContact").trim();a.dob=v("acDob");a.q=v("acQ").trim();const ps=$("#acPreset");if(ps&&+ps.value>=0){a.preset=+ps.value;a.loc=null}}
+async function acFind(){const a=S.ac;readAcct();if(a.q.length<2){a.findErr="Type at least two letters or a ZIP code.";renderAcct();return}a.finding=true;a.findErr="";renderAcct();
+ try{const r=await geoSearch(a.q);a.results=r.out;a.loc=r.auto||r.out.length===1?r.out[0]:null;if(a.loc)a.preset=-1;if(!r.out.length)a.findErr="No match for “"+a.q+"”. Check the spelling or add the state."}catch(e){a.results=null;a.findErr="Couldn't reach the place search. Check your connection, or pick a nearby city."}
+ a.finding=false;renderAcct()}
+function acSubmit(){const a=S.ac;readAcct();a.err="";
+ if(!/^[A-Za-z0-9_]{3,20}$/.test(a.user)){a.err="Pick a username with 3 to 20 letters, numbers or underscores.";a.focus="acUser";return renderAcct()}
+ if(a.save){a.norm=normContact(a.via,a.contact);if(!a.norm){a.err=a.via==="email"?"Enter a valid email address.":"Enter a valid phone number, including the area code.";a.focus="acContact";return renderAcct()}}
+ const age=ageFrom(a.dob);if(age==null){a.err="Enter your date of birth.";a.focus="acDob";return renderAcct()}if(age<13){a.step="young";a.dob="";return renderAcct()}if(age>120){a.err="Check the year in your date of birth.";a.focus="acDob";return renderAcct()}
+ if(!a.loc&&!(a.preset>=0)){a.err="Find your city or ZIP code, or pick a nearby city.";a.focus="acQ";return renderAcct()}
+ a.dob="";a.age13=true;
+ if(!a.save){S.guest=true;S.guestName=a.user;startWizFromAcct();return}
+ a.code=newCode();a.step="verify";a.focus="acCode";renderAcct();window.scrollTo({top:0})}
+function acVerify(){const a=S.ac,c=(($("#acCode")||{}).value||"").replace(/\D/g,"");a.err="";
+ if(Date.now()>a.code.exp){a.err="That code expired. Send a new one.";return renderAcct()}
+ if(++a.code.tries>5){a.err="Too many tries. Send a new code.";return renderAcct()}
+ if(c!==a.code.c){a.err="That code doesn't match. Check it and try again.";a.focus="acCode";return renderAcct()}
+ const L=a.loc||PRESETS[a.preset];
+ CONSENT={v:PRIVACY_VERSION,ts:new Date().toISOString(),method:"Saving turned on when you created your account",functional:true,analytics:false};LS.set("consent",CONSENT);
+ S.acct={user:a.user,via:a.via,contact:a.norm,verified:new Date().toISOString(),age13:true,loc:{lat:L.lat,lon:L.lon,tz:L.tz,dst:L.dst,tzName:L.tzName||null,region:L.region,short:L.short||L.name,label:L.label||L.name,key:L.key||null}};
+ LS.set("acct",S.acct);S.session=true;LS.set("session",1);renderConsent();toast("You're verified, "+a.user+". Now let's build your space.");startWizFromAcct()}
+function startWizFromAcct(){const a=S.ac||{},w=S.wiz=newWiz();const L=(S.acct&&S.acct.loc)||a.loc||(a.preset>=0?PRESETS[a.preset]:null);
+ if(L){if(L.key||L.tzName||L.label){w.loc=Object.assign({},L,{label:L.label||L.short||L.name,short:L.short||L.name});w.preset=-1}else{w.preset=PRESETS.indexOf(L);w.loc=null}}
+ S.view="setup";renderChrome();renderSetup();window.scrollTo({top:0})}
+function renderSignIn(){const si=S.si;let h='<div class="sheet-bg" data-act="close-sheet"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetT"><div class="row between"><h2 id="sheetT" tabindex="-1">Sign in</h2><button class="btn sm" data-act="close-sheet">Close</button></div>';
+ if(!si.code){h+='<form id="siForm" class="stack"><div class="chips" role="group" aria-label="Sign in with"><button type="button" class="chip" data-act="si-via" data-arg="email" aria-pressed="'+(si.via==="email")+'">Email</button><button type="button" class="chip" data-act="si-via" data-arg="phone" aria-pressed="'+(si.via==="phone")+'">Phone number</button></div><label class="f">'+(si.via==="email"?"Email":"Phone number")+'<input type="'+(si.via==="email"?"email":"tel")+'" id="siContact" value="'+esc(si.contact||"")+'" autocomplete="'+(si.via==="email"?"email":"tel")+'"></label>'+(si.err?'<p class="small" role="alert"><b>'+esc(si.err)+"</b></p>":"")+'<div class="row between"><button class="btn link small" type="button" data-act="si-create">New here? Create an account</button><button class="btn primary" type="submit">Send me a code</button></div></form>'}
+ else h+='<form id="siCodeForm" class="stack"><p>Enter the 6-digit code we sent to <b>'+esc(maskContact({via:si.via,contact:si.norm}))+"</b>.</p>"+PROTO_NOTE(si.code.c)+'<label class="f">Code<input type="text" id="siCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6"></label>'+(si.err?'<p class="small" role="alert"><b>'+esc(si.err)+"</b></p>":"")+'<div class="row between"><button class="btn sm" type="button" data-act="si-back">Use a different '+(si.via==="email"?"email":"number")+'</button><button class="btn primary" type="submit">Sign in</button></div></form>';
+ $("#sheetHost").innerHTML=h+'<p class="tiny muted">In this prototype, accounts live on the device where they were made.</p></div></div>';setTimeout(()=>{const t=$("#siCode")||$("#siContact");if(t)t.focus()},0)}
+function siSend(){const si=S.si;si.contact=(($("#siContact")||{}).value||"").trim();si.norm=normContact(si.via,si.contact);si.err="";
+ if(!si.norm){si.err=si.via==="email"?"Enter a valid email address.":"Enter a valid phone number, including the area code.";return renderSignIn()}
+ if(!S.acct||S.acct.contact!==si.norm){si.err="No account with that "+(si.via==="email"?"email":"number")+" on this device. Create one, or try the "+(si.via==="email"?"phone number":"email")+" you signed up with.";return renderSignIn()}
+ si.code=newCode();renderSignIn()}
+function siCheck(){const si=S.si,c=(($("#siCode")||{}).value||"").replace(/\D/g,"");si.err="";if(Date.now()>si.code.exp||++si.code.tries>5){si.code=null;si.err="That code expired. Send a new one.";return renderSignIn()}
+ if(c!==si.code.c){si.err="That code doesn't match.";return renderSignIn()}
+ S.session=true;LS.set("session",1);$("#sheetHost").innerHTML="";toast("Welcome back, "+S.acct.user+".");if(S.props.mine){S.propId="mine";go("dash")}else startWizFromAcct()}
 /* ---------- guided tour ---------- */
 const TOUR=[
  ["Welcome","This is your garden at a glance: today's weather and tip, your spaces, what needs a look and what's coming up.",null,null],
@@ -1496,7 +1562,7 @@ function openDisplay(){const ch=(arg,label,on)=>'<button class="chip" data-act="
 /* ---------- toast, sheets ---------- */
 let toastT;function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3000)}
 const SHEETS={
- policy:["Privacy policy (draft)","<p>This is a draft for the prototype.</p><ul><li><b>Optional cookies are off by default.</b> Only your privacy decision is stored after you make a choice; saving garden data is optional and off by default. Privacy choices explains exactly what each option stores.</li><li>No analytics, ad pixels, session replay or fingerprinting are installed.</li><li>The page loads no outside fonts, maps or scripts. <b>The only outside connection is Open-Meteo</b>, a free weather service, and only when you press a live weather or frost button. It receives your city's approximate location, rounded to about 7 miles, and, like any website, your IP address. It gets nothing about you or your garden, and the results aren't saved.</li><li><b>Permissions we never ask for:</b> camera, microphone, photo library, contacts or your device's location. The only sensor the site can use is the compass (motion and orientation), and only after you press Start compass during setup. Readings stay on your device and stop when you leave that step.</li><li><b>Location:</b> you type your city or ZIP code, or pick a listed city. It is used only for plant-related things: sun times, planting season, native plants, pest seasons and weather. When you press Find, only what you typed is sent to Open-Meteo's free place search. The site never asks for your device's location. Your street address is used only if you choose “Use my address” during setup: it is sent to OpenStreetMap's free search and map services to find your house and the street in front of it, and it is never saved.</li><li><b>Photos and videos:</b> you choose individual files from a folder on your device. Location data inside photos is removed. House and yard photos are kept in this browser only if you turn on saving and choose “Keep my house photos in my profile”; community post media stays in the open tab. Nothing is uploaded or shared.</li><li>Pest reports show only a coarse area of about a mile, never your address.</li><li><b>Community posts and trades</b> stay on this device in the prototype, and posts are private by default.</li><li><b>Sound:</b> Garden Mood sounds are made in your browser and never start on their own. No music service is connected.</li></ul><p class='small muted'>Privacy and accessibility requirements need legal review for each jurisdiction before launch.</p>"],
+ policy:["Privacy policy (draft)","<p>This is a draft for the prototype.</p><ul><li><b>Optional cookies are off by default.</b> Only your privacy decision is stored after you make a choice; saving garden data is optional and off by default. Privacy choices explains exactly what each option stores.</li><li>No analytics, ad pixels, session replay or fingerprinting are installed.</li><li>The page loads no outside fonts, maps or scripts. <b>The only outside connection is Open-Meteo</b>, a free weather service, and only when you press a live weather or frost button. It receives your city's approximate location, rounded to about 7 miles, and, like any website, your IP address. It gets nothing about you or your garden, and the results aren't saved.</li><li><b>Permissions we never ask for:</b> camera, microphone, photo library, contacts or your device's location. The only sensor the site can use is the compass (motion and orientation), and only after you press Start compass during setup. Readings stay on your device and stop when you leave that step.</li><li><b>Account:</b> your username, email or phone number, and city are used to run your account. Your email or phone is used only to send one-time sign-in codes, never for marketing, and is never shown to anyone. Your date of birth is checked once to confirm you're 13 or older and is not kept. In this prototype the account is stored only on your device.</li><li><b>Location:</b> you type your city or ZIP code, or pick a listed city. It is used only for plant-related things: sun times, planting season, native plants, pest seasons and weather. When you press Find, only what you typed is sent to Open-Meteo's free place search. The site never asks for your device's location. Your street address is used only if you choose “Use my address” during setup: it is sent to OpenStreetMap's free search and map services to find your house and the street in front of it, and it is never saved.</li><li><b>Photos and videos:</b> you choose individual files from a folder on your device. Location data inside photos is removed. House and yard photos are kept in this browser only if you turn on saving and choose “Keep my house photos in my profile”; community post media stays in the open tab. Nothing is uploaded or shared.</li><li>Pest reports show only a coarse area of about a mile, never your address.</li><li><b>Community posts and trades</b> stay on this device in the prototype, and posts are private by default.</li><li><b>Sound:</b> Garden Mood sounds are made in your browser and never start on their own. No music service is connected.</li></ul><p class='small muted'>Privacy and accessibility requirements need legal review for each jurisdiction before launch.</p>"],
  a11y:["Accessibility","<ul><li>Text size, higher contrast and reduced motion are under Accessibility &amp; display at the top of every page.</li><li>Every photo you add asks for a short description. Screen readers read it aloud, and it shows as a caption for everyone.</li><li>Every video needs a written description or transcript before it's added, can carry a caption file (.vtt), never plays on its own and has no sound until you press play.</li><li>Every map has a text version (Map in words) and a sun-hours table.</li><li>Every slider works with arrow keys; dragging is never required.</li><li>Status uses words and shapes, not color alone, and notices are announced to screen readers.</li><li>Nothing on the site relies on sound.</li><li>The target is WCAG 2.2 AA.</li></ul>"],
  rules:["Community rules","<ul><li>Report what you saw and roughly where. The public map only ever shows a coarse area.</li><li>Add a photo when you can. Moderators verify reports from photos.</li><li>No addresses, faces or license plates in photos.</li><li>Unverified reports are labeled until someone confirms them.</li></ul>"],
  sources:["Data sources","<ul><li>Sun position: NOAA solar calculation (an approximation of the Solar Position Algorithm).</li><li>Daily light (DLI): clear-sky sunlight from the Haurwitz model, split into direct sun and sky light and converted to plant light at about 2.1 µmol per joule. With live data, it is scaled to measured sunlight totals.</li><li>Soils: USDA NRCS soil survey (SSURGO), used as regional context only.</li><li>Native plants: starter lists by region; the Maryland Plant Atlas is a candidate source for the Mid-Atlantic.</li><li>Pests: seasonal ranges from extension guidance; sightings in the demo are examples.</li><li>Live forecasts, sunlight and frost estimates: <a href='https://open-meteo.com/' target='_blank' rel='noopener noreferrer'>Open-Meteo.com</a> (CC BY 4.0), which combines national weather service models and ERA5 reanalysis. Fetched only when you ask. Frost dates and zones are estimates from 10 years of gridded daily lows and can differ from your yard; the official USDA zone map is the reference for zones.</li><li>Weather in the demo yard is example data.</li><li>House outlines and streets for “Use my address”: OpenStreetMap (© OpenStreetMap contributors, ODbL), found with Nominatim and the Overpass API. Coverage varies by area.</li></ul>"],
@@ -1507,7 +1573,7 @@ function openSheet(k){const s=SHEETS[k];if(!s)return;$("#sheetHost").innerHTML='
 
 /* ---------- app chrome ---------- */
 function renderChrome(){
- $("#home").hidden=S.view!=="home";$("#app").hidden=S.view!=="app";$("#setup").hidden=S.view!=="setup";
+ $("#home").hidden=S.view!=="home";$("#app").hidden=S.view!=="app";$("#setup").hidden=S.view!=="setup";$("#acct").hidden=S.view!=="acct";document.querySelectorAll('[data-act="login"]').forEach(x=>{if(x.closest("#sheetHost")||x.closest("#acct")||x.closest("#profile")||x.closest(".card"))return;x.textContent=S.acct&&S.session?S.acct.user:"Sign in";x.setAttribute("aria-label",S.acct&&S.session?"Signed in as "+S.acct.user+". Open profile":"Sign in")});if(S.view==="acct")renderAcct();
  if(S.view!=="app")return;
  const p=prop();
  $("#propSel").innerHTML='<option value="demo">Sample DC rowhouse yard (demo)</option><option value="demomke">Sample Milwaukee duplex yard (demo)</option>'+(S.props.mine?'<option value="mine">'+esc(S.props.mine.name)+"</option>":"")+'<option value="new">+ Add my property</option>';
@@ -2203,7 +2269,7 @@ function renderAlerts(){const a=S.alertf,chip=(k,v,t)=>'<button class="chip" dat
 function renderProfile(){const saved=S.posts.filter(x=>S.saved.includes(x.id));
  const F=[["Sun and shade model, map editor","working"],["Soil records, rain and water planning","working"],["Plant matching, planner and journal","working"],["Seasonal pest outlook","working"],["Privacy controls, accessibility settings","working"],["Community posts (this device only)","prototype"],["Trade offers and crop circles (this device only)","prototype"],["Garden Globe","prototype"],["Garden Mood sounds","prototype"],["Pest sighting reports","prototype"],["Accounts and sync","planned"],["Shared community feed with moderation","planned"],["Verified policy, water and supply alerts","planned"],["Live weather and frost dates (on request)","prototype"],["Garden assistant","planned"],["Phone notifications","planned"],["Licensed music services","planned"]];
  let h='<div class="pagehead"><div class="stack"><h2>Profile</h2><p class="muted small">Your privacy, settings, saved items and data.</p></div></div><div class="cols2"><div class="stack">';
- h+='<div class="card"><div class="row between"><h3>Account</h3>'+stat("planned")+'</div><p class="small">Accounts come in a later release, after a security and privacy review. For now everything stays on this device.</p></div>';
+ h+='<div class="card"><div class="row between"><h3>Account</h3>'+stat("prototype")+'</div>'+(S.acct?'<p class="small"><b>'+esc(S.acct.user)+"</b> · "+esc(maskContact(S.acct))+" · "+esc(S.acct.loc.short||"")+"</p><p class=\"tiny muted\">"+(S.session?"Signed in.":"Signed out.")+' In this prototype the account lives on this device; codes are shown on screen instead of being sent.</p><div class="row">'+(S.session?'<button class="btn sm" data-act="sign-out">Sign out</button>':'<button class="btn sm" data-act="login">Sign in</button>')+'<button class="btn sm" data-act="acct-delete">Delete account</button></div>':'<p class="small">No account yet. Create one to save your garden and sign in with your email or phone.</p><div class="row"><button class="btn sm primary" data-act="start">Create an account</button><button class="btn sm" data-act="login">Sign in</button></div>')+"</div>";
  h+='<div class="card"><h3>Privacy</h3><p class="small">'+(CONSENT?esc(CONSENT.method)+".":"Everything optional is off. Nothing is stored on this device.")+'</p><div><button class="btn sm" data-act="privacy-choices">Privacy choices</button></div></div>';
  {const ph=PHOTOS.mine||{},nP=PSLOTS.filter(x=>ph[x[0]]).length+(ph.extra||[]).length;h+='<div class="card"><h3>House photos</h3><p class="small">'+(S.props.mine?nP+" photo"+(nP===1?"":"s")+" of "+esc(S.props.mine.name)+".":"Start your own garden to add house photos.")+"</p>"+(S.props.mine?keepPhotosHTML(S.props.mine)+'<div><button class="btn sm" data-act="go-photos-mine">Open house photos</button></div>':"")+"</div>"}
  h+='<div class="card"><h3>Accessibility &amp; display</h3><p class="small">Text size: '+({1:"standard",1.15:"large",1.3:"larger"}[A11Y.ts]||"standard")+" · Contrast: "+(A11Y.contrast?"higher":"standard")+" · Motion: "+(A11Y.motion?"reduced":"follows your device")+" · Low data: "+(A11Y.lowdata?"on":"off")+'</p><div><button class="btn sm" data-act="display">Change settings</button></div></div>';
@@ -2260,8 +2326,8 @@ document.addEventListener("click",e=>{
   delete S.props.mine;delete PHOTOS.mine;IDB.clear().catch(()=>{});S.posts=[];S.saved=[];S.trade={mode:"swap",offers:[],circles:[]};S.mySightings=[];LS.del("mine");S.propId="demo";S.props.demo=makeDemo();S.props.demomke=makeDemoMke();toast("Your garden data was deleted from this device.");renderChrome();break}
  case"go-home":S.view="home";$("#sheetHost").innerHTML="";stopPlay();renderChrome();window.scrollTo({top:0});break;
  case"scroll":{const t=document.getElementById(arg);if(t){t.scrollIntoView({behavior:reduceMotion()?"auto":"smooth"});const h=t.querySelector("h2");if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}break}
- case"login":openSheet("login");break;
- case"start":$("#sheetHost").innerHTML="";S.wiz=newWiz();S.view="setup";renderChrome();renderSetup();window.scrollTo({top:0});break;
+ case"login":if(S.acct&&S.session){go("profile");break}S.si={via:"email"};renderSignIn();break;
+ case"start":$("#sheetHost").innerHTML="";if(S.acct&&S.session||S.guest){startWizFromAcct();break}S.ac=S.ac||{step:"details",save:true,via:"email"};S.view="acct";renderChrome();window.scrollTo({top:0});break;
  case"demo":$("#sheetHost").innerHTML="";S.propId=arg==="mke"?"demomke":"demo";go("dash");break;
  case"demo-tab":{S.propId="demo";const [t,l]=arg.split(":");go(t,{layer:l||"shade"});break}
  case"privacy-choices":$("#sheetHost").innerHTML="";consentOpen=true;consentDetails=true;renderConsent();setTimeout(()=>$("#consentT")?.focus(),0);break;
@@ -2294,6 +2360,15 @@ document.addEventListener("click",e=>{
  case"photo-hand":S.photoEdit=!S.photoEdit;if(S.photoEdit){S.usePhoto=true;S.tool="select"}renderMapTools();drawProp();{const b=$('[data-act="photo-hand"]');if(b)b.focus()}toast(S.photoEdit?"Drag, pinch or scroll the photo on the map.":"Photo position saved.");break;
  case"photo-show":S.usePhoto=!S.usePhoto;renderMapTools();renderPhotos();drawProp();break;
  case"go-roof":S.roofTap=[];renderPhotos();setTimeout(()=>{const r=$("#roofTap");if(r)r.scrollIntoView({block:"center",behavior:reduceMotion()?"auto":"smooth"})},40);break;
+ case"ac-via":readAcct();S.ac.via=arg;S.ac.contact="";S.ac.focus="acContact";renderAcct();break;
+ case"ac-find":acFind();break;
+ case"ac-resend":S.ac.code=newCode();S.ac.err="";renderAcct();toast("New code sent.");break;
+ case"ac-back":S.ac.step="details";S.ac.focus="acContact";renderAcct();break;
+ case"si-via":S.si.via=arg;S.si.contact="";S.si.err="";renderSignIn();break;
+ case"si-back":S.si.code=null;S.si.err="";renderSignIn();break;
+ case"si-create":$("#sheetHost").innerHTML="";S.ac={step:"details",save:true,via:S.si.via,contact:S.si.contact||""};S.view="acct";renderChrome();window.scrollTo({top:0});break;
+ case"sign-out":S.session=false;LS.del("session");S.view="home";renderChrome();window.scrollTo({top:0});toast("Signed out. Your garden stays saved on this device.");break;
+ case"acct-delete":if(!confirm("Delete your account and everything saved on this device? This can't be undone."))break;S.acct=null;S.session=false;LS.del("acct");LS.del("session");LS.del("mine");delete S.props.mine;IDB.clear().catch(()=>{});S.propId="demo";S.view="home";renderChrome();toast("Your account and saved garden were deleted from this device.");break;
  case"zoom":{const z=S.zoom==null?zoomFit(p,"lot").z:S.zoom;if(arg==="in")S.zoom=Math.min(6,+(z*1.4).toFixed(2));else if(arg==="out")S.zoom=Math.max(1,+(z/1.4).toFixed(2));else if(arg==="all"){S.zoom=1;S.zoomCtr=null}else{const f=zoomFit(p,arg==="house"?"house":"lot");S.zoom=f.z;S.zoomCtr=f.c}
   if(S.zoom!=null&&S.zoom<=1)S.zoomCtr=null;drawProp();zoomLabel();break}
  case"pan":{const g=$("#propCv")._g;if(!g||g.z<=1){toast("Zoom in first, then move around.");break}const q=arg.split(":"),vw=g.w/g.k,vh=g.h/g.k;S.zoomCtr={x:g.ox+vw/2+(+q[0])*vw*.25,y:g.oy+vh/2+(+q[1])*vh*.25};drawProp();break}
@@ -2366,6 +2441,9 @@ document.addEventListener("change",e=>{
    pushUndo();o.days=Object.keys(m).sort().slice(-730).map(k=>m[k]);changed(p);renderSelCard();renderLayerDyn();drawProp();
    toast(r.days.length+" days loaded from "+r.rows.toLocaleString()+" readings ("+{dli:"daily DLI",ppfd:"PPFD",lux:"lux",wm2:"solar radiation"}[r.unit]+").")}catch(err){toast(err.message||"Couldn't read that file.")}};rd.readAsText(file);el.value="";return}
  if(el.dataset&&el.dataset.photo){const file=el.files[0];if(!file)return;const k=el.dataset.photo,lm=file.lastModified?new Date(file.lastModified):null;stripImage(file,(url,img)=>{const pp=PHOTOS[p.id]=PHOTOS[p.id]||{},old=pp[k];pp[k]={url,img,alt:"",taken:lm?ymd(lm)+"T"+pad(lm.getHours())+":"+pad(lm.getMinutes()):""};if(k==="overhead"){S.usePhoto=true;p.photoAlign=fitToLot(p,img)}renderPhotos();renderMapTools();drawProp();savePhotos(p.id);toast(k==="overhead"?"Top view added. Use the buttons under the map, or turn on Move & resize by hand.":"Photo added. Location data removed. Add a description and check when it was taken.");if(k!=="overhead"){const i=$('[data-palt="'+k+'"]');if(i)i.focus()}},k==="overhead"?3200:1600,k==="overhead"?.92:.85);return}
+ if(el.dataset&&el.dataset.acsave!=null){readAcct();S.ac.save=el.dataset.acsave==="1";renderAcct();return}
+ if(el.dataset&&el.dataset.acpick!=null){readAcct();S.ac.loc=S.ac.results[+el.dataset.acpick];S.ac.preset=-1;renderAcct();return}
+ if(el.id==="acPreset"){readAcct();renderAcct();return}
  if(el.dataset&&el.dataset.adpick!=null){S.wiz.ad.pick=+el.dataset.adpick;renderSetup();const r=$('[data-adpick="'+S.wiz.ad.pick+'"]');if(r)r.focus();return}
  if(el.dataset&&el.dataset.wzpick!=null){const w=S.wiz;w.loc=w.results[+el.dataset.wzpick];w.preset=-1;renderSetup();return}
  if(el.id==="wzPreset"){const w=S.wiz;w.preset=+el.value;if(w.preset>=0)w.loc=null;renderSetup();return}
@@ -2422,6 +2500,10 @@ document.addEventListener("submit",e=>{
  if(id==="circleForm"){const name=$("#ccName").value.trim();if(!name){toast("Give the circle a name.");$("#ccName").focus();return}
   S.trade.circles=[{id:nid("c"),name,area:$("#ccArea").value.trim()||cityName(p),max:Math.max(2,Math.min(12,+$("#ccMax").value||6)),rules:$("#ccRules").value.trim(),pledges:[]}];renderTrade();toast("Circle created. Add the first pledge.");return}
  if(id==="pledgeForm"){const ci=S.trade.circles[0];if(!ci)return;const hh=$("#plHH").value.trim()||"My household";ci.pledges.push({hh,crop:$("#plCrop").value,amt:$("#plAmt").value.trim(),sun:$("#plSun").value});renderTrade();toast("Pledge added.");return}
+ if(id==="acForm"){acSubmit();return}
+ if(id==="acVerify"){acVerify();return}
+ if(id==="siForm"){siSend();return}
+ if(id==="siCodeForm"){siCheck();return}
  if(id==="wzFind"){wizFind();return}
  if(id==="adFind"){addrFind();return}
  if(id==="qnForm"){const txt=$("#qnText").value.trim();if(!txt){toast("Write a note first.");$("#qnText").focus();return}
@@ -2468,5 +2550,3 @@ else if(["garden","explore","trade","alerts","profile"].includes(hsh)){S.view="a
 renderChrome();
 })();
 </script>
-</body>
-</html>
