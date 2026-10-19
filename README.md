@@ -41,6 +41,12 @@ There are two fictional demo yards: a Southeast DC rowhouse and a Milwaukee dupl
 4. **Size:** measure from the top photo by tapping the yard corners (satellite pictures have a known scale; your own photos use the house width as a ruler), or type your own measurements. Spaces without a yard (patio, containers, indoor) get growing-space fields instead.
 5. **Review**, then the dashboard. The same orientation dial and a "Sunlight tells a story" card (modeled direct-sun hours for each side of the home) appear in My Garden.
 
+## Live sun and shade
+
+- **Dashboard map:** shows the sun and shade for the current hour at the garden's location and refreshes on the hour, like a clock. A label shows the time and where the sun is; at night it shows when the sun rises.
+- **House photos:** a "Sun and shade on your photos" slider in My Garden lights up the front, back and side photos for any time of day (direct sun, shade, or sun behind that side), linked to the map's time slider. It's modeled from the sun's position and which way each side faces; tree and neighbor shadows show on the map.
+- The house outline is see-through over a top photo, so your real roof shows.
+
 ## Accounts (prototype)
 
 - **Create an account:** username, email *or* phone number (only if you want your garden saved), date of birth, and city or ZIP code. Then verify with a 6-digit code and go straight into building your space; the city carries over into setup.
