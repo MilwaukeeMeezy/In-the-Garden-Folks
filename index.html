@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="In the Garden, Folks! Know your space, grow what works, share what you grow.">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>In the Garden, Folks!</title>
-<title>In the Garden, Folks!</title>
+<title>In the Garden, Folks!</title><title>In the Garden, Folks!</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
 /* Layout: a neighborly garden notebook. Public homepage with a drawn rowhouse-block hero, then a working app: widget dashboard, map-plus-panel property editor, garden, planner, community. No external requests: system font stacks only, per the privacy brief. */
@@ -589,6 +588,16 @@ figure.media img,figure.media video,.postart svg,.preview img,.preview video{bor
 .gsec.gdrag{outline:3px dashed #121412;outline-offset:3px;opacity:.85}
 .gsec:has(> #selCard:empty){display:none}
 .tmwarn{margin:6px 0 0;padding:6px 8px;border-left:4px solid #FF8A00;background:#FFF4E5}
+.cpanel{border:1.5px solid var(--line,#E4E8E0);border-radius:12px;background:#FAFAF6;padding:0 10px}
+.cpanel>summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:10px 0;list-style:none}
+.cpanel>summary::-webkit-details-marker{display:none}
+.cpanel>summary::before{content:"▸";font-weight:800}.cpanel[open]>summary::before{content:"▾"}
+.cpanel[open]{padding-bottom:10px}
+.fcard{padding:0}.fcard .cpanel{border:none}
+.card .chead{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cbtn{margin-left:auto;border:1.5px solid #121412;background:transparent;border-radius:8px;font-size:.78rem;font-weight:700;padding:3px 8px;cursor:pointer;color:inherit}
+.card.coll>:not(.chead){display:none!important}
+.gsec:has(> #foundBox:empty){display:none}
 .mshot{border:2px solid #E4E8E0;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;background:#FAFAF6}
 .mlabel{margin:0;font-size:1.15rem}
 .mfig{margin:0;display:flex;flex-direction:column}
@@ -741,6 +750,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
         <p class="small" id="resizeLbl" aria-live="polite" style="margin:0"></p>
         <div class="gsortc stack" id="gsortL" style="gap:10px">
         <div class="gsec" data-gsec="tools"><button type="button" class="gsgrip" aria-label="Move map tools. Drag, or use the up and down arrow keys." title="Drag to rearrange">⠿</button><div id="mapTools" class="stack" style="gap:8px"></div></div>
+        <div class="gsec" data-gsec="found"><button type="button" class="gsgrip" aria-label="Move identified objects. Drag, or use the up and down arrow keys." title="Drag to rearrange">⠿</button><div id="foundBox"></div></div>
         <div class="gsec" data-gsec="years"><button type="button" class="gsgrip" aria-label="Move look ahead. Drag, or use the up and down arrow keys." title="Drag to rearrange">⠿</button><div class="chips" id="years" role="group" aria-label="Look ahead"></div></div>
         <div class="gsec" data-gsec="words"><button type="button" class="gsgrip" aria-label="Move map in words. Drag, or use the up and down arrow keys." title="Drag to rearrange">⠿</button><details class="card" id="mapWords"><summary>Map in words</summary><div id="mapWordsBody" class="stack small"></div></details></div>
         </div>
@@ -786,7 +796,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
 <div id="setup" class="wrap" hidden></div>
 <div id="acct" class="wrap" hidden></div>
 
-<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Oct 19, 5:00 PM</p>
+<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Oct 19, 6:10 PM</p>
   <span class="small muted">In the Garden, Folks! · working prototype</span>
   <div class="row small">
     <button class="btn link" data-act="sheet" data-arg="contact">Contact</button>
@@ -1211,8 +1221,12 @@ function faceWords(p){const w=WORDS[dir16(p.face)];return"Front faces "+w+" ("+M
 const SHOWK=[["lot","Lot line"],["house","House outline"],["grow","Growing places"],["trees","Trees"],["water","Water marks"],["found","Found objects"]];
 const shown=(p,k)=>k==="grow"?p.showGrow!==false:!(p.hide&&p.hide[k]);
 function renderMapShow(){const el=$("#mapShow");if(!el)return;const p=prop();if(!p){el.innerHTML="";return}el.innerHTML='<div class="mapshow" role="group" aria-label="Show on the map"><span class="small"><b>Show on map:</b></span>'+SHOWK.map(([k,l])=>'<label class="check small"><input type="checkbox" data-show="'+k+'"'+(shown(p,k)?" checked":"")+"> "+l+"</label>").join("")+'<span class="row" style="gap:4px"><button class="btn link small" type="button" data-act="show-all">All on</button><button class="btn link small" type="button" data-act="show-none">All off</button></span></div>'}
+S.gcoll=LS.get("gcoll")||{};
+const cOpen=(k,def)=>S.gcoll[k]==null?def:!!S.gcoll[k];
+const cPanel=(k,title,inner,def,sum)=>'<details class="cpanel" data-ck="'+k+'"'+(cOpen(k,def)?" open":"")+'><summary><span class="lbl">'+title+"</span>"+(sum?'<span class="small muted">'+sum+"</span>":"")+"</summary>"+inner+"</details>";
 function renderMapTools(){renderMapShow();const el=$("#mapTools");if(!el)return;const p=prop(),ph=(PHOTOS[p.id]||{}).overhead,al=Object.assign({x:0,y:0,s:1,r:0,o:.85},p.photoAlign||{});
- let h='<div class="toolrow facebar"><div class="stack" style="gap:0"><span class="lbl">House orientation</span><b class="facew" id="faceWords" aria-live="polite">'+faceWords(p)+'</b><span class="tiny muted">Back faces '+WORDS[dir16((p.face+180)%360)]+". Turn the house until it matches your photo.</span></div>"+turnBtns("space-turn")+"</div>"+frontPicker(p)+growRow(p)+candRow(p);
+ let h=cPanel("orient","House orientation",'<div class="toolrow facebar"><div class="stack" style="gap:0"><b class="facew" id="faceWords" aria-live="polite">'+faceWords(p)+'</b><span class="tiny muted">Back faces '+WORDS[dir16((p.face+180)%360)]+". Turn the house until it matches your photo.</span></div>"+turnBtns("space-turn")+"</div>",true,faceWords(p))+(frontPicker(p)?cPanel("front","Front door wrong?",frontPicker(p),false,"Pick the way it really faces"):"")+cPanel("grow","Growing areas & outlines",growRow(p),true);{const fb=$("#foundBox");if(fb)fb.innerHTML=candRow(p)}
+ const h0=h.length;
  if(ph)h+='<div class="toolrow"><div class="stack" style="gap:0"><span class="lbl">Top photo</span><span class="small"><b>'+Math.round(al.s*100)+'%</b> size · turned <b>'+Math.round(al.r)+'°</b></span></div>'+
   '<button class="btn sm handbtn" type="button" data-act="photo-hand" aria-pressed="'+(!!S.photoEdit)+'">'+(S.photoEdit?"✋ Done moving photo":"✋ Move & resize by hand")+"</button>"+
   '<div class="row" role="group" aria-label="Photo size"><button class="btn sm" type="button" data-act="pal-size" data-arg="0.8" aria-label="Photo much smaller">− −</button><button class="btn sm" type="button" data-act="pal-size" data-arg="0.95" aria-label="Photo a little smaller">−</button><button class="btn sm" type="button" data-act="pal-size" data-arg="1.05" aria-label="Photo a little bigger">+</button><button class="btn sm" type="button" data-act="pal-size" data-arg="1.25" aria-label="Photo much bigger">+ +</button></div>'+
@@ -1220,7 +1234,8 @@ function renderMapTools(){renderMapShow();const el=$("#mapTools");if(!el)return;
   '<div class="row" role="group" aria-label="Move the photo"><button class="btn sm" type="button" data-act="pal-move" data-arg="0:-1" aria-label="Move photo up">↑</button><button class="btn sm" type="button" data-act="pal-move" data-arg="0:1" aria-label="Move photo down">↓</button><button class="btn sm" type="button" data-act="pal-move" data-arg="-1:0" aria-label="Move photo left">←</button><button class="btn sm" type="button" data-act="pal-move" data-arg="1:0" aria-label="Move photo right">→</button></div>'+
   '<div class="row"><button class="btn sm" type="button" data-act="pal-fit">Fit to my lot</button><button class="btn sm" type="button" data-act="go-roof">Line it up for me</button><button class="btn sm" type="button" data-act="photo-show">'+(S.usePhoto?"Hide photo":"Show photo")+"</button></div>"+(S.photoEdit?'<p class="tiny" style="flex-basis:100%">Drag the photo with one finger or the mouse. Pinch with two fingers to resize and turn it. On a computer, scroll to resize and hold Shift while scrolling to turn.</p>':"")+"</div>";
  else h+='<div class="toolrow"><div class="stack" style="gap:2px"><span class="lbl">Top photo</span><span class="small">Add a drone or satellite picture to see your real yard under the map.</span></div><label class="btn sm">Add a top view<input type="file" accept=".jpg,.jpeg,.png,.webp,.heic" data-photo="overhead" class="sr"></label></div>';
- el.innerHTML=h}
+ h=h.slice(0,h0)+cPanel("photo","Top photo",h.slice(h0),!!ph);
+ el.innerHTML=h;if($("#glance"))renderGlance()}
 const PE={pts:new Map(),base:null};
 function peSnap(p){const a=[...PE.pts.values()],al=Object.assign({x:0,y:0,s:1,r:0,o:.85},p.photoAlign||{});PE.base={al:Object.assign({},al),c:a.length?{x:a.reduce((t,q)=>t+q.x,0)/a.length,y:a.reduce((t,q)=>t+q.y,0)/a.length}:null,d:a.length>1?Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y):0,ang:a.length>1?Math.atan2(a[1].y-a[0].y,a[1].x-a[0].x):0}}
 function peDown(e){const p=prop();if(!S.photoEdit||!((PHOTOS[p.id]||{}).overhead))return false;PE.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cvP.setPointerCapture(e.pointerId)}catch(x){}peSnap(p);e.preventDefault();return true}
@@ -1848,12 +1863,13 @@ function renderGlance(){const p=prop(),el=$("#glance");if(!el)return;
  h+=A("plants","✿","#FF9E8C","Plants",np+" plantings in "+nb+" beds and containers",'<div class="list">'+bedsOf(p).slice(0,5).map(b=>'<div class="small"><b>'+esc(b.name)+":</b> "+((b.plants||[]).length?esc(b.plants.join(", ")):'<span class="muted">empty</span>')+"</div>").join("")+'</div><button class="btn sm" data-act="tab" data-arg="plants">Beds & plants</button>');
  h+=A("tasks","✓","#C9F25A","Today's tasks",open.length?open.length+" open · next: "+esc(open[0].title):"Nothing open",'<div>'+open.slice(0,3).map(taskRow).join("")+'</div><button class="btn sm" data-act="tab" data-arg="planner">All tasks</button>');
  {const ph=PHOTOS[p.id]||{},nP=PSLOTS.filter(x=>ph[x[0]]).length+(ph.extra||[]).length;h+=A("photos","▣","#C9F25A","House photos",nP?nP+" photo"+(nP>1?"s":"")+(ph.overhead?" · top view on the map":""):"None yet · add top, front, back and sides",'<p class="small">Top view lines up under the map; side photos compare with the shade model.</p><button class="btn sm" data-act="go-photos" aria-expanded="'+!!S.showPhotos+'" aria-controls="photoCard">'+(S.showPhotos?"Hide house photos":"Open house photos")+"</button>")}
+ {const C=CANDS[p.id]||[];if(C.length){const cnt=k=>C.filter(x=>x.kind===k).length;h+=A("found","🔍","#7CFF00","Identified objects",C.length+" possible: "+[["tree","tree","trees"],["bush","bush","bushes"],["building","building","buildings"]].map(([k,a,l])=>cnt(k)?cnt(k)+" "+(cnt(k)===1?a:l):"").filter(Boolean).join(", "),'<p class="small">The app spotted these on your top photo. Check each one: confirm it, change what it is, or mark it as not an object. Confirmed ones can be measured for height so their shade counts.</p><button class="btn sm primary" type="button" data-act="found-open">Review identified objects</button>')}}
  h+=A("notes","✎","#7B7CFB","Garden notes",j?esc(dshort(j.date))+": "+esc(j.text.length>48?j.text.slice(0,46)+"…":j.text):"No notes yet",(j?journalRow(j):"")+'<button class="btn sm" data-act="tab" data-arg="planner">Add a note</button>');
  el.innerHTML=h}
 function zoomFit(p,what){const o=p.objects.find(x=>x.type===what)||p.objects.find(x=>x.type==="lot");if(!o)return{z:1,c:null};let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;corners(o).forEach(q=>{x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1])});const m=what==="house"?1.5:1.12,g=($("#propCv")||{})._g,bw=g&&g.bw?g.bw:p.view.W,bh=g&&g.bh?g.bh:p.view.H;return{z:Math.max(1,Math.min(6,Math.min(bw/((x1-x0)*m),bh/((y1-y0)*m)))),c:{x:(x0+x1)/2,y:(y0+y1)/2}}}
 function zoomLabel(){const z=$("#zoomLbl"),p=prop();if(z)z.textContent=Math.round((S.zoom==null?zoomFit(p,"lot").z:S.zoom)*100)+"%"}
 function renderProperty(){
- const p=prop();gsortApply();
+ const p=prop();gsortApply();setTimeout(()=>{collapsify($("#gsortR"));collapsify($("#gsortL"))},0);
  renderGlance();zoomLabel();renderMapTools();{const pc=$("#photoCard");if(pc)pc.hidden=!S.showPhotos}
  $("#propSub").textContent=p.place+" · front faces "+WORDS[dir16(p.face)]+" · "+(p.demo?"fictional demo property":"private to you");
  $("#tools").innerHTML=TOOLS.map(t=>'<button class="chip" data-act="tool" data-arg="'+t[0]+'" aria-pressed="'+(S.tool===t[0])+'">'+t[1]+"</button>").join("")+'<span class="sep" aria-hidden="true"></span><button class="chip" data-act="undo"'+(UNDO.length?"":" disabled")+'>Undo</button><button class="chip" data-act="redo"'+(REDO.length?"":" disabled")+">Redo</button>";
@@ -1905,7 +1921,7 @@ function zoneTable(p){
  const zs=bedsOf(p);if(!zs.length)return'<p class="small muted">Add a bed to see sun hours by zone.</p>';
  return'<div class="tablewrap"><table><thead><tr><th>Bed</th><th class="num">Direct sun</th><th>Light</th></tr></thead><tbody>'+zs.map(z=>{const e=estimate(p,zonePts(z),S.Y);const c=e.ok?sunClass(e.h):null;
   return"<tr><td>"+esc(z.name)+'</td><td class="num">'+(e.ok?e.h.toFixed(1)+" h":"–")+"</td><td>"+(e.ok?'<span class="pill" style="background:var('+c.c+');color:'+(c.t==="Full shade"?"#FFFFFF":"#1F2F26")+'">'+c.t+"</span>":'<button class="btn link small" data-act="select-obj" data-arg="'+e.need[0].id+'">Needs '+esc(e.need[0].name)+" height</button>")+"</td></tr>"}).join("")+"</tbody></table></div>"}
-function renderLayerDyn(){
+function renderLayerDyn(){setTimeout(()=>collapsify($("#layerDyn")),0);
  const p=prop(),el=$("#layerDyn");let h="";renderGlance();
  if(S.layer==="shade"||S.layer==="hours"){
   const unk=unknownObjs(p);
@@ -1999,7 +2015,7 @@ cvP.addEventListener("pointerdown",e=>{if(peDown(e))return;const p=prop(),w=toWo
  if(S.tool==="select"){const o=hitTest(p,[w.x,w.y]);
   if(o){S.sel=o.id;if(!o.fixed&&o.type!=="area"&&!(o.type==="house"&&p.demo)){pushUndo();drag={id:o.id,dx:w.x-o.x,dy:w.y-o.y,moved:false};cvP.setPointerCapture(e.pointerId)}renderSelCard();drawProp();return}
   S.sel=null;S.spot={x:w.x,y:w.y};drag={probe:true};cvP.setPointerCapture(e.pointerId);renderSelCard();renderLayerDyn();drawProp();return}
- if((S.tool==="tmstand"||S.tool==="tmshadow")&&S.tm){const o=p.objects.find(x=>x.id===S.tm.id);if(o){const d=Math.round(objDist(o,[w.x,w.y])*10)/10;if(S.tool==="tmstand"){S.tm.dist=d;toast("You're about "+d+" ft from it.")}else{S.tm.shadow=d;toast("Shadow is about "+d+" ft long.")}}S.tool="select";renderSelCard();return}
+ if((S.tool==="tmstand"||S.tool==="tmshadow")&&S.tm){const o=p.objects.find(x=>x.id===S.tm.id);if(o){const d=Math.round(objDist(o,[w.x,w.y])*10)/10;if(S.tool==="tmstand"){S.tm.dist=d;toast("You're about "+d+" ft from it.")}else{S.tm.shadow=d;toast("Shadow is about "+d+" ft long.")}}S.tool="select";tmAuto();renderSelCard();return}
  if(S.tool==="obsshade"||S.tool==="obssun"||S.tool==="obsdappled"){const now=liveNow(p.loc);p.shadeObs=p.shadeObs||[];const ob={id:nid("v"),x:w.x,y:w.y,kind:S.tool==="obsshade"?"shade":S.tool==="obsdappled"?"dappled":"sun",date:now.date,m:Math.round(now.m)};p.shadeObs.push(ob);changed(p);drawProp();renderLayerDyn();const mod=obsModel(p,ob);toast(mod===ob.kind?"Marked. The map agrees ✓":"Marked. The map shows "+({sun:"full sun",shade:"shade",dappled:"dappled sun"})[mod]+" here, so something is "+(mod==="sun"?"missing":"off")+".");return}
  if(S.tool==="wpt"){const t=WTYPES[S.wtype]||WTYPES.puddle;pushUndo();p.water.marks=p.water.marks||[];p.water.marks.push({id:nid("w"),kind:"point",wt:S.wtype||"puddle",pts:[[Math.round(w.x*10)/10,Math.round(w.y*10)/10]],col:t.col,date:TODAY});changed(p);if(S.layer!=="water")S.layer="water";renderProperty();toast(t.n+" added. Tap to add another, or press Done.");return}
  if(S.tool==="wline"||S.tool==="warea"){S.wdraw={kind:S.tool==="wline"?"stream":"area",wt:S.wtype||null,pts:[[w.x,w.y]]};drag={wdraw:true};cvP.setPointerCapture(e.pointerId);return}
@@ -2412,7 +2428,7 @@ function renderSetup(){
   (w.satBusy?'<p class="small" role="status">Getting the satellite view…</p>':"")+(w.satErr?'<p class="small" role="alert"><b>'+esc(w.satErr)+"</b></p>":"")+(w.pics==="sat"&&w.photos.overhead&&w.photos.overhead.sat?'<p class="small" role="status">✓ Satellite view ready. You\'ll see it in the next step.</p>':"")+
   '<p class="tiny muted">Satellite imagery: when you choose it, the app asks Esri\'s World Imagery service for the map squares around your home. That shares your home\'s approximate map position with Esri. Imagery can be months or years old. Imagery © Esri, Maxar, Earthstar Geographics.</p></div>'}
  if(w.step===2){const o=w.photos.overhead,L=wzLoc(w);
-  h+='<div class="card stack"><h2>Photos</h2><p class="tiny muted" style="margin:0">Version Oct 19, 5:00 PM</p><p class="small muted">Choose files from a folder on your device; the site never opens your photo library, camera or microphone. Location data is removed from each photo. Photos are kept in your profile only if you choose to keep them.</p><h3>Find your home orientation</h3>';
+  h+='<div class="card stack"><h2>Photos</h2><p class="tiny muted" style="margin:0">Version Oct 19, 6:10 PM</p><p class="small muted">Choose files from a folder on your device; the site never opens your photo library, camera or microphone. Location data is removed from each photo. Photos are kept in your profile only if you choose to keep them.</p><h3>Find your home orientation</h3>';
   let R='';
   if(o&&!o.sat)R+='<div class="ctlgrp"><span class="small"><b>1. Turn the photo</b> until north is at the top of the dial.</span><div class="row" role="group" aria-label="Turn the top photo">'+[[-90,"↺ 90°"],[-15,"↺ 15°"],[-1,"↺ 1°"],[1,"↻ 1°"],[15,"↻ 15°"],[90,"↻ 90°"]].map(b2=>'<button class="btn sm" type="button" data-act="wz-prot" data-arg="'+b2[0]+'" aria-label="Turn the photo '+Math.abs(b2[0])+" degrees "+(b2[0]<0?"left":"right")+'">'+b2[1]+"</button>").join("")+"</div></div>";
   else if(o&&o.sat)R+='<p class="tiny muted">Satellite pictures already have north at the top. Imagery © Esri, Maxar, Earthstar Geographics.</p>';
@@ -2847,6 +2863,7 @@ document.addEventListener("click",e=>{
  case"sel-obj":S.sel=arg;renderSelCard();renderMapTools();drawProp();{const c2=$("#propBox");if(c2)c2.scrollIntoView({block:"center",behavior:reduceMotion()?"auto":"smooth"})}toast("Drag it to move, or drag a corner square to resize.");break;
  case"grow-make":{const a=makeGrowAreas(p,p.kinds||[]);if(a.length){pushUndo();a.forEach(x=>p.objects.push(x));p.showGrow=true;changed(p);renderProperty();drawProp();toast("Outlines added. Pick one to drag or resize it.")}break}
  case"gsort-reset":{S.gorder=null;LS.del("gorder");const def={gsortL:["tools","years","words"],gsortR:["glance","sel","time","layer"]};S.gorder=def;gsortApply();S.gorder=null;toast("Layout reset.");break}
+case"found-open":{S.gcoll.found=true;if(canSave())LS.set("gcoll",S.gcoll);renderMapTools();const fb=$("#foundBox");if(fb){fb.scrollIntoView({block:"start",behavior:reduceMotion()?"auto":"smooth"});const sm=fb.querySelector("summary");if(sm)sm.focus()}break}
 case"show-all":case"show-none":{const on=act==="show-all";p.showGrow=on;p.hide={};if(!on)SHOWK.forEach(([k])=>{if(k!=="grow")p.hide[k]=true});changed(p);drawProp();renderMapTools();break}
 case"grow-toggle":p.showGrow=p.showGrow===false;changed(p);renderMapTools();drawProp();break;
  case"rc-new":rcOpen(null);break;
@@ -2870,7 +2887,7 @@ case"grow-toggle":p.showGrow=p.showGrow===false;changed(p);renderMapTools();draw
  case"tm-hold":tmRead();S.tm.hold=arg;TMS.buf=[];renderSelCard();break;
 case"tm-pundo":tmRead();(S.tm.taps||[]).pop();renderSelCard();break;
 case"tm-pclear":tmRead();S.tm.taps=[];renderSelCard();break;
-case"tm-lock":{tmRead();if(TMS.beta!=null){S.tm.angle=Math.round(TMS.beta*10)/10;tmStop();renderSelCard();toast("Angle locked: "+S.tm.angle+"°.")}break}
+case"tm-lock":{tmRead();if(TMS.beta!=null){S.tm.angle=Math.round(TMS.beta*10)/10;tmStop();tmAuto();renderSelCard()}break}
  case"tm-tap":tmRead();S.tool=arg==="stand"?"tmstand":"tmshadow";renderSelCard();toast(arg==="stand"?"Tap the spot where you're standing.":"Tap the tip of the shadow.");{const c2=$("#propBox");if(c2)c2.scrollIntoView({block:"center"})}break;
  case"tm-use":{tmRead();const o=p.objects.find(x=>x.id===S.sel),hv=o&&tmResult(p,o);if(!o||hv==null)break;pushUndo();o.h=hv;if(o.type==="tree"&&(!o.matureH||o.matureH<hv))o.matureH=hv;o.hm={how:S.tm.mode,date:TODAY};tmStop();S.tm=null;p._v=(p._v||0)+1;HEAT.key="";changed(p);renderProperty();drawProp();toast(o.name+" set to "+hv+" ft. Shade and sun hours updated.");break}
  case"cand-run":runDetect(p);break;
@@ -2925,7 +2942,10 @@ case"tm-lock":{tmRead();if(TMS.beta!=null){S.tm.angle=Math.round(TMS.beta*10)/10
  case"wiz-cancel":S.wiz=null;S.view="home";renderChrome();break;
  }});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#sheetHost").innerHTML){$("#sheetHost").innerHTML=""}});
-document.addEventListener("click",e=>{const pt=e.target.closest&&e.target.closest("#tmPhotoTap");if(!pt||!S.tm||!S.tm.photo)return;tmRead();const t=S.tm;t.taps=t.taps||[];if(t.taps.length>=4)return;const r=pt.getBoundingClientRect();t.taps.push([(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]);renderSelCard()});
+document.addEventListener("toggle",e=>{const d=e.target;if(!d||!d.dataset||!d.dataset.ck)return;S.gcoll[d.dataset.ck]=d.open;if(canSave())LS.set("gcoll",S.gcoll)},true);
+/* every card on the My Garden page can fold up to its title */
+function collapsify(root){if(!root)return;root.querySelectorAll(".card").forEach(c=>{if(c.classList.contains("fcard")||c.dataset.cz)return;const t=c.querySelector("h3")||c.querySelector(".lbl");if(!t)return;let hd=t;while(hd.parentNode&&hd.parentNode!==c)hd=hd.parentNode;if(hd.parentNode!==c||hd.tagName==="DETAILS")return;c.dataset.cz="1";hd.classList.add("chead");const k="c:"+t.textContent.trim().slice(0,40),b=document.createElement("button");b.type="button";b.className="cbtn";const sync=()=>{const shut=!!S.gcoll[k];c.classList.toggle("coll",shut);b.textContent=shut?"▸ Show":"▾ Hide";b.setAttribute("aria-expanded",String(!shut));b.setAttribute("aria-label",(shut?"Show ":"Hide ")+t.textContent.trim())};b.addEventListener("click",ev2=>{ev2.stopPropagation();S.gcoll[k]=!S.gcoll[k];if(canSave())LS.set("gcoll",S.gcoll);sync()});hd.appendChild(b);sync()})}
+document.addEventListener("click",e=>{const pt=e.target.closest&&e.target.closest("#tmPhotoTap");if(!pt||!S.tm||!S.tm.photo)return;tmRead();const t=S.tm;t.taps=t.taps||[];if(t.taps.length>=4)return;const r=pt.getBoundingClientRect();t.taps.push([(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]);if(t.taps.length===4)tmAuto();renderSelCard()});
 function wzPhotoUpd(){const o=S.wiz&&S.wiz.photos.overhead,g=document.getElementById("wzPG");if(o&&g)g.setAttribute("transform","translate("+(o.px||0).toFixed(1)+" "+(o.py||0).toFixed(1)+") scale("+(o.zoom||1).toFixed(3)+")")}
 (()=>{const P=new Map();let B=null;const own=()=>{const o=S.wiz&&S.wiz.photos&&S.wiz.photos.overhead;return o&&!o.sat?o:null};
  const base=sv=>{const o=own(),r=sv.getBoundingClientRect(),q=[...P.values()];B={sv,k:520/r.width,px:o.px||0,py:o.py||0,z:o.zoom||1,c:q.length>1?[(q[0][0]+q[1][0])/2,(q[0][1]+q[1][1])/2]:q[0],d:q.length>1?Math.hypot(q[0][0]-q[1][0],q[0][1]-q[1][1]):0}};
@@ -2977,7 +2997,8 @@ document.addEventListener("input",e=>{const el=e.target;if(el.closest&&el.closes
 document.addEventListener("change",e=>{
  const el=e.target,f=el.dataset&&el.dataset.f,p=prop();
  if(el.dataset&&el.dataset.tmphoto&&S.tm){const file=el.files[0];if(!file)return;stripImage(file,(url,img)=>{tmRead();S.tm.photo={url,img};S.tm.taps=[];renderSelCard();toast("Photo added. Location data removed. Tap the bottom of the "+((prop().objects.find(x=>x.id===S.tm.id)||{}).type==="tree"?"tree.":"building."))},1600,.85);return}
- if((el.id==="tmRef"||el.id==="tmRefH")&&S.tm){tmRead();setTimeout(()=>{if(S.tm)renderSelCard()},0);return}
+ if((el.id==="tmRef"||el.id==="tmRefH")&&S.tm){tmRead();tmAuto();setTimeout(()=>{if(S.tm)renderSelCard()},0);return}
+ if(["tmDist","tmSteps","tmAngle","tmEye","tmShadow"].includes(el.id)&&S.tm){tmRead();tmAuto();setTimeout(()=>{if(S.tm)renderSelCard()},0);return}
  if(el.dataset&&el.dataset.show&&p){const k=el.dataset.show;if(k==="grow")p.showGrow=el.checked;else{p.hide=p.hide||{};p.hide[k]=!el.checked}changed(p);drawProp();renderMapTools();const f2=document.querySelector('[data-show="'+k+'"]');if(f2)f2.focus();return}
  if(el.dataset&&el.dataset.sensorFile){const file=el.files[0],o=p.objects.find(x=>x.id===el.dataset.sensorFile);if(!file||!o)return;
   if(file.size>15e6){toast("That file is over 15 MB. Export a shorter date range.");return}
@@ -3288,9 +3309,10 @@ function tmHTML(p,o){const m=o.hm,t=S.tm&&S.tm.id===o.id?S.tm:null,nm=o.type==="
  if(t.mode==="shadow"){const sl=t.shadow!=null&&t.shadow!==""?+t.shadow:null,up=sp.alt>3,res=sl!=null&&up?Math.round(sl*Math.tan(sp.alt*RAD)):null;
   h+='<p class="small">Right now the sun is <b>'+Math.round(sp.alt)+'°</b> up'+(up?"":", too low to use shadows")+'. Measure the '+nm+'\'s shadow on flat ground, from the '+(o.type==="tree"?"trunk":"wall")+' to the tip of the shadow.'+(sp.alt>60?" (Midday shadows are short; mid-morning or mid-afternoon is easier.)":"")+'</p><div class="row" style="align-items:flex-end;gap:6px"><label class="f" style="width:130px">Shadow length (ft)<input type="number" id="tmShadow" min="1" max="1000" step="0.5" value="'+(sl!=null?Math.round(sl*10)/10:"")+'"></label><button class="btn sm" type="button" data-act="tm-tap" data-arg="shadow">'+(S.tool==="tmshadow"?"Tap the shadow tip…":"Tap the shadow tip on the map")+"</button></div>"+
    (res!=null?'<p class="tmres" role="status">About <b>'+res+' ft</b> tall <span class="tiny muted">('+Math.round(sl)+" ft × tan "+Math.round(sp.alt)+"°, measured at "+clock12(liveNow(p.loc).m)+")</span></p>":'<p class="small muted" role="status">'+(up?"Enter the shadow length to get the height.":"Try again when the sun is higher.")+"</p>")}
- return h+'<div class="row"><button class="btn sm primary" type="button" data-act="tm-use"'+(tmResult(p,o)!=null?"":" disabled")+'>Use this height</button><button class="btn sm" type="button" data-act="tm-close">Cancel</button></div></div>'}
+ return h+'<p class="tiny muted" style="margin:4px 0 0">The height updates on its own as soon as there\u2019s a result.</p><div class="row"><button class="btn sm primary" type="button" data-act="tm-close">Done</button></div></div>'}
 function tmRefH(p,t){const hh=(p.objects.find(x=>x.type==="house")||{}).h;return t.ref==="eave"?18:t.ref==="door"?6.7:t.ref==="person"||t.ref==="custom"?(+t.refH||0):(+hh||0)}
 function tmRatio(t){const q=t.taps||[];if(q.length<4||!t.photo)return 0;const ih=t.photo.img.height,iw=t.photo.img.width,len=(a,b)=>Math.hypot((a[0]-b[0])*iw,(a[1]-b[1])*ih),r=len(q[2],q[3]);return r>2?len(q[0],q[1])/r:0}
+function tmAuto(){const p=prop(),t=S.tm;if(!t)return;const o=p.objects.find(x=>x.id===t.id);if(!o)return;const hv=tmResult(p,o);if(hv==null||hv===o.h)return;o.h=hv;if(o.type==="tree"&&(!o.matureH||o.matureH<hv))o.matureH=hv;o.hm={how:t.mode,date:TODAY};p._v=(p._v||0)+1;HEAT.key="";changed(p);drawProp();renderLayerDyn();toast(o.name+" is now "+hv+" ft tall. Shade updated.")}
 function tmRead(){const t=S.tm;if(!t)return;const v=id=>(($("#"+id)||{}).value);if($("#tmRef")){t.ref=v("tmRef");if($("#tmRefH"))t.refH=v("tmRefH")}if($("#tmDist")){const st=v("tmSteps");t.dist=st?+st*2.5:v("tmDist");if($("#tmAngle")&&v("tmAngle")!=="")t.angle=+v("tmAngle");t.eye=v("tmEye")===""?5:+v("tmEye")}if($("#tmShadow"))t.shadow=v("tmShadow")}
 function tmResult(p,o){const t=S.tm;if(!t||t.id!==o.id)return null;if(t.mode==="photo"){const r=tmRatio(t),h0=tmRefH(p,t);return r>0&&h0>0?Math.round(r*h0):null}if(t.mode==="tilt"){const d=+t.dist,a=t.angle;if(!(d>0)||!(a>0&&a<89))return null;return Math.round(d*Math.tan(a*RAD)+(+t.eye||0))}const now=liveNow(p.loc),sp=sunPos(now.m,now.date,p.loc),l=+t.shadow;if(!(l>0)||sp.alt<=3)return null;return Math.round(l*Math.tan(sp.alt*RAD))}
 function tmStop(){if(TMS.fn)window.removeEventListener(TMS.ev,TMS.fn,true);TMS.on=false;TMS.fn=null;clearTimeout(TMS.t)}
@@ -3323,13 +3345,14 @@ function detectObjects(p){const ph=(PHOTOS[p.id]||{}).overhead;if(!ph||!ph.img||
  const gap=Math.max(2,3/ftpp);let merged=true;while(merged){merged=false;for(let a=0;a<RP.length&&!merged;a++)for(let b=a+1;b<RP.length&&!merged;b++){const A=RP[a].b,B=RP[b].b;if(A[0]-gap>B[2]||B[0]-gap>A[2]||A[1]-gap>B[3]||B[1]-gap>A[3])continue;const P=RP[a].P.concat(RP[b].P),mr=minRect(P),n=RP[a].n+RP[b].n;if(mr&&n/mr.area>=.7&&n*px2ft<=6000){RP[a]={P,n,b:[Math.min(A[0],B[0]),Math.min(A[1],B[1]),Math.max(A[2],B[2]),Math.max(A[3],B[3])]};RP.splice(b,1);merged=true}}}
  RP.forEach(r=>{const area=r.n*px2ft;if(area<70)return;const mr=minRect(r.P);if(!mr||r.n/mr.area<.68)return;const wp=mr.poly.map(q=>toW(q[0],q[1]));let cxw=0,cyw=0;wp.forEach(q=>{cxw+=q[0];cyw+=q[1]});cxw/=4;cyw/=4;if(occ.some(pl=>inPoly([cxw,cyw],pl)))return;C.push({id:nid("c"),kind:"building",poly:wp,x:cxw,y:cyw,w:Math.round(Math.hypot(wp[1][0]-wp[0][0],wp[1][1]-wp[0][1])),d:Math.round(Math.hypot(wp[2][0]-wp[1][0],wp[2][1]-wp[1][1])),rot:Math.atan2(wp[1][1]-wp[0][1],wp[1][0]-wp[0][0])*DEG})});
  C.sort((a,b)=>(b.kind==="tree"?b.r*b.r*3.14:b.kind==="building"?b.w*b.d:1)-(a.kind==="tree"?a.r*a.r*3.14:a.kind==="building"?a.w*a.d:1));return C.slice(0,30)}
-function runDetect(p,quiet){const c=detectObjects(p);if(!c){if(!quiet)toast("Add a top photo of your yard first (My Garden → House photos).");return}CANDS[p.id]=c;S.candSel=null;if(isMap()){renderMapTools();drawProp()}if(!quiet||c.length)toast(c.length?(c.length===1?"Found 1 possible tree, bush or building":"Found "+c.length+" possible trees, bushes or buildings")+" on your photo. Check each one under the map.":"Nothing new found on the top photo.")}
+function runDetect(p,quiet){const c=detectObjects(p);if(!c){if(!quiet)toast("Add a top photo of your yard first (My Garden → House photos).");return}CANDS[p.id]=c;S.candSel=null;if(isMap()){renderMapTools();drawProp()}renderGlance();if(!quiet)toast(c.length?(c.length===1?"Found 1 possible tree, bush or building":"Found "+c.length+" possible trees, bushes or buildings")+" on your photo. Check each one under the map.":"Nothing new found on the top photo.")}
 const CANDCOL={tree:"#7CFF00",bush:"#00E0C6",building:"#FF8A00"},CANDW={tree:"Possible tree",bush:"Possible bush",building:"Possible building"};
 function drawCands(c,p,g,T,px){const C=CANDS[p.id];if(!C||!C.length)return;inWorld(g,c);C.forEach((o,i)=>{const col=CANDCOL[o.kind],sel=S.candSel===o.id;c.setLineDash([5*px,3*px]);c.lineWidth=(sel?4:2.5)*px;c.strokeStyle="#121412";if(o.kind==="building"){path(c,o.poly);c.stroke();c.strokeStyle=col;c.lineWidth=(sel?2.6:1.6)*px;c.stroke();c.globalAlpha=sel?.25:.12;c.fillStyle=col;c.fill();c.globalAlpha=1}else{c.beginPath();c.arc(o.x,o.y,o.r,0,7);c.stroke();c.strokeStyle=col;c.lineWidth=(sel?2.6:1.6)*px;c.stroke();c.globalAlpha=sel?.25:.12;c.fillStyle=col;c.fill();c.globalAlpha=1}c.setLineDash([])});
  inScreen(g,c);C.forEach((o,i)=>{const X=o.x*g.k,Y=o.y*g.k;c.beginPath();c.arc(X,Y,10,0,7);c.fillStyle=CANDCOL[o.kind];c.fill();c.strokeStyle="#121412";c.lineWidth=2;c.stroke();c.fillStyle="#121412";c.font="800 11px "+T.font;c.textAlign="center";c.textBaseline="middle";c.fillText(String(i+1),X,Y+.5)});inFixed(g,c)}
-function candRow(p){const C=CANDS[p.id],ph=(PHOTOS[p.id]||{}).overhead;if(!ph)return"";let h='<div class="toolrow candrow"><div class="stack" style="gap:2px;flex:1;min-width:220px"><span class="lbl">Find trees, bushes &amp; buildings</span><span class="small">The app scans your top photo for things that cast shade and highlights them. You decide what\'s real.</span></div><button class="btn sm'+(C?"":" primary")+'" type="button" data-act="cand-run">🔍 '+(C?"Scan again":"Scan my top photo")+"</button></div>";
+function candRowInner(p){const C=CANDS[p.id],ph=(PHOTOS[p.id]||{}).overhead;if(!ph)return"";let h='<div class="toolrow candrow"><div class="stack" style="gap:2px;flex:1;min-width:220px"><span class="lbl">Find trees, bushes &amp; buildings</span><span class="small">The app scans your top photo for things that cast shade and highlights them. You decide what\'s real.</span></div><button class="btn sm'+(C?"":" primary")+'" type="button" data-act="cand-run">🔍 '+(C?"Scan again":"Scan my top photo")+"</button></div>";
  if(C&&C.length)h+='<div class="stack candlist" style="gap:6px">'+C.map((o,i)=>'<div class="li candli'+(S.candSel===o.id?" on":"")+'"><div class="row between" style="align-items:center"><button type="button" class="btn link small" data-act="cand-focus" data-arg="'+o.id+'"><b>#'+(i+1)+" "+CANDW[o.kind]+"</b>"+(o.dim?" (in shadow, may be ground)":"")+" · "+(o.kind==="building"?o.w+" × "+o.d+" ft":"about "+Math.round(o.r*2)+" ft wide")+'</button></div><div class="row" role="group" aria-label="What is #'+(i+1)+'?"><button class="btn sm'+(o.kind==="tree"?" primary":"")+'" type="button" data-act="cand-yes" data-arg="'+o.id+':tree">✓ Tree</button><button class="btn sm'+(o.kind==="bush"?" primary":"")+'" type="button" data-act="cand-yes" data-arg="'+o.id+':bush">✓ Bush</button><button class="btn sm'+(o.kind==="building"?" primary":"")+'" type="button" data-act="cand-yes" data-arg="'+o.id+':building">✓ Building</button><button class="btn sm" type="button" data-act="cand-no" data-arg="'+o.id+'">✗ Not an object</button></div></div>').join("")+'<div class="row"><button class="btn link small" type="button" data-act="cand-clear">Dismiss all</button></div></div>';
  else if(C)h+='<p class="small muted">Nothing new found. Add trees by hand with + Tree.</p>';return h}
+function candRow(p){const C=CANDS[p.id],ph=(PHOTOS[p.id]||{}).overhead;if(!ph)return"";const n=C?C.length:0;return'<div class="card fcard">'+cPanel("found",n?"Identified objects ("+n+")":"Find trees, bushes & buildings",candRowInner(p),false,n?"Possible trees, bushes and buildings on your top photo. Open to review.":"Scan your top photo for things that cast shade.")+"</div>"}
 function candConfirm(p,id,kind){const C=CANDS[p.id]||[],o=C.find(x=>x.id===id);if(!o)return;pushUndo();let ob;
  if(kind==="building"){const w=o.w||Math.max(10,o.r*1.6),d=o.d||Math.max(10,o.r*1.6);ob={id:nid("o"),type:"neighbor",name:"Building",x:o.x,y:o.y,w,d,h:null,rot:o.rot!=null?o.rot:(p.rot||0)}}
  else{const r=o.r||Math.max(2,Math.min(o.w||8,o.d||8)/2);ob={id:nid("o"),type:"tree",name:kind==="bush"?"Bush":"Tree",x:o.x,y:o.y,r,h:null,matureH:null,matureR:r,rate:0,canopy:kind==="bush"?"dense":"medium",found:true}}
