@@ -47,6 +47,15 @@ There are two fictional demo yards: a Southeast DC rowhouse and a Milwaukee dupl
 - **House photos:** a "Sun and shade on your photos" slider in My Garden lights up the front, back and side photos for any time of day (direct sun, shade, or sun behind that side), linked to the map's time slider. It's modeled from the sun's position and which way each side faces; tree and neighbor shadows show on the map.
 - The house outline is see-through over a top photo, so your real roof shows.
 
+## My Garden
+
+- **Views:** picture tiles above the map switch between Sun & shade now, Sun hours, Water and Soil zones.
+- **Live compass:** tap the compass on the map to make it follow your phone (its N needle points to real north). It only reads the phone's orientation after you turn it on, and stops when you turn it off or leave the map.
+- **House & yard photos** stay hidden until you tap "Open house photos" in the At a glance panel.
+- **Beds & plants:** add a bed or container (raised, in-ground or pot) with its size; the app places it in the sunniest, part-sun or shadiest open spot, and you can drag it on the map. Add plants to any bed by typing them (with a count) or tap "Search the library".
+- **Plant library** is its own tab: browse natives and edibles, search by name, filter by light, soil and type, and add plants to a bed. Pick a bed under "Adding to" to see how well each plant fits it.
+- The dashboard's extra cards are a "Show more cards" checkbox under Customize (the Starter/Advanced buttons are gone).
+
 ## Accounts (prototype)
 
 - **Create an account:** username, email *or* phone number (only if you want your garden saved), date of birth, and city or ZIP code. Then verify with a 6-digit code and go straight into building your space; the city carries over into setup.
