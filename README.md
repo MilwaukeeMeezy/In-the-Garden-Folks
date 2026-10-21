@@ -1,176 +1,170 @@
 # In the Garden, Folks!
 
-**Grow where you live.** A privacy-first garden app prototype for urban and suburban home growers, balcony and container gardeners, and community plot members.
+**Grow where you live.** A privacy-first garden planner for city and suburban home growers, balcony and container gardeners, community plot members, and garden consultants.
 
-Know your space. Grow what works. Share what you grow. Stay connected to your local growing community.
+Know your space. Grow what works. Share what you grow.
 
 ## Try it
 
-Open `index.html` in any modern browser. It's one file with no build step. It makes no outside requests unless the visitor presses a live weather or frost button (see Privacy).
+Open `index.html` in any modern browser. It's one file with no build step and no outside libraries. When the page opens, it loads nothing from other sites. It contacts an outside service only when you press a button that needs one (see [Privacy](#privacy)).
 
-To publish with GitHub Pages: **Settings → Pages → Deploy from a branch → `main` / (root)**.
+Press **Explore demo** to try a fictional sample yard without setting anything up. There are two demo yards: a Southeast DC rowhouse and a Milwaukee duplex with an alley garage (open it directly with `index.html#demo-mke`). Demo weather, pest sightings and the sample crop circle are labeled as examples.
 
-## What's in it
+New to gardening? Tap any word with a dotted underline to see what it means, or press **? Help** for the full list of garden words.
+
+## What works today
 
 | Area | Status |
 |---|---|
-| Home dashboard: space banner, quick actions, topic tabs, and sections for Today, My spaces, Garden health, Upcoming tasks, Around you and From the folks (reorder or hide sections; Advanced adds More cards) | Working |
-| My Garden map with an At a glance panel (overview, weather, sun and shade, soil, water, plants, tasks, notes) | Working |
-| Search across plants, beds, tasks, notes and app sections, plus a 7-step guided tour | Working |
-| House & yard photos: top (drone, satellite screenshot or upstairs window), front, back, both sides and up to 24 more; line the top view up under the map; jump the map to the time a photo was taken to compare shadows; optionally keep photos in your profile on this device. Turn and size buttons for the top photo, "Line it up for me" (tap two front roof corners to size, turn and place the photo automatically), and a quick-turn button for sideways photos | Working |
-| Map toolbar right under the map: house orientation in words (updates with every turn, also shown on the map), house turn buttons, top-photo size/turn/move buttons, Move & resize by hand (drag, two-finger pinch to resize and turn, scroll wheel), zoom and pan | Working |
-| My Garden: map editor, sun and shade by date and time, sun-hour heat map, soil records, rain and downspout planning, plant matching, calendar, journal, budget | Working |
-| Seasonal pest outlook | Working |
-| Live 7-day forecast, frost dates and approximate zone from [Open-Meteo](https://open-meteo.com/), fetched only on request | Prototype |
-| Daily light integral (DLI) per bed: clear-day estimate from the shade model, this week's and monthly values with real cloud cover, and light-meter readings (DLI, PPFD or lux) logged as Measured | Working (live parts on request) |
-| Light probe: drag a pin anywhere on the yard map to see that spot's sun hours, clear-day DLI, this week's DLI and typical DLI by month from 10 years of recorded sunlight | Working (history on request) |
-| Light sensors: place a sensor on the map and load its CSV log (PPFD, lux, W/m² or daily DLI); daily totals are kept as Measured and used to correct probe readings within 15 ft | Working |
-| Privacy controls and accessibility settings | Working |
-| Explore: community posts and Garden Globe | Prototype (this device only) |
-| Trade: harvest swaps and community crop circles | Prototype (this device only) |
-| Garden Mood background sounds (generated in the browser) | Prototype |
-| Accounts, shared feed and moderation, verified policy and water alerts, garden assistant, notifications | Planned |
+| Garden setup: home type, places you grow, city or ZIP code, photos, which way the home faces, measuring the house and lot (including splitting a townhome row) | Working |
+| My Garden map: sun and shade at any date and time, sun hours, water, soil zones, tree line by direction | Working |
+| At a glance panel with a section for each topic, which you can reorder or move under the map | Working |
+| 3D garden: the yard in 3D with sun and shadows; drag things to move them; watch plants grow through the season | Working |
+| Beds, containers, plants and the plant library (natives and edibles, filtered by light and soil) | Working |
+| Care & watering: water needed per bed this week, a monthly care plan, plant check-ins, harvest log, rough plant prices | Working |
+| Safety & wildlife (811, landlord or HOA, lead, toxic and invasive plants, animals), site conditions, and your situation (mobility, budget, community or school garden, rooftop, indoor, climate) | Working |
+| Soil records, water and rain planning, rain gauge log | Working |
+| Light: sun hours (clear day), daily light (DLI) with real weather, light probe, meter readings, sensor logs, model check | Working |
+| Needed improvements and site reports, with client consent, labor estimate, invoice, a downloadable report file and an email summary | Working |
+| Saved site reports on this device, backup and spreadsheet export, report summaries | Working |
+| Plain-language help, beginner tips and a Sources page | Working |
+| Calendar, journal, budget, receipts, and calendar reminders (.ics file) | Working |
+| Seasonal pest outlook and links to official alert sources | Working |
+| Live 7-day forecast, frost dates with their usual range, and estimated zone (only when you press a button) | Working |
+| Works offline after the first visit (published site) | Working |
+| Ask about your garden (answers from your own map and the app's guides; no AI service) | Prototype |
+| Español (menus, section names, tips and key steps) | Prototype |
+| Finding trees, bushes and buildings in your top photo | Prototype: results need your review |
+| Consultant report sync (encrypted) | Prototype: use "Test the sync service" under Saved reports to check the live connection |
+| Accounts | Prototype: stored only on the device where they were made; sign-in codes are shown on screen, not sent |
+| Explore (community posts, Garden Globe, share cards) and Trade (swaps, crop circles) | Prototype: stays on this device |
+| Pest sighting reports | Prototype |
+| Garden Mood sounds (made in the browser) | Prototype |
+| Shared community feed with moderation, verified water and local-rules alerts, phone push notifications | Planned: needs a server and an editorial process |
 
-There are two fictional demo yards: a Southeast DC rowhouse and a Milwaukee duplex on a narrow lot with an alley garage. Open the Milwaukee one directly with `index.html#demo-mke`. The demo yards are fictional. Demo weather, pest sightings and the sample crop circle are labeled as examples. There are no invented posts, offers or alerts.
+## Main parts of the app
+
+**Home.** A dashboard for your space: quick actions, weather, today's tasks and tips. Sections can be reordered or hidden.
+
+**My Garden** has four tabs:
+- **Map, sun & water.** A top-down map of your yard. Views: Normal, Sun & shade now, Sun hours, Water and Soil zones. Map types: 2D map, Lot map, Photos and 3D view. A time slider shows sun and shade at any hour and date.
+- **Beds & plants.** Add beds and containers (raised, in-ground or pot) and plants with quantities. Everything you add shows on the 2D map, in 3D and on matched photos.
+- **3D garden.** The house, fences, trees, beds and balconies in 3D at their real heights and floors. Drag plants, trees, beds and other objects to move them.
+- **Calendar & journal.** Tasks from your frost dates, journal entries, budget and receipts.
+
+**At a glance** (beside the map) has a section for each topic: Measure objects, Overview, Ask about your garden, Outlines, Where you're growing, Weather, Sun & shade, Soil health, Water flow & drainage, Plants in your garden, House photos, Identified objects, Care & watering, Safety & wildlife, Site conditions, Your situation, Needed improvements, Site report and Garden notes. Move any section up or down, or send it under the map.
+
+**Plant library.** Natives and edibles for your region. Search, filter by light, soil and type, and add plants to a bed or straight onto the map.
+
+**Explore, Trade and Alerts.** Community posts, a Garden Globe, neighbor swaps and crop circles are prototypes that stay on your device. "Make a share card" saves a picture of your map and plants (never your address) with a suggested image description, to post wherever you like. Alerts links to official sources (U.S. Drought Monitor, USDA APHIS, your extension service, invasive species lists); the app doesn't publish its own alerts yet.
+
+**Profile.** Privacy choices, accessibility and display settings, Garden Mood, copy or delete your data.
 
 ## Setting up a garden
 
-1. **Your space:** name it and pick every place you grow: front yard, back yard, left side yard, right side yard, greenhouse, patio, containers, community plot, row house yard, indoor (by a window), indoor (in a sun room).
-2. **Location:** the city from sign-up is filled in. Optionally type the street address: the app finds the building on OpenStreetMap, works out which way the front faces, and estimates house and yard size from nearby buildings. Then choose a top-of-house picture: satellite imagery (Esri World Imagery, opt-in), your own pictures, or none.
-3. **Photos:** a compass dial shows the top view, which way the home faces, and today's sun path with sunrise and sunset. Turn your own top photo until north is up, turn the house, or use the phone compass. Add front, back and side photos (each can be turned).
-4. **Size:** measure from the top photo by tapping the yard corners (satellite pictures have a known scale; your own photos use the house width as a ruler), or type your own measurements. Spaces without a yard (patio, containers, indoor) get growing-space fields instead.
-5. **Review**, then the dashboard. The same orientation dial and a "Sunlight tells a story" card (modeled direct-sun hours for each side of the home) appear in My Garden.
+1. **Your space.** Pick your type of home (detached house, townhouse end or middle unit, or apartment or condo), how many floors, whether you have a deck, balcony or patio, and every place you grow: front, back or side yards, row house yard, in-ground garden, greenhouse, patio, balcony, containers, community plot or indoors.
+2. **Location.** Type your city or ZIP code, or pick a listed city. You can also type your street address to find your house on OpenStreetMap; the address is never saved.
+3. **Photos and direction.** Add a top view (drone, upstairs window, a map screenshot, or an optional satellite picture) and front, back and side photos. Set which way your home faces with the dial, the phone's compass, the number from your phone's Compass app, or by checking against the sun. Lock it when it's right.
+4. **Measure.** The easiest way is a screenshot of Google Maps or Apple Maps: the app reads the scale bar, traces your house and lets you tap the lot corners. Or tap corners on your top photo, or type sizes. Apartments and townhomes outline their own home on the building. Maps usually draw a row of townhomes as one building, so "Split the row" divides it into homes and you tap yours.
+5. **Review**, then your garden opens.
 
-## Live sun and shade
+## Measuring and accuracy
 
-- **Dashboard map:** shows the sun and shade for the current hour at the garden's location and refreshes on the hour, like a clock. A label shows the time and where the sun is; at night it shows when the sun rises.
-- **House photos:** a "Sun and shade on your photos" slider in My Garden lights up the front, back and side photos for any time of day (direct sun, shade, or sun behind that side), linked to the map's time slider. It's modeled from the sun's position and which way each side faces; tree and neighbor shadows show on the map.
-- The house outline is see-through over a top photo, so your real roof shows.
+- **Heights** of trees and buildings come from a tilt reading, a shadow, or a comparison in a photo. "Fill in quick guesses" estimates the rest from size or floors, labeled as guesses until measured.
+- **Clear day vs real weather:** sun hours are labeled "Clear day". Numbers that use recorded or forecast sunshine are labeled "Real weather".
+- **Model check:** mark sunny and shady spots in the Sun & shade view; the app shows how often the map agrees.
+- **Sun hours** are modeled for a clear day from the sun's position and the objects on your map. Real weather, objects you haven't added and wrong heights all change the real amount. Tapping a spot shows what is shading it, and "Fix it with my shadow" helps line the model up with your yard.
+- **Frost dates and zones:** after you press a live weather or frost button, frost dates are the middle of the last 10 years of weather records, with the range seen in most years. Before that, they are a rough guess from latitude that can be off by 2 to 3 weeks. The zone is an estimate; the USDA map is the official reference.
+- **Rounding:** numbers are shown only as precisely as they are known. Sun hours are rounded to the nearest half hour, modeled daily light to whole numbers, water amounts to two significant figures, and measured heights say "give or take" about 10%.
+- **The compass** on phones and tablets can be off by a lot near metal, cars or electronics. The app gives one set of steps everywhere: stand in your front doorway, hold the phone flat with its top edge pointing at the street, wait for a steady reading, then set and lock your front. If the reading looks wrong, check it with the sun or type the number from your phone's Compass app (held the same way, with True north on).
 
-## My Garden
+## Site reports for consultants
 
-- **Views:** picture tiles above the map switch between Sun & shade now, Sun hours, Water and Soil zones.
-- **Live compass:** tap the compass on the map to make it follow your phone (its N needle points to real north). It only reads the phone's orientation after you turn it on, and stops when you turn it off or leave the map.
-- **Growing areas & adjustable outlines:** every place picked on "Where are you growing?" gets its own measured area (sizes set in setup step 4). Each shows as a thin colored outline with its name and size on the top photo, with an Outlines on/off switch. Pick the house, the whole yard or any area under the map, then drag it to move or drag its corner squares to resize; the size updates as you drag. Add more areas any time.
-- **Measurements carry over exactly:** after "Measure me", the top photo, lot, house (where you tapped it, even off-center) and every area are placed in My Garden exactly as measured. The ruler can be the front of your house or the scale bar on a map screenshot (in meters, as Google Earth and Google Maps show it, or feet).
-- **Shade check:** in the Sun & shade view, mark spots that are shady or sunny right now. The app compares them with the map. If the sun is low and still hidden behind the trees and houses around you, one tap sets your **tree line** (the angle the sun must clear; adjustable with a slider). Otherwise it can add an estimated tree in the direction of the sun, tall enough to cast that shade, for you to move or adjust.
-- **Measure a height:** select a tree (or the house, a neighbor's house, a fence or shed) and press "📐 Measure its height". **Tilt:** set your distance (type it, count steps, or tap where you stand on the map), hold the phone screen-up and sight along its top edge to the top, lock the angle; height = distance × tan(angle) + eye height. **Shadow:** measure the shadow (tape or tap its tip on the map); height = shadow × tan(sun angle right now). The result is saved as Measured and the shade updates. The tilt reading uses the motion sensor only after you start it.
-- **Find trees, bushes & buildings:** after a top photo is added (in setup or under House photos), the app scans it on the device and highlights each possible tree (green), bush (teal) and building (orange) with a numbered dashed outline. Under the map, each one has ✓ Tree, ✓ Bush, ✓ Building and ✗ Not an object. Confirming adds it to the map at the size seen in the photo and opens "Measure its height", so its shade counts once the height is set. "Scan again" reruns it. It uses color and texture (no AI service, nothing uploaded). It evens out the blue tint common in 3D map screenshots (Google Earth and similar), finds dark canopy in shadow (marked "in shadow, may be ground"), and joins roof halves split by a ridge line. Works best on clear, overhead photos taken in summer; ground-level photos aren't scanned. Gray or solar-panel roofs can be missed — add those with + Neighbor's house.
-- **Dappled shade & neighbors:** trees have a "Leaves let through" setting (dense, medium, light), so light-leafed trees cast filtered shade that counts as partial sun in the sun hours. The shade check has a "⛅ Dappled here now" mark, and its fix adds a light-canopy tree when you mark dappled spots. "+ Neighbor's house" adds a neighbor's building with a height so its shadow counts.
-- **Rearrange the dashboard:** drag any section by its ⠿ handle (mouse or finger), or focus the handle and use the up/down arrow keys.
-- **Sun hours view:** a continuous color scale (dark green under 2 h → light yellow ≈3 h → bright yellow ≈6 h → golden orange 10+ h) with a legend right under the map that also shows the most sun possible that day. Drag the sun or the time slider to overlay where shade falls at that moment.
-- **Water drawing:** draw a line where water runs (bright arrows show the direction of flow) or a shape where water sits (arrows point to where it collects). Pick bright arrow colors, add notes, delete.
-- **Rain gauge log:** place your rain gauge on the map, log readings in inches after each rain, and see the last 7 days, 30 days and year, a 30-day bar chart and the gallons that ran off your roof.
-- **House and lot maps:** the map-screenshot size step has **1. House measurement** (a close-up map; tap your house and the app traces it) and **2. Lot measurement** (zoomed out). Each shows only its map with ↶ Undo, ↷ Redo and ✕ Clear all lines. On the lot map, a "Measure:" row picks what you tap: House, Lot, then each place you grow (front yard, back yard…), each with a ✓ when done. **3. Line up your top photo** follows if you added a photo. On the right, **Your measurements** holds the scale bars (found automatically, length and meters/feet, or tap it yourself) and every number: lot, house, setback and each place.
-- **Places you grow on the lot map:** once the lot is measured, the Lot measurement section lists every place picked in step 1 (front yard, back yard, side yards, greenhouse…). Press 📏 Measure on one and tap its corners on the lot map; it shows in its color with its size and area, and carries onto the top photo and into My Garden. The cards in the measurements column have the same "Measure on the map" button.
-- **Your top photo (section 3):** after lining the photo up (two taps on the house's front corners), the lot (white dashed), house (orange) and every place you grow are drawn on the photo. Drag any corner of a place to adjust it where you can see the real beds, or pick a place under "Measure on the photo" and tap its corners. Changes show on the lot map, in Your measurements and in My Garden, with Undo, Redo and Clear all lines.
-- **Show on map:** a row of switches right under the My Garden map turns each kind of outline on or off: lot line, house outline, growing places, trees, water marks and found objects, plus All on / All off. Hidden things still count in the sun and shade.
-- **Plot water:** in the Water view, "Water you've seen" lists kinds of water to plot. Tap a spot: puddle, downspout, soggy spot, drain or sump. Drag a line: runoff, stream (arrows show the flow), erosion or washout. Drag around a shape: pooling, flooding. Each kind has its own color and label on the map; you can add several in a row, change colors, add notes and delete.
-- **Rearrange My Garden:** every panel on the My Garden page has a ⠿ tab. Drag it (or focus it and use the up/down arrow keys) to reorder: At a glance, Selected item, Time of day and the view's details on the right; map tools, Look ahead and Map in words under the map. The layout is remembered (on this device when saving is on); "Reset layout" restores the default.
-- **Measure a height, fixed and improved:** the tilt reading now works whichever way the phone or iPad is held (portrait or sideways), with two ways to aim: along the top edge, or pointing the back of the phone like a camera (the camera is never opened). It shows a live height while you aim and warns when you stand too close. New third method, **Compare in a photo**: pick a photo from a folder, tap the bottom and top of the tree, then the bottom and top of something with a known height (your house, a two-story wall, a door, a person or anything you type).
-- **Measuring tools:** every measuring step (map screenshot, roof and lot on the photo, each growing place) has the same tool bar right above the picture: the current instruction, ↶ Undo last tap, ✕ Clear all lines, Done and Stop. On the map screenshot, the steps are a numbered list (1 Scale bar, 2 Your house, 3 Your lot, 4 Line up your top photo) with a status and a Redo button each; results show in one "Your measurements" box at the end, with a warning if the lot corners look wrong.
-- **Map screenshot (easiest, no tape measure):** setup step 4 starts with "Use a map screenshot". Add a screenshot of the plain 2D map view (Google Maps or Apple Maps) zoomed in on the house. The app finds the scale bar on its own (or you tap its two ends) and you pick its length in meters or feet. Tap inside your house and the app traces its outline, notches included. Then tap the lot corners along the property lines. Lot size, true area, house size and shape, and setback are all measured from the scale bar. If you have a satellite or drone top photo, tap the two front corners of the house on it, and the photo is scaled, turned and lined up with the map (two-point match). With no photo, the map is used as the top view. The screenshot is read on the device and isn't kept after setup.
-- **Roof outline = official house size:** measuring the lot goes ruler → every corner of the roof → every corner of the lot. When the ruler is the front of the house, those two taps are also the first two roof corners. The roof outline sets the house width, depth, position, angle and setback; an L-shaped or stepped roof (garage, porch, addition) is kept as its real outline on the map, and its shadow follows that shape.
-- **Measure me:** setup step 4 lists the lot (with the house) and every place you picked, each with one "📏 Measure me" button. Tap each corner around the edge on your top photo; any shape works (square, narrow, curved, L-shaped). Tap point 1 again or press Done to finish. The app works out width, depth, true area (shoelace formula) and setback, and decides by itself whether the shape is a rectangle (resizable by corners in My Garden) or irregular (draggable points).
-- **Receipts & spending:** in Calendar & journal → Spending & receipts, add a photo or screenshot of a receipt, tap (or drag a box over) each garden item and enter its price, or press "Read the receipt for me" to find the priced lines and check the ones to keep. Items are categorized, totals add up against the receipt total and tax, and spending is tracked by category for the year. Reading runs on the device (Tesseract.js downloads once from jsDelivr); receipts are stored only on the device when saving is on.
-- **Plot each place you grow:** in setup step 4, after measuring the lot and house on the top photo, tap the four corners of each place you picked (front yard, back yard, patio…). Each gets its own measurement and its outline appears in that exact spot in My Garden.
-- **Line up your photo on the dial:** in the Photos step, under "Turn the house", step 3 lets you drag the top photo on the dial, pinch or scroll to resize it, or use the − / + and arrow buttons, until your roof matches the see-through house (dashed outline, drawn at your house's proportions). If you don't measure on the photo later, this line-up also places the photo under the house in My Garden.
-- **Orientation step layout:** the dial sits beside the turn buttons and compass (on phones it stays pinned at the top while you scroll the controls).
-- **Compass snapshot:** turn on the live compass (on the map, or under the orientation dial in setup), stand in your front doorway facing the street, and tap "📸 Set my front to this". The exact reading becomes your front direction (corrected to true north).
-- **Front door wrong?** A house outline looks the same with its front on either side, so under the turn buttons you can pick which way the front door really faces (the outline stays where it is), tap your front door on the map, or use the live compass while standing in the doorway. The same choice is in setup.
-- **House & yard photos** stay hidden until you tap "Open house photos" in the At a glance panel.
-- **Beds & plants:** add a bed or container (raised, in-ground or pot) with its size; the app places it in the sunniest, part-sun or shadiest open spot, and you can drag it on the map. Add plants to any bed by typing them (with a count) or tap "Search the library".
-- **Plant library** has its own spot in the main menu (under My Garden; "Plants" on phones): browse natives and edibles, search by name, filter by light, soil and type, and add plants to a bed. Pick a bed under "Adding to" to see how well each plant fits it.
-- The dashboard's extra cards are a "Show more cards" checkbox under Customize (the Starter/Advanced buttons are gone).
+Fill in who it's for and who prepared it (an optional site address is printed but never saved), then **Make the report**. It includes a summary, site facts, the map, sun by bed, soil, water, trees and plants, prioritized findings, a seasonal plan, materials with rough costs, the garden words used and the methods.
 
-## Accounts (prototype)
+Record the client's consent (how and when) and your hourly rate; the report then includes the consent line and a labor estimate, and "Make an invoice" opens an editable, printable invoice. From an open report, "Download file for the client" saves a standalone page that opens in any browser, and "Email summary" opens your email app with the top recommendations.
 
-- **Create an account:** username, email *or* phone number (only if you want your garden saved), date of birth, and city or ZIP code. Then verify with a 6-digit code and go straight into building your space; the city carries over into setup.
-- **Sign in** with your email or phone number and a one-time code. No passwords.
-- **Under 13:** account creation is blocked (COPPA). The date of birth is checked once and is not stored.
-- **Just trying it:** choose "No thanks" and nothing is saved when you leave.
-- **Prototype limit:** no email or text is actually sent. The code is shown on screen, and the account is stored only on the device where it was made. Going live needs a sign-in service (for example Firebase Authentication, Supabase Auth or Auth0) plus an email/SMS sender; text messages cost a small amount per code. Only the verify step needs to change.
+Each report is saved on this device when saving is on. Reopen, print or delete it, export a backup or a spreadsheet, and see summaries (reports by month, common findings, ZIP codes, cities, typical costs). Consultants can sign in to sync reports across devices. Each report is encrypted on the device before upload; the sync service can't read it. A recovery key is shown once at sign-up.
 
 ## Privacy
 
-- Account details (username, email or phone, city) are used only to run your account; email/phone only for sign-in codes, never marketing. Date of birth is not kept.
+The full policy is in the app (Privacy policy, in the footer). In short:
 
-- On the first visit, a privacy pop-up asks the visitor to allow or reject saving their garden on the device. Allow and Reject look the same, and nothing optional runs before a choice. Only the choice itself is remembered, so the pop-up doesn't keep returning. Privacy choices lists exactly what each option stores and can be changed any time.
-- No analytics, ad pixels, outside fonts or third-party scripts.
-- The only outside connection is Open-Meteo, and only when the visitor presses a live weather or frost button. It receives the city's location rounded to about 7 miles (and, like any website, the visitor's IP address), nothing about the person or their garden. Results aren't saved.
-- Never asks for camera, microphone, photo library or device location. Location is a city or ZIP code the person types (looked up with Open-Meteo's free place search only when they press Find) or a listed city, used only for plant-related information. No latitude or longitude to enter.
-- Setup works out which way the front of the house faces: with the phone's compass (only after the person presses Start compass; corrected to true north; readings never leave the device), or by tapping the roof and front door on a satellite screenshot. A third option, "Use my address", finds the house outline and the street in front of it on OpenStreetMap (via Nominatim and the Overpass API), works out the facing direction, offers a choice of streets on corner lots and can estimate the house size. The address is sent only when the person presses Find and is never saved. Turn buttons (5°, 15° and 90°) fine-tune the direction in setup and later on My Garden, turning the house and everything on the map together. Setting it by hand is still there as a fallback.
-- Nominatim and the public Overpass servers are free but meant for light use. A public launch with many users needs a paid or self-hosted geocoder and map data service.
-- Photos are chosen from a folder, and location data inside them is removed. House photos are kept only if the person turns on saving and chooses "Keep my house photos in my profile"; they stay in that browser and are never uploaded. Posts are private by default.
-- The app never loads satellite maps itself; people add a satellite screenshot or drone photo as a file, so no address is sent anywhere.
+- No cookies, ads, analytics, tracking, outside fonts or outside scripts at page load.
+- Nothing is saved until you choose. If you turn on saving, your garden is kept in this browser only. Turning saving off deletes everything the site stored there.
+- Street addresses are never saved, not even in reports. The app never asks for an apartment or unit number.
+- Never asks for camera, microphone, photo library, contacts, notifications or device location. The compass is used only after you press a button.
+- Photos are picked one file at a time from a folder. Hidden location data is removed from photos.
+- Report files, invoices, share cards and calendar files are made on your device. "Ask about your garden" answers on your device; nothing you type is sent.
+- On the published site, the browser keeps an offline copy of the app's own files (no garden data).
+
+Outside services are contacted only when you use a feature that needs them. Each also sees your IP address, like any website.
+
+| Service | When | What it gets |
+|---|---|---|
+| Open-Meteo place search | You press Find in setup | The city or ZIP code you typed |
+| Open-Meteo weather and climate | You press a live weather or frost button | Your city's location, rounded to about 7 miles |
+| OpenStreetMap (Nominatim and Overpass) | You choose "Use my address" | The address you typed, then your home's map position to find building outlines and the street |
+| Esri World Imagery | You choose a satellite top view | The map squares around your home (about a city block) |
+| jsDelivr | First time you press "Read the receipt for me" | A download request for the text-reading tool |
+| Supabase | You sign in to sync reports | Your email, a sign-in code made from your passphrase, encrypted reports, and when each changed |
 
 ## Accessibility
 
-- Required descriptions for photos; descriptions or transcripts and optional caption files for video. Videos never autoplay and start muted.
-- Text size, higher contrast, reduced motion and low-data settings.
-- Text versions of maps and the globe, and keyboard-operable controls. Target: WCAG 2.2 AA.
+- Text size, higher contrast, reduced motion, low-data mode and captions settings.
+- Required descriptions for photos; transcripts or caption files for video. Videos never autoplay and start muted.
+- Text versions of maps and the globe; keyboard-operable controls; plain-language explanations of garden words.
+- Spanish (beta) for menus, section names, tips and key steps.
+- Share cards come with a suggested image description to paste as alt text.
+- Target: WCAG 2.2 AA.
+
+## Data sources and methods
+
+- **Sun position:** NOAA solar calculation.
+- **Weather and frost:** [Open-Meteo](https://open-meteo.com/) (CC BY 4.0). Frost dates are the median last and first 32°F days over the past 10 years; the zone is estimated from the average yearly lowest temperature.
+- **Daily light (DLI):** clear-sky sunlight from the Haurwitz model, split into direct and sky light, converted at about 2.1 µmol per joule. Lux readings use 1,000 lux ≈ 18.5 µmol/m²/s. Sensor logs are read in the browser; days covering less than 80% of daylight are kept but left out of averages.
+- **Maps:** building outlines and streets from OpenStreetMap contributors (ODbL).
+- **Satellite imagery:** Esri World Imagery (Imagery © Esri, Maxar, Earthstar Geographics), only when you choose it.
+- **Receipt reading:** Tesseract.js, downloaded from jsDelivr the first time you use it.
+- **Rules of thumb** (full sun, watering, mulch, planting times, rain gardens, DLI) come from state extension services; the in-app Sources page links each one.
+- **Plant prices, labor hours and fence heights** are rough planning figures, labeled as such.
+
+## Known limits before a public launch
+
+- Open-Meteo's free API is for non-commercial use; a commercial launch needs a subscription or another provider.
+- Nominatim and the public Overpass servers are meant for light use; many users need a paid or self-hosted service.
+- Esri imagery at scale needs an ArcGIS Location Platform account (or a public-domain source like USGS NAIP).
+- Accounts need a real sign-in service and an email or text sender.
+- Report sync needs testing against the live Supabase project: sign in, then run "Test the sync service" under Saved reports.
+- A shared community feed, verified alerts and push notifications need a server, moderation and an editorial process. Today the app links to official sources, saves reminders to your own calendar, and makes share cards you post yourself.
+- Spanish covers the main menus and tips; detailed text is still English.
+- The garden assistant matches common questions with your data; it is not an AI chatbot.
+- Privacy and accessibility requirements need legal review for each place it launches.
+
+## For developers
+
+- Everything is in `index.html`: HTML, CSS and vanilla JavaScript, with no build step and no third-party libraries (3D uses plain WebGL).
+- Publish with GitHub Pages: **Settings → Pages → Deploy from a branch → `main` / (root)**. Upload `sw.js`, `manifest.webmanifest` and `icon.svg` next to `index.html` for offline use.
+- Report sync uses Supabase's REST API with the project's publishable key. The table it expects:
+
+  ```sql
+  create table public.reports (
+    id text primary key,
+    owner uuid not null default auth.uid(),
+    updated_at timestamptz not null default now(),
+    blob text not null
+  );
+  alter table public.reports enable row level security;
+  create policy "own reports" on public.reports
+    for all using (owner = auth.uid()) with check (owner = auth.uid());
+  ```
+
+  Never put the service_role key in the page.
 
 ## Fonts
 
-The welcome page embeds trimmed copies of three open fonts, so nothing loads from an outside font service:
-Big Shoulders (headlines), Instrument Sans (body text) and JetBrains Mono (labels and measurements).
-All three are released under the SIL Open Font License 1.1 (https://openfontlicense.org).
+The page embeds trimmed copies of Big Shoulders (headlines), Instrument Sans (body text) and JetBrains Mono (labels and measurements), all under the SIL Open Font License 1.1.
 
-## Data sources
+## Changelog
 
-- **Satellite imagery:** Esri World Imagery tiles (Imagery © Esri, Maxar, Earthstar Geographics), loaded only when the user opts in during setup. Fine for a prototype; a public launch at scale needs an ArcGIS Location Platform account (or a public-domain source such as USGS NAIP for U.S. addresses).
-
-- Weather forecasts and frost estimates: [Open-Meteo.com](https://open-meteo.com/), licensed CC BY 4.0. The free API is for non-commercial use; a commercial launch needs an Open-Meteo subscription or another provider.
-- Frost dates are the median last and first 32°F days from the past 10 years of daily lows; the zone is estimated from the average yearly lowest temperature. Both are estimates; the official USDA map is the reference for zones.
-- Sun position: NOAA solar calculation.
-- Sensor logs are read in the browser and never uploaded. Readings are integrated into daily DLI; days covering less than 80% of daylight are kept but left out of averages. Solar radiation (W/m²) is converted at 2.1 µmol/m²/s per W/m².
-- Daily light (DLI): clear-sky sunlight from the Haurwitz model, split into direct sun and sky light, with shaded spots keeping part of the sky light. Converted to plant light at about 2.1 µmol per joule; lux readings use 1,000 lux ≈ 18.5 µmol/m²/s (sunlight).
-- Tree and building heights now update on their own as soon as a measurement has a result (no extra button). Every My Garden card (Time of day, Light probe and more) can be hidden or shown, and map tool rows like "Front door wrong?" fold up. Found objects live in their own movable, folded section, and an "Identified objects" item under At a glance opens it. Scans of your top photo run quietly instead of popping up at sign-in.
-- New Normal view with no sun, water or soil layers. Each view shows its own details right under the map: sun and shade for the sun views, water flow for Water, and a button for every bed and growing area in Soil zones. Any section, including At a glance, can be dragged (or moved with the arrow keys) under the map. The Top photo box sits right under the map and folds up.
-- Setup: Live Compass is at the top of the line-up screen, and you can turn the house by dragging a finger around the dial's edge.
-- Balcony is a new growing place. Balcony and window growers answer which floor they're on, which way it faces (or use the live compass), what's above it and whether walls or a solid railing block sun. The app never asks for an apartment number.
-- Apartments: balcony and window growers enter their apartment's size (width and depth, or just the total square feet) instead of a lot. The apartment is drawn at that size, its height comes from the floor it's on, and the balcony or window sits on the side it faces.
-- 3D garden (My Garden → 3D garden): the real yard in 3D, including the house, fences, trees, beds, pots and apartment balconies at their floor height. Drag a date slider or press "Watch it grow" to see plants grow, bloom, fruit and die back with the frost, with sun and shadows for the time of day. Side lists show what's in bloom, what's ready to pick and what to do this month. Pick a plant and tap a bed, pot, balcony or the ground to plant it, or tap a plant to move it, change its planting date or remove it. "Save garden file" exports the layout and plants (no photos, notes or address) to send to a client, who opens it with "Open a garden file". Built with plain WebGL, so nothing loads from other sites. The plant library has "Build my garden in 3D" and "Place in 3D garden" buttons.
-- Apartment lookup: when an apartment grower types their address, their building's outline appears from OpenStreetMap. They tap the side their home is on (no unit number needed). Nearby buildings come in with heights from the map, or guessed, and can be unticked or corrected. In 3D, the balcony sits on the right wall of the real building.
-- Floor plan: upload a floor plan, set the scale from total square feet or one known wall, trace the home, then add each balcony or patio by tapping its corners. Sizes can be adjusted. The app works out which way each one faces, and each becomes its own growing space. The plan image is never saved.
-- Look from my balcony: tilt-and-compass readings (or typed angles) of what blocks the sky in each direction. Measured directions replace the map's guesses in the balcony's sun hours.
-- My Garden page reorganized: Views sit at the top, with the map under them and the Time of day slider to its right. At a glance lists Overview, Outlines, Where you're growing, Weather, Sun & shade, Soil health, Water flow, Plants in your garden, House photos and Garden notes. The add buttons moved out of the top toolbar into those sections: + Bed, Container and Greenhouse under Where you're growing; + Tree under Plants; + Fence, Neighbor's house and Shed, garage or structure (with height boxes) under Outlines; water tools under Water flow; + Light sensor under Sun & shade. The Normal view shows an overview of everything under the map. Sun & shade now shows which beds are in sun at the chosen time, and Sun hours shows the all-day numbers.
-- At a glance tidy-up: House orientation (dial and turn buttons) sits under Overview. Outlines lists the lot and every growing place (front yard, back yard, side yards and more) with Select and width/depth boxes, plus Front door wrong?, the growing-area outline switches, and fences, neighbors' houses and structures. Look ahead moved under Plants in your garden. The Identified objects box shows only when opened from At a glance and has a Close button. Zoom and Undo/Redo moved into the Top photo box under the map.
-- Trees: each tree (added, or confirmed from the photo scan) has "How full is it?" with Bushy, Medium, Airy and Bald options, and "Leaves in winter" with drops leaves or evergreen. These are also quick picks under Plants in your garden. Leaf-dropping trees count as bare branches (about a quarter of the shade) outside the estimated leaf season, worked out from your frost dates, in sun hours, shade maps, balcony sun and the 3D view. Balcony sky readings have a Leafy tree tick for each direction, so a tree blocks sun only while it's in leaf.
-- Measure objects (At a glance) lists every tree, bush, building and fence with its height. Each has a 📐 Measure button that opens the height tool, and items needing a height are outlined in red on the map. Sun views list Trees & bushes under the map with Type (tree or bush), How full is it?, leaves in winter, a Leaf density slider and Measure buttons. Identified objects: the selected one stays bright while the others fade, and its circle can be dragged to move or resized by its edge handles (buildings by their corners). Opening Plants in your garden highlights beds and growing areas on the map with their plants and lists them under the map, along with measured trees and bushes. Map: two fingers pinch to zoom and drag to move. Setup dial: two fingers twist to turn the photo. Units: lengths in inches, feet, yards or meters, and areas in sq ft, sq yd, sq m or acres (Overview and Outlines).
-- Photo lock: "Done, keep the photo here" on the setup dial and under the map, so the photo stays put once it lines up. Tree height tilt has an Automatic mode that works out how the phone is held (screen up or pointing the back), which fixes near-zero readings on an upright iPad, and it warns about very low angles. Identified objects opens right under the map and can be dragged anywhere. "Missed one?" buttons (+ Tree, Bush or Building) add an object by tapping the map, then you drag and size it. A selected tree's canopy can be resized on the map by dragging its white dots.
-- My Garden map has a 2D map / 3D view switch: plot beds in 2D and check them in 3D, with Trees / See-through / No trees. The 3D garden lists every plant with Remove one and Remove all, and you can add a plant bed, rain garden, rock, pebbles or rain barrel by tapping the ground. 3D now shows water marks, pooling, downspouts, the rain gauge, rain barrels, rain gardens, rocks and pebbles. Rain gardens, rocks and pebbles are also new objects on the 2D map (under Where you're growing). The plant library adds Trees, fruit & shrubs (maples, white pine, redbud, serviceberry, apple, peach, fig, hardy banana, blueberry, raspberry, blackberry, elderberry and more), more edibles and herbs (bell and hot peppers, zucchini, cucumber, peas, fennel, rosemary, sage, oregano, dill, cilantro, chives, lavender) and Groundcovers & helpers (clovers, creeping thyme and phlox, wild strawberry, switchgrass, little bluestem, goldenrod, bee balm, anise hyssop, mountain mint, zinnia, comfrey). Benefit filters cover pollinators & butterflies, stopping erosion, groundcover, building soil, rain gardens and birds.
-- Map types above the map: 2D map, Lot map, Photos and 3D view. Lot map puts your setup map screenshot under the yard, lined up automatically, or uses one you add in the new Lot map photo slot. Its photo controls and hand mode adjust the lot map. ✋ Move the map lets you drag around without moving any objects. Plants from the 3D garden show as plant icons on the 2D maps (Show on map → Plants). Photos lets you pick a front, back, side or extra photo and place drawn plants on it: tap to add, drag to move, size with the top handle or slider, and remove. Plants show their season for the chosen date, or full grown. Placements are saved with the garden.
-- Setup line-up fixes: the street side of the lot is now worked out from the way the front door faces, so tapping the lot corners in any order gives the right width and depth. While lining up the top photo, the two house corners to tap are marked 1 and 2 on the lot map. Under the photo, a "Not lining up?" row moves, turns (2° or 90°), resizes or flips the outlines, and two fingers on the photo drag, pinch and twist them.
-- Compass accuracy: "Check it with the sun". Point the phone's top edge at the sun or along your shadow, and the app works out the compass error from the sun's exact position, then corrects every reading on that device. It warns when the phone is held upright and when the compass disagrees with your address map by more than 25°, and gives tips (hold it flat, step away from metal and cars, wave it in a figure 8).
-- Balconies: the side-wall setting now asks which side the wall is on (left or right as you look out), so morning or afternoon sun is counted correctly for corner balconies that are open on one side.
-- Townhouses: pick "Townhouse" (end unit with a neighbor on the left or right, or middle unit) in setup or under Overview, and the attached homes, plus optional privacy fences between back patios, are added to the map so they shade your side yards correctly. Choosing "Row house yard" starts as a middle unit.
-- Identified objects: "Review identified objects" responds right away (it shows "Opening…" and jumps straight to the list without being hidden under the tabs), and the list is in two columns on wider screens.
-- Sun check: tap any spot in Sun & shade or Sun hours to see where the sun is right now, which way shadows point, and exactly what is shading that spot (house, a tree, a neighbor, or the tree-line setting). If it doesn't match your yard, "Fix it with my shadow" turns your map to match: stand in the sun, tap where you stand and where your shadow ends.
-- One garden everywhere: plants added to a bed or container (from Beds & plants or the Plant library) appear on the 2D map, in the 3D garden and on matched photos automatically; removing them anywhere updates the bed list.
-- Match a photo to your map: in Photos, tap where you stood and what you faced, pick the lens (0.5×, 1×, 2×, 3×) and set the horizon line. Guide lines show your house, beds and trees on the photo so you can line them up. Once matched, your real plants show on the photo and plants you add there go into your 2D map and 3D garden.
-- New plants: pear, pawpaw, Raspberry Blast, jalapeño, French marigold and African marigold (blueberry, peach, tomato, parsley, fennel, creeping thyme and strawberries were already in the library).
-- Direction lock: a 🔒 button by the direction dial (setup and Overview). When locked, dragging the dial, the turn buttons and the compass can't change which way your house faces. It locks itself after you use the compass or the shadow fix.
-- Street side: the lot map marks the street edge with a coral "Street" line. If your lot comes out sideways (width and depth swapped), press "Street is on another side" on the lot map or in the "Not lining up?" box; the lot re-measures and the front direction follows.
-- Type of home now includes Apartment or condo. Under Overview (and in setup) you can tick "A deck", "A balcony" and "A patio"; each gets its own outline to drag and measure like a greenhouse. Decks have a height off the ground, balconies a floor.
-- Stories: set how many floors your house, townhouse or apartment building has (and which floor you live on). The 3D view draws the building at that height with a line at each floor, and balconies sit on the right floor.
-- Compass: readings only count when the phone is flat, steady and the compass reports good accuracy; "Set my front" waits until the reading stops wobbling.
-- Compass: fixed iPad/iPhone readings that could come out turned around in landscape, cleared old compass corrections, and added "Type the number from your phone's Compass app" in setup and Overview (sets and locks your front).
-- Apartments and townhomes: setup now needs a map screenshot of the lot. Tap Building to trace the whole building, Lot / grounds for the property, then "Your apartment" or "Your townhome" to outline your own home on the building. Your home's size comes from that outline; the rest of the building is placed around it (attached townhomes on each side, or your apartment building).
-- Mark what's already there: on a photo matched to your map, switch to "Mark what's already there", pick a tree, bush or plant and tap where it meets the ground. Drag its yellow dot to its top for the height and set the width. It appears on the 2D map, in 3D and in the sun and shade. Tick "Plan to remove" and turn on "Show my yard after removals" to preview the yard, sun and shade without it.
-- Plants go straight onto the map: "+ Plant on the map" (Plants in your garden) and "Place on my map" (Plant library) take a plant and a quantity, then a tap on the 2D map. Plants appear in 3D in the same spot; drag them on the 2D map to move them. Adding to a bed from the library also takes a quantity.
-- Duplicate beds (and containers, rain gardens, pebbles, sand, mulch, rocks, barrels and more) from their selection card.
-- Lot size can be changed in Outlines even after it was plotted; an irregular lot outline stretches to the new size.
-- New: In-ground garden as a place you grow; sand; mulch (wood, straw or shredded leaves) as patches on the ground, on top of beds, or as a ring around trees.
-- Needed improvements (At a glance): beds and trees that could use mulch, puddles that could become rain gardens, downspouts without barrels and planned removals, with a rough estimate of water mulch keeps in the soil.
-- At a glance sections can be moved up and down with the ▲ ▼ buttons; the order is remembered.
-- Fixed: plants added to beds sometimes landed in the wrong spot in 3D.
-- Site report (At a glance): fill in Prepared for, Prepared by, an optional site address (never saved) and notes, then "Make the report" for a client-ready site assessment: summary, site facts, map, sun by bed (today and mid-June), soil, water, existing trees and plants, prioritized findings and recommendations, a seasonal action plan from your frost dates, materials with rough cost ranges, and methods and limits. "Print or save as PDF" prints just the report.
-- Lot outline: an irregular lot plotted from your map is now one outline you can select (Outlines → your lot) and reshape by dragging its corner squares, like the front and back yard. Typing a width or depth stretches it. No more second, fixed outline.
-- At a glance: every tab can be moved on its own with ▲ ▼, and the ⤓ button moves a tab under the map (it opens there; ⤒ sends it back). Positions are remembered.
-- Cleaner tabs: Water flow & drainage, Outlines, Measure objects, Where you're growing, Weather (with frost dates), Sun & shade, Soil health, Plants, House photos and Garden notes use section headings, cards and large buttons.
-- Trees, bushes & buildings panel: preview map with colored dots, How it works, Why this matters, a Show filter, thumbnails cut from your photo, where each one sits ("in the front yard, near the street"), Tree/Bush/Building/Not an object buttons, Show more, Missed anything? and Dismiss all.
-- "Show everything" now fits the whole top photo (or lot map), not just the lot.
-- 3D: drag plants, trees, beds, rocks, mulch, barrels, decks and patios to move them; balconies stay on their wall and floor; downspouts slide along the house and bring their rain barrel. Plants dropped on a bed join it. Dragging empty space still turns the view.
-- Setup restyled: numbered progress bar, tile grid with a summary, Growing area card, top-view setup cards, Photos & home orientation with quick tips and North/East/South/West buttons, Measure your house and yard with tips, and a card-style Review.
-- Site reports are saved (on this device) every time you make one: reopen, reprint or delete them, export a backup or a CSV spreadsheet, import a backup, and see analytics (reports by month, common findings, ZIP codes, cities, average lot, sun mix, typical costs). Consultants can sign in to sync reports across devices; each report is encrypted on the device with a key protected by your passphrase before upload (Supabase). Addresses are never saved. A recovery key is shown once at sign-up.
+See [CHANGELOG.md](CHANGELOG.md) for feature notes in the order they were added.

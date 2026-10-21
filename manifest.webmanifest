@@ -1,0 +1,11 @@
+{
+  "name": "In the Garden, Folks!",
+  "short_name": "Garden Folks",
+  "description": "A privacy-first garden planner: sun and shade, soil, water and plants for your own yard.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FAFAF6",
+  "theme_color": "#121412",
+  "icons": [{"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}]
+}
