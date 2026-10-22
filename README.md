@@ -1,12 +1,12 @@
 # In the Garden, Folks!
 
-**Grow where you live.** A privacy-first garden planner for city and suburban home growers, balcony and container gardeners, community plot members, and garden consultants.
+**Grow where you live.** A privacy-first garden planner for city and suburban home growers, balcony and container gardeners, community plot members, and garden consultants, with a focus on regenerative gardening: building healthy, living soil year after year.
 
 Know your space. Grow what works. Share what you grow.
 
 ## Try it
 
-Open `index.html` in any modern browser. It's one file with no build step and no outside libraries. When the page opens, it loads nothing from other sites. It contacts an outside service only when you press a button that needs one (see [Privacy](#privacy)).
+Open `index.html` in any modern browser. It's one file with no build step and no outside libraries. The 3D view also loads small model files from the `models/` folder next to it (browsers only allow that when the page is served from a website, such as GitHub Pages); without them it uses simple shapes. When the page opens, it loads nothing from other sites. It contacts an outside service only when you press a button that needs one (see [Privacy](#privacy)).
 
 Press **Explore demo** to try a fictional sample yard without setting anything up. There are two demo yards: a Southeast DC rowhouse and a Milwaukee duplex with an alley garage (open it directly with `index.html#demo-mke`). Demo weather, pest sightings and the sample crop circle are labeled as examples.
 
@@ -19,13 +19,19 @@ New to gardening? Tap any word with a dotted underline to see what it means, or 
 | Garden setup: home type, places you grow, city or ZIP code, photos, which way the home faces, measuring the house and lot (including splitting a townhome row) | Working |
 | My Garden map: sun and shade at any date and time, sun hours, water, soil zones, tree line by direction | Working |
 | At a glance panel with a section for each topic, which you can reorder or move under the map | Working |
-| 3D garden: the yard in 3D with sun and shadows; drag things to move them; watch plants grow through the season | Working |
+| 3D garden: the yard in 3D with sun and shadows, realistic models (trees, bushes, beds, greenhouse, shed, deck, watering tools), slopes and dips you can exaggerate, touch navigation (drag, pinch, twist, two-finger slide, double-tap); drag things to move them; watch plants grow through the season | Working |
+| Yard conditions: slope arrows, height pins and height lines, dips and low spots, tree stumps, retaining walls, stairs (wood or set into a slope), walkways and driveways, on the 2D map and in 3D; photos from different angles to mark what the satellite map misses | Working |
+| Where water goes: flow lines from your slope, downspouts and hard surfaces (red when they reach the house), likely puddles, suggested routes around the house or to a rain garden, routes you draw, moving-water animation and a rain view | Working (estimates) |
+| Ways to water: rain this week vs. what each bed needs, hose reach, sprinkler coverage, watering cans, rain barrels, PVC lines with straight, tee and corner fittings that connect to a spigot or barrel, with a parts list | Working |
+| Running bamboo and English ivy: mark them as problems; the plan and report include a removal plan | Working |
 | Beds, containers, plants and the plant library (natives and edibles, filtered by light and soil) | Working |
 | Care & watering: water needed per bed this week, a monthly care plan, plant check-ins, harvest log, rough plant prices | Working |
+| Regenerative practices: soil health scorecard (soil cover, less digging, living roots, plant diversity, pollinators, closing the loop, keeping rain on site), practice checklist, cover crop timing from your frost dates; in the care plan and site reports | Working |
 | Safety & wildlife (811, landlord or HOA, lead, toxic and invasive plants, animals), site conditions, and your situation (mobility, budget, community or school garden, rooftop, indoor, climate) | Working |
 | Soil records, water and rain planning, rain gauge log | Working |
 | Light: sun hours (clear day), daily light (DLI) with real weather, light probe, meter readings, sensor logs, model check | Working |
 | Needed improvements and site reports, with client consent, labor estimate, invoice, a downloadable report file and an email summary | Working |
+| Problems & plan: Existing vs Recommended labels, problem pins, Today / With recommendations / Both map views, two report maps, visit comparison, visit timeline and progress since the last visit | Working |
 | Saved site reports on this device, backup and spreadsheet export, report summaries | Working |
 | Plain-language help, beginner tips and a Sources page | Working |
 | Calendar, journal, budget, receipts, and calendar reminders (.ics file) | Working |
@@ -52,7 +58,7 @@ New to gardening? Tap any word with a dotted underline to see what it means, or 
 - **3D garden.** The house, fences, trees, beds and balconies in 3D at their real heights and floors. Drag plants, trees, beds and other objects to move them.
 - **Calendar & journal.** Tasks from your frost dates, journal entries, budget and receipts.
 
-**At a glance** (beside the map) has a section for each topic: Measure objects, Overview, Ask about your garden, Outlines, Where you're growing, Weather, Sun & shade, Soil health, Water flow & drainage, Plants in your garden, House photos, Identified objects, Care & watering, Safety & wildlife, Site conditions, Your situation, Needed improvements, Site report and Garden notes. Move any section up or down, or send it under the map.
+**At a glance** (beside the map) has a section for each topic: Measure objects, Overview, Ask about your garden, Outlines, Where you're growing, Weather, Sun & shade, Soil health, Water flow & drainage, Yard conditions, Ways to water, Plants in your garden, House photos, Identified objects, Care & watering, Regenerative practices, Safety & wildlife, Site conditions, Your situation, Problems & plan, Needed improvements, Site report and Garden notes. Move any section up or down, or send it under the map.
 
 **Plant library.** Natives and edibles for your region. Search, filter by light, soil and type, and add plants to a bed or straight onto the map.
 
@@ -126,8 +132,45 @@ Outside services are contacted only when you use a feature that needs them. Each
 - **Maps:** building outlines and streets from OpenStreetMap contributors (ODbL).
 - **Satellite imagery:** Esri World Imagery (Imagery © Esri, Maxar, Earthstar Geographics), only when you choose it.
 - **Receipt reading:** Tesseract.js, downloaded from jsDelivr the first time you use it.
-- **Rules of thumb** (full sun, watering, mulch, planting times, rain gardens, DLI) come from state extension services; the in-app Sources page links each one.
+- **Rules of thumb** (full sun, watering, mulch, planting times, rain gardens, DLI, cover crops) come from state extension services, and the regenerative scorecard follows the USDA NRCS soil health principles; the in-app Sources page links each one.
 - **Plant prices, labor hours and fence heights** are rough planning figures, labeled as such.
+- **Slope and water flow** are estimates from the slope arrows, height pins and dips you mark (or the slope direction you chose); water lines follow the ground downhill. Slope percent is drop ÷ distance × 100.
+- **Running bamboo and English ivy removal** follows University of Maryland Extension guidance.
+
+### 3D model credits
+
+Free models from [Poly Pizza](https://poly.pizza), simplified to load fast. CC-BY 3.0 models are used under the [Creative Commons Attribution 3.0 license](https://creativecommons.org/licenses/by/3.0/); CC0 models are public domain. The in-app Sources page lists the same credits.
+
+- [Hose (“TIME HOTEL 4.28”) by S. Paul Michael](https://poly.pizza/m/1NHQ2WYCMBX) [CC-BY 3.0]
+- [Water Can by Zoe XR](https://poly.pizza/m/7EfDXOcziyF) [CC-BY 3.0]
+- [Beer Keg (used as a rain barrel) by Jarlan Perez](https://poly.pizza/m/dy4tnEIsHHa) [CC-BY 3.0]
+- [Metal pipe by Poly by Google](https://poly.pizza/m/a4bBMLzmLky) [CC-BY 3.0]
+- [Tree by Marc Solà](https://poly.pizza/m/6Yjt8nIwLsD) [CC-BY 3.0]
+- [Tree by Quaternius](https://poly.pizza/m/qZtx0AHhcy) [CC0]
+- [Trees by Quaternius](https://poly.pizza/m/etFGNvsiFv) [CC0]
+- [Pine by Quaternius](https://poly.pizza/m/79gmlLnweB) [CC0]
+- [Poplar Tree by Poly by Google](https://poly.pizza/m/2y-Cl3E7lMf) [CC-BY 3.0]
+- [Bamboo by Poly by Google](https://poly.pizza/m/auVD_m-ugF0) [CC-BY 3.0]
+- [Banana Tree by Poly by Google](https://poly.pizza/m/d0WJSiuOz6o) [CC-BY 3.0]
+- [Bush by Quaternius](https://poly.pizza/m/ooG6CkLyE8) [CC0]
+- [Bush with Flowers by Quaternius](https://poly.pizza/m/U1ymDy8tbY) [CC0]
+- [Wall by Quaternius](https://poly.pizza/m/CkF171SeTV) [CC0]
+- [Stairs Open by Kenney](https://poly.pizza/m/ZsfbTnXt2g) [CC0]
+- [Stone Walkway by Pixel](https://poly.pizza/m/Im0kSO5tiJ) [CC-BY 3.0]
+- [White Dandelions by Aeres Vistaas](https://poly.pizza/m/2R2ocKyluaP) [CC-BY 3.0]
+- [Clover by Quaternius](https://poly.pizza/m/u5SOgBFiut) [CC0]
+- [Plants - Seedlings by Jakers H](https://poly.pizza/m/0ASWNpT1YEP) [CC-BY 3.0]
+- [Crops by Quaternius](https://poly.pizza/m/Ro6K0Yg7mx) [CC0]
+- [Farm Dirt by Quaternius](https://poly.pizza/m/8BQFbUMOeC) [CC0]
+- [Flower Frame by Hugo Gibson](https://poly.pizza/m/8coLcKGpdOB) [CC-BY 3.0]
+- [grapes by Poly by Google](https://poly.pizza/m/971XbsYmMG3) [CC-BY 3.0]
+- [Pear tree by Poly by Google](https://poly.pizza/m/44lGuM746Zi) [CC-BY 3.0]
+- [Ivy by Jarlan Perez](https://poly.pizza/m/3SiwWmWJ2WW) [CC-BY 3.0]
+- [Greenhouse by J-Toastie](https://poly.pizza/m/exys3emjr1) [CC-BY 3.0]
+- [Cabana (used for decks) by Poly by Google](https://poly.pizza/m/dDw6BXOMJJ8) [CC-BY 3.0]
+- [Raised bed, robomower hideaway by Dan Vinge Madsen](https://poly.pizza/m/aTU8O8XERgM) [CC-BY 3.0]
+- [Storage shed by Quaternius](https://poly.pizza/m/TvXpjtD2nk) [CC0]
+- [railing by g w](https://poly.pizza/m/4APZeLcSRuI) [CC-BY 3.0]
 
 ## Known limits before a public launch
 
@@ -144,7 +187,8 @@ Outside services are contacted only when you use a feature that needs them. Each
 ## For developers
 
 - Everything is in `index.html`: HTML, CSS and vanilla JavaScript, with no build step and no third-party libraries (3D uses plain WebGL).
-- Publish with GitHub Pages: **Settings → Pages → Deploy from a branch → `main` / (root)**. Upload `sw.js`, `manifest.webmanifest` and `icon.svg` next to `index.html` for offline use.
+- Publish with GitHub Pages: **Settings → Pages → Deploy from a branch → `main` / (root)**. Upload `sw.js`, `manifest.webmanifest` and `icon.svg` next to `index.html` for offline use, and the `models/` folder for the 3D models.
+- `models/*.m3d` are the 3D models converted from the original GLB files: flat-colored triangles (texture colors baked in, normal maps dropped, heavy meshes thinned), stored as `M3D1` + vertex and triangle counts + size, then 16-bit positions, 16-bit triangle indices and one RGB color per triangle. The app reads them with its own small WebGL loader; if a file is missing, that item falls back to simple shapes.
 - Report sync uses Supabase's REST API with the project's publishable key. The table it expects:
 
   ```sql
