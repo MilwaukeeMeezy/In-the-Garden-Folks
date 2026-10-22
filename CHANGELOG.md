@@ -111,6 +111,11 @@ Feature notes in the order they were added (oldest first). The README describes 
 - Explore is now the Growing Circle: account holders start or join circles by ZIP code, pick crops to grow together, say what each person grows, and post updates, extras to share and requests. Circle leads and the admin can hide posts and remove members; anyone can report a post; posts with street addresses or phone numbers are blocked.
 - New `supabase-setup.sql` with the tables, row-level security, invite and flag functions, and private storage for receipt and map photos. Privacy policy updated (draft-0.9) to describe garden-service accounts and the Growing Circle.
 - No more passwords: sign in or create an account with a 6-digit code sent by email (or by text once a texting service is connected). An authenticator app can be added as a second step from Your account; the admin account must use one, and the database only grants admin access after that step. Saved consultant reports keep syncing; older passphrase-locked reports move over after typing the old passphrase once. Privacy policy updated (draft-0.10).
+## Oct 22, 6:00 PM
+- Setup maps (house map, lot map, top photo): zoom in and out with − / + / Fit, pinch with two fingers (buttons only on the top photo), or Ctrl + scroll on a computer.
+- Edit outline corners while plotting or after: tap a corner to select it, drag it, remove it, or delete all of that outline's corners; tap + between corners to add one you missed. Arrow keys nudge a selected corner; Delete removes it. Undo covers every edit.
+- "Clear all lines" is now "Delete all points".
+
 ## Oct 22, 4:30 PM
 - Consultant dashboard: the admin lands on it after signing in (overview tiles, needs your attention, review queue, community impact; links to Customers, Gardens, Growing Circle and Reports). "Dashboard" button next to Customers returns to it.
 - Customer list download: Excel sheet or PDF from the Customers screen (name, contact, year of birth, ZIP, garden today, lot size, gardening space, needs, stage, signed-up and contacted dates).
