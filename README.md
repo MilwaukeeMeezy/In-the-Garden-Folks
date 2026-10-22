@@ -24,6 +24,10 @@ New to gardening? Tap any word with a dotted underline to see what it means, or 
 | Where water goes: flow lines from your slope, downspouts and hard surfaces (red when they reach the house), likely puddles, suggested routes around the house or to a rain garden, routes you draw, moving-water animation and a rain view | Working (estimates) |
 | Ways to water: rain this week vs. what each bed needs, hose reach, sprinkler coverage, watering cans, rain barrels, PVC lines with straight, tee and corner fittings that connect to a spigot or barrel, with a parts list | Working |
 | Running bamboo and English ivy: mark them as problems; the plan and report include a removal plan | Working |
+| Plan on a budget (Start With What You Have): where you grow, a spending limit ($0, $25, $50, $100 or your own), what you already have and what your household eats; the plan lists crops with planting dates, what you already have, what to buy within the limit, and what to find free, reuse, borrow or wait on, with safety notes | Working (prices are rough estimates) |
+| Supplies & budget: supplies on hand marked Owned, Borrowed, Reused or Needed; one budget for plan items, manual items, receipts and things you got free or borrowed, with money left and savings; Before you buy check; spending by bed (Detailed) | Working |
+| My next three tasks (At a glance and Home): picked from your tasks, frost and rain, problems, planting dates, harvests and this month's care, with Done, Later and Skip; Quick or Detailed mode | Working |
+| Harvest log (At a glance tab): what you picked, where it went (eaten, stored, given, traded), food on hand, totals for the year, optional store-price comparison with what you spent | Working |
 | Beds, containers, plants and the plant library (natives and edibles, filtered by light and soil) | Working |
 | Care & watering: water needed per bed this week, a monthly care plan, plant check-ins, harvest log, rough plant prices | Working |
 | Regenerative practices: soil health scorecard (soil cover, less digging, living roots, plant diversity, pollinators, closing the loop, keeping rain on site), practice checklist, cover crop timing from your frost dates; in the care plan and site reports | Working |
@@ -42,8 +46,9 @@ New to gardening? Tap any word with a dotted underline to see what it means, or 
 | Español (menus, section names, tips and key steps) | Prototype |
 | Finding trees, bushes and buildings in your top photo | Prototype: results need your review |
 | Consultant report sync (encrypted) | Prototype: use "Test the sync service" under Saved reports to check the live connection |
-| Accounts | Prototype: stored only on the device where they were made; sign-in codes are shown on screen, not sent |
-| Explore (community posts, Garden Globe, share cards) and Trade (swaps, crop circles) | Prototype: stays on this device |
+| Accounts: customer and consultant (admin) accounts, synced across phone, tablet and computer; invites by email, text or link; QR code interest form | Working once the Supabase setup below is done |
+| Growing Circle (replaces Explore): neighbors with accounts start or join circles by ZIP code, pick crops to grow together, say what each grows, and post updates, extras to share and requests; circle leads and the admin can hide posts and remove members; posts block street addresses and phone numbers | Working once the Supabase setup below is done |
+| Trade (swaps, crop circles) | Prototype: stays on this device |
 | Pest sighting reports | Prototype |
 | Garden Mood sounds (made in the browser) | Prototype |
 | Shared community feed with moderation, verified water and local-rules alerts, phone push notifications | Planned: needs a server and an editorial process |
@@ -58,7 +63,7 @@ New to gardening? Tap any word with a dotted underline to see what it means, or 
 - **3D garden.** The house, fences, trees, beds and balconies in 3D at their real heights and floors. Drag plants, trees, beds and other objects to move them.
 - **Calendar & journal.** Tasks from your frost dates, journal entries, budget and receipts.
 
-**At a glance** (beside the map) has a section for each topic: Measure objects, Overview, Ask about your garden, Outlines, Where you're growing, Weather, Sun & shade, Soil health, Water flow & drainage, Yard conditions, Ways to water, Plants in your garden, House photos, Identified objects, Care & watering, Regenerative practices, Safety & wildlife, Site conditions, Your situation, Problems & plan, Needed improvements, Site report and Garden notes. Move any section up or down, or send it under the map.
+**At a glance** (beside the map) has a section for each topic: Measure objects, Overview, Ask about your garden, Outlines, Where you're growing, Weather, Sun & shade, Soil health, Water flow & drainage, Yard conditions, Ways to water, Plan on a budget, Supplies & budget, Harvest log, Plants in your garden, House photos, Identified objects, Care & watering, Regenerative practices, Safety & wildlife, Site conditions, Your situation, Problems & plan, Needed improvements, Site report and Garden notes. Move any section up or down, or send it under the map.
 
 **Plant library.** Natives and edibles for your region. Search, filter by light, soil and type, and add plants to a bed or straight onto the map.
 
@@ -183,6 +188,21 @@ Free models from [Poly Pizza](https://poly.pizza), simplified to load fast. CC-B
 - Spanish covers the main menus and tips; detailed text is still English.
 - The garden assistant matches common questions with your data; it is not an AI chatbot.
 - Privacy and accessibility requirements need legal review for each place it launches.
+
+## Accounts: customers and the consultant
+
+- **Customer accounts** see their own garden only: the dashboard (same layout as before) plus Sun, shade & water views with a time slider, Where you're growing, 3D, Water flow & drainage, Care & watering, Costs & receipts (photo or typed), Report a problem, Questions (to the consultant or the built-in guide), Journal and What you grew. The map and 3D are view-only for them; At a glance, editing tools, the plant library, Trade and Alerts are hidden. Their garden tab shows their name, like "Jordan's Garden".
+- **The consultant (admin) account** sees every customer's garden, edits the map and plan, and uses At a glance for analysis. A **Customers** button lists customers, unread messages and new entries, adds a customer (set up their yard or copy the garden on screen; the consultant's own garden is never touched), makes invite links (email, text or copy), shows the interest list from the QR code, and shows the QR code to print. Each customer garden has a **Customer: messages & reports** tab to reply, mark reports seen or fixed, or pin a report on the map.
+- **Sync:** the map and plan sync from the consultant's devices; the customer's journal, harvests, receipts and costs, problem reports and messages sync from theirs. Changes show up on other devices within about 30 seconds, when the app comes back to the front, or with Sync now. Receipt photos and the garden's map photos are stored in private storage.
+- **Security:** the database's row-level security lets each customer read only their own garden and only the admin read everyone's. Only the admin can change a garden's map and plan.
+
+### One-time Supabase setup
+
+1. In Supabase, open **Authentication → URL Configuration**. Set the **Site URL** to your published app address (for example `https://milwaukeemeezy.github.io/in-the-garden-folks/`) and add the same address under **Redirect URLs**. Email confirmation links come back here.
+2. Open **SQL Editor → New query**, paste all of `supabase-setup.sql`, and press **Run**. It creates the tables, security rules, sign-up trigger and the two private storage buckets.
+3. In the app, press **Sign in → Create an account** with your own email.
+4. Back in the SQL Editor, run the last line of `supabase-setup.sql` with your email filled in. That makes your account the admin. Sign out and back in: the **Customers** button appears.
+5. Never put the `service_role` key in the app or send it to anyone. The app uses only the publishable key.
 
 ## For developers
 
