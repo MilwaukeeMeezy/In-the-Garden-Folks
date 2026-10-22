@@ -198,11 +198,16 @@ Free models from [Poly Pizza](https://poly.pizza), simplified to load fast. CC-B
 
 ### One-time Supabase setup
 
-1. In Supabase, open **Authentication → URL Configuration**. Set the **Site URL** to your published app address (for example `https://milwaukeemeezy.github.io/in-the-garden-folks/`) and add the same address under **Redirect URLs**. Email confirmation links come back here.
-2. Open **SQL Editor → New query**, paste all of `supabase-setup.sql`, and press **Run**. It creates the tables, security rules, sign-up trigger and the two private storage buckets.
-3. In the app, press **Sign in → Create an account** with your own email.
-4. Back in the SQL Editor, run the last line of `supabase-setup.sql` with your email filled in. That makes your account the admin. Sign out and back in: the **Customers** button appears.
-5. Never put the `service_role` key in the app or send it to anyone. The app uses only the publishable key.
+Sign-in has no passwords: people get a 6-digit code by email (or by text once texting is connected). An authenticator app (Google Authenticator, Microsoft Authenticator, Authy and others) can be added as a second step; it is required for the admin account.
+
+1. **Site address.** In Supabase, open **Authentication → URL Configuration**. Set the **Site URL** to `https://thegardenfolks.com/` and add `https://thegardenfolks.com/` and `https://www.thegardenfolks.com/` under **Redirect URLs**.
+2. **Email sender.** Supabase's built-in email only reaches your own team's addresses and sends very few messages per hour, so customers won't get codes. Under **Authentication → Emails → SMTP Settings**, connect an email service (for example Resend, Postmark, Amazon SES, SendGrid, Brevo or ZeptoMail) using an address at your domain, such as `hello@thegardenfolks.com`.
+3. **Put the code in the emails.** Under **Authentication → Emails → Templates**, edit **Magic Link** and **Confirm signup** so the message includes `{{ .Token }}`, for example: `Your In the Garden, Folks! sign-in code is {{ .Token }}`. The link in the email also works on the same device.
+4. **Authenticator apps.** Under **Authentication → Multi-Factor** (or Sign In / Providers), make sure **Authenticator app (TOTP)** is enabled.
+5. **Run the database setup.** Open **SQL Editor → New query**, paste all of `supabase-setup.sql` and press **Run**.
+6. **Make yourself admin.** Sign in to the app once with your email code. Then run the last line of `supabase-setup.sql` with your email filled in. Sign out and back in: the app asks you to set up your authenticator app, and then the **Customers** button appears.
+7. **Texting (later).** To let people sign in by text, connect a texting service such as Twilio under **Authentication → Sign In / Providers → Phone**. Until then, the app tells people to use email.
+8. Never put the `service_role` key in the app or send it to anyone. The app uses only the publishable key.
 
 ## For developers
 
