@@ -111,3 +111,11 @@ Feature notes in the order they were added (oldest first). The README describes 
 - Explore is now the Growing Circle: account holders start or join circles by ZIP code, pick crops to grow together, say what each person grows, and post updates, extras to share and requests. Circle leads and the admin can hide posts and remove members; anyone can report a post; posts with street addresses or phone numbers are blocked.
 - New `supabase-setup.sql` with the tables, row-level security, invite and flag functions, and private storage for receipt and map photos. Privacy policy updated (draft-0.9) to describe garden-service accounts and the Growing Circle.
 - No more passwords: sign in or create an account with a 6-digit code sent by email (or by text once a texting service is connected). An authenticator app can be added as a second step from Your account; the admin account must use one, and the database only grants admin access after that step. Saved consultant reports keep syncing; older passphrase-locked reports move over after typing the old passphrase once. Privacy policy updated (draft-0.10).
+## Oct 22, 4:30 PM
+- Consultant dashboard: the admin lands on it after signing in (overview tiles, needs your attention, review queue, community impact; links to Customers, Gardens, Growing Circle and Reports). "Dashboard" button next to Customers returns to it.
+- Customer list download: Excel sheet or PDF from the Customers screen (name, contact, year of birth, ZIP, garden today, lot size, gardening space, needs, stage, signed-up and contacted dates).
+- Interest form asks (all optional) for year of birth, garden today, what they need, lot size and gardening space. Under-14 years ask a parent or guardian to fill it in.
+- "Contacted today" button on interest requests; "Details" editor for each customer.
+- "Start my garden" skips the account step when already signed in. Clearer message when the code limit is reached.
+- Database: run section 6b of supabase-setup.sql once.
+
