@@ -111,6 +111,12 @@ Feature notes in the order they were added (oldest first). The README describes 
 - Explore is now the Growing Circle: account holders start or join circles by ZIP code, pick crops to grow together, say what each person grows, and post updates, extras to share and requests. Circle leads and the admin can hide posts and remove members; anyone can report a post; posts with street addresses or phone numbers are blocked.
 - New `supabase-setup.sql` with the tables, row-level security, invite and flag functions, and private storage for receipt and map photos. Privacy policy updated (draft-0.9) to describe garden-service accounts and the Growing Circle.
 - No more passwords: sign in or create an account with a 6-digit code sent by email (or by text once a texting service is connected). An authenticator app can be added as a second step from Your account; the admin account must use one, and the database only grants admin access after that step. Saved consultant reports keep syncing; older passphrase-locked reports move over after typing the old passphrase once. Privacy policy updated (draft-0.10).
+## Oct 22, 9:00 PM
+- Woods: draw around a wooded area and the app fills it with trees (close together, medium or spread out; height; leafy, evergreen or mixed). They cast shade (bare in winter unless evergreen), show in 3D, and refill when you change the outline.
+- Ponds (draw around them) and streams, creeks, rivers or drainage ditches (draw along them, with width and flow direction). Shown in blue on the map and in 3D, with depth, "all year or wet seasons only", and notes.
+- Hill or mound and Uneven ground: tap to place, set the height or how bumpy, drag corners to size. The 3D ground and height lines show them.
+- Yard conditions (At a glance) lists woods, water and ground shapes with buttons to add each. The outline editor works on woods, ponds and streams too.
+
 ## Oct 22, 7:45 PM
 - My Garden map: edit the lot and growing-place outlines. Pick one with the new "Edit an outline" buttons (or tap inside a growing place or on an outline), then drag a corner, tap + between corners to add one, or tap a corner and press "Remove corner". Lot size and area update as you go; Undo works.
 
