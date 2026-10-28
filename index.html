@@ -925,7 +925,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
 <div id="setup" class="wrap" hidden></div>
 <div id="acct" class="wrap" hidden></div>
 
-<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Oct 27, 10:20 PM</p>
+<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Oct 27, 11:55 PM</p>
   <span class="small muted">In the Garden, Folks! · working prototype</span>
   <div class="row small">
     <button class="btn link" data-act="help-open">Plain-language help</button>
@@ -1267,10 +1267,10 @@ function casters(p,Y,mode,date){const out=[];for(const o of p.objects){if(!SHADI
 let HZ=0;
 function shadowSet(cs,az,alt){if(alt<=Math.max(.3,hzAt(az)))return null;const t=Math.tan(alt*RAD),s=[-Math.sin(az*RAD),Math.cos(az*RAD)];
  return cs.flatMap(c=>{if(c.tree){const l1=Math.min(c.h*(c.cb!=null?c.cb:.3)/t,400),l2=Math.min(c.h*.95/t,400);return[{a:[c.x+s[0]*l1,c.y+s[1]*l1],b:[c.x+s[0]*l2,c.y+s[1]*l2],r:c.r,d:c.d||1}]}
-  const L=Math.min(c.h/t,400),sh=q=>[q[0]+s[0]*L,q[1]+s[1]*L],P=c.poly;if(P.length<=4)return[{poly:hull(P.concat(P.map(sh)))}];
+  const L=Math.min(c.h/t,400),sh=q=>[q[0]+s[0]*L,q[1]+s[1]*L],P=c.poly;if(P.length<=4)return[{poly:hull(P.concat(P.map(sh))),d:c.d}];
   /* outlines with more corners (L-shaped houses): footprint + shifted roof + one band per wall, so notches aren't filled in */
   const out=[{poly:P},{poly:P.map(sh)}];for(let k=0;k<P.length;k++){const a=P[k],b=P[(k+1)%P.length];out.push({poly:[a,b,sh(b),sh(a)]})}return out})}
-function sunFrac(pt,set){if(!set)return 0;let b=0;for(const s of set){if(s.poly){if(inPoly(pt,s.poly))return 0}else if(segDist(pt,s.a,s.b)<s.r){b=Math.max(b,s.d||1);if(b>=1)return 0}}return 1-b}
+function sunFrac(pt,set){if(!set)return 0;let b=0;for(const s of set){if(s.poly){if(inPoly(pt,s.poly)){if(s.d==null||s.d>=1)return 0;b=Math.max(b,s.d)}}else if(segDist(pt,s.a,s.b)<s.r){b=Math.max(b,s.d||1);if(b>=1)return 0}}return 1-b}
 function shaded(pt,set){return sunFrac(pt,set)<.5}
 const SC=new Map();
 function samples(p,Y,mode,step,date){date=date||S.date;HZ=p.horizon||0;HZD=p.hzDir&&p.hzDir.some(v=>+v>0)?p.hzDir:null;const k=[p.id,p._v,date,Y,mode,step,p.loc.lat,p.loc.lon,p.horizon||0,(p.hzDir||[]).join(",")].join("|");if(SC.has(k))return SC.get(k);
@@ -1548,8 +1548,8 @@ function whyShade(p,pt,min,date){const sn=sunPos(min,date,p.loc),r={sun:sn,by:[]
  const hz=p.horizon||0;if(sn.alt<=Math.max(.3,hz)){r.state="treeline";r.hz=hz;return r}
  for(const o of p.objects){if(!SHADING[o.type])continue;let c;
   if(o.type==="tree"){const t=treeAt(o,S.Y),d=treeBlock(p,o,date);c={tree:1,x:o.x,y:o.y,r:t.r,h:t.h==null?60:t.h,d}}
-  else{const h=o.h==null?30:o.h;if(h<1)continue;c={poly:o.poly||corners(o),h}}
-  const f=sunFrac(pt,shadowSet([c],sn.az,sn.alt));if(f<1)(o.h==null?r.maybe:r.by).push({o,f})}
+  else if(o.type==="fence"){const h=o.h==null?6:o.h;c=fenceCasters(p,o,h)}else{const h=o.h==null?30:o.h;if(h<1)continue;c={poly:o.poly||corners(o),h}}
+  const f=sunFrac(pt,shadowSet(Array.isArray(c)?c:[c],sn.az,sn.alt));if(f<1)(o.h==null?r.maybe:r.by).push({o,f})}
  r.frac=r.by.reduce((a,x)=>Math.min(a,x.f),1);r.state=r.frac<.5?"shade":r.frac<1?"dappled":"sun";return r}
 function whyHTML(p,pt){const w=whyShade(p,pt,S.minutes,S.date),sn=w.sun,t=fmtT(S.minutes),nm=o=>o.type==="house"?(o.name||"Your house"):o.name||TYPES[o.type]||o.type;
  let h='<div class="li stack" style="gap:6px" id="whyBox"><div class="row between"><b class="small">Right now · '+t+'</b>'+ev("modeled")+'</div>';
@@ -1734,7 +1734,7 @@ function drawMap(cv,p,o){HZ=p.horizon||0;HZD=p.hzDir&&p.hzDir.some(v=>+v>0)?p.hz
    if(!o.mini){const t=(ob.rot||0)*RAD,f=[-Math.cos(t),-Math.sin(t)],mx=(cp[0][0]+cp[3][0])/2,my=(cp[0][1]+cp[3][1])/2;
     inScreen(g,c);c.fillStyle=T.fg;c.font="800 10px "+T.font;c.textAlign="center";c.textBaseline="middle";c.save();c.translate(mx*g.k-f[0]*14,my*g.k-f[1]*14);c.fillStyle=T.surface;c.fillText("FRONT",0,0);c.restore();inWorld(g,c)}}
   else if(ty==="neighbor"){c.fillStyle=T.nroof;c.fill();c.strokeStyle=T.fg;c.globalAlpha=.4;c.lineWidth=px;c.stroke();c.globalAlpha=1}
-  else if(ty==="fence"){c.fillStyle=T.fence;c.fill()}
+  else if(ty==="fence"){fenceDraw(c,ob,px,T)}
   else if(ty==="bed"){c.fillStyle=T.soilbed;c.fill();c.strokeStyle=T.fg;c.globalAlpha=.5;c.lineWidth=px;c.stroke();c.globalAlpha=1;
    const n=(ob.plants||[]).length;if(n){c.fillStyle=T.leaf;const z=zonePts(ob);z.forEach(q=>{c.beginPath();c.arc(q[0],q[1],Math.min(ob.w,ob.d)*.13,0,7);c.fill()})}}
   else if(ty==="container"){c.beginPath();c.arc(ob.x,ob.y,ob.w/2,0,7);c.fillStyle=T.pot;c.fill();c.fillStyle=T.leaf;c.beginPath();c.arc(ob.x,ob.y,ob.w/4,0,7);c.fill()}
@@ -2535,7 +2535,7 @@ function hitTest(p,pt){const pri=["sensor","barrel","rock","container","tree","b
   if(ty==="tree"){if(Math.hypot(o.x-pt[0],o.y-pt[1])<Math.max(2,treeAt(o,S.Y).r))return o}
   else if(ty==="sensor"){if(Math.hypot(o.x-pt[0],o.y-pt[1])<2)return o}
   else if(ty==="container"||ty==="barrel"||ty==="rock"){if(Math.hypot(o.x-pt[0],o.y-pt[1])<o.w/2+1)return o}
-  else{const c=corners(o);if(inPoly(pt,c)||(ty==="fence"&&polyDist(pt,c)<1.2))return o}}return null}
+  else if(ty==="fence"){if(fenceHit(p,o,pt))return o}else{const c=o.poly||corners(o);if(inPoly(pt,c))return o}}return null}
 const cvP=$("#propCv");
 /* two fingers on the map: pinch to zoom, drag to move around */
 const MZ={pts:new Map(),b:null};
@@ -3055,7 +3055,7 @@ function renderSetup(){
   (w.satBusy?'<p class="small" role="status">Getting the satellite view…</p>':"")+(w.satErr?'<p class="small" role="alert"><b>'+esc(w.satErr)+"</b></p>":"")+(w.pics==="sat"&&w.photos.overhead&&w.photos.overhead.sat?'<p class="small" role="status">✓ Satellite view ready. You\'ll see it in the next step.</p>':"")+
   '<p class="tiny muted">Satellite imagery: when you choose it, the app asks Esri\'s World Imagery service for the map squares around your home. That shares your home\'s approximate map position with Esri. Imagery can be months or years old. Imagery © Esri, Maxar, Earthstar Geographics.</p></div>'}
  if(w.step===2){const o=w.photos.overhead,L=wzLoc(w);
-  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Oct 27, 10:20 PM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
+  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Oct 27, 11:55 PM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
   let R=wzCompass(w);
   if(o&&!o.sat)R+='<div class="ctlgrp"><span class="small"><b>1. Turn the photo</b> until north is at the top of the dial.</span><div class="row" role="group" aria-label="Turn the top photo">'+[[-90,"↺ 90°"],[-15,"↺ 15°"],[-1,"↺ 1°"],[1,"↻ 1°"],[15,"↻ 15°"],[90,"↻ 90°"]].map(b2=>'<button class="btn sm" type="button" data-act="wz-prot" data-arg="'+b2[0]+'" aria-label="Turn the photo '+Math.abs(b2[0])+" degrees "+(b2[0]<0?"left":"right")+'">'+b2[1]+"</button>").join("")+"</div></div>";
   else if(o&&o.sat)R+='<p class="tiny muted">Satellite pictures already have north at the top. Imagery © Esri, Maxar, Earthstar Geographics.</p>';
@@ -6527,9 +6527,9 @@ const hvFmt=r=>{const f=v=>v<1?String(Math.round(v*100)/100):String(Math.round(v
 
 function hvSun(p,b,date){try{const pts=zonePts(b),smp=samples(p,0,"known",10,date);let h=0;for(const pt of pts)h+=hoursAt(pt,smp,10).h;return h/pts.length}catch(_){return null}}
 function hvBed(p,b){const y=+TODAY.slice(0,4),F=g3Frost(p),cnt={};(b.plants||[]).forEach(x=>{const m=String(x).match(/×\s*(\d+)$/),n=pbase(x);cnt[n]=(cnt[n]||0)+(m?+m[1]:1)});
- const sumH=hvSun(p,b,y+"-07-01"),sprH=hvSun(p,b,g3Date(y,F.lf+21)),wet=isWet(p,b),t=latestTest(b),ph=t&&t.ph!=null?+t.ph:null,rows=[],none=[];
+ const SH={full:8.5,part:5,shade:2.5},sk=b.seen&&SH[b.seen],sumH=sk?SH[b.seen]:hvSun(p,b,y+"-07-01"),sprH=sk?SH[b.seen]:hvSun(p,b,g3Date(y,F.lf+21)),wet=isWet(p,b),t=latestTest(b),ph=t&&t.ph!=null?+t.ph:null,rows=[],none=[];
  Object.keys(cnt).forEach(n=>{const d=HV[n];if(!d){if(isFood(n))none.push(n);return}const cool=d[3]!=="F",h=cool?sprH:sumH;if(h==null){rows.push({n,c:cnt[n],d,lvl:null});return}
-  const need=HVSUN[d[3]];let lvl=h>=need[0]?2:h>=need[1]?1:h>=need[2]?0:-1;const why=[];why.push("about "+Math.round(h*10)/10+" h of sun "+(cool?"in spring":"in midsummer")+" ("+need[0]+"+ is best)");
+  const need=HVSUN[d[3]];let lvl=h>=need[0]?2:h>=need[1]?1:h>=need[2]?0:-1;const why=[];why.push(sk?"from what you see: "+SEEN[b.seen][0].toLowerCase():"about "+Math.round(h*10)/10+" h of sun "+(cool?"in spring":"in midsummer")+" ("+need[0]+"+ is best)");
   if(wet&&lvl>0){lvl--;why.push("wet after rain")}if(ph!=null&&(ph<5.5||ph>7.8)&&lvl>0){lvl--;why.push("pH "+ph)}rows.push({n,c:cnt[n],d,lvl,why,h})});
  return{rows,none,soil:!!t}}
 function hvLogged(p,b,n){const y=TODAY.slice(0,4);return(p.harvests||[]).filter(x=>(x.date||"").slice(0,4)===y&&pbase(x.n)===n&&(!b||x.bed===b.id)).reduce((a,x)=>a+(x.unit==="lb"?+x.amt:x.unit==="oz"?+x.amt/16:0),0)}
@@ -6938,6 +6938,81 @@ document.head.insertAdjacentHTML("beforeend",`<style>.g3hid{margin:8px auto 0;ba
 {const _yd=y3Draw;y3Draw=function(p){const L=p.objects.filter(o=>(o.type==="drive"||o.type==="walk")&&o.poly&&!gone(o));L.forEach(o=>{o._t=o.type;o.type="poly_"+o.type});try{_yd.apply(this,arguments)}finally{L.forEach(o=>{o.type=o._t;delete o._t})}
  try{L.forEach(o=>{const col=o.type==="drive"?{concrete:"#CFCBC3",asphalt:"#4E4E4C",gravel:"#C9C1B2",pavers:"#B9876A"}[o.mat||"concrete"]:{stone:"#A39A8C",pavers:"#B9876A",gravel:"#C9C1B2",mulch:"#7A4E2D",concrete:"#D3D0CA",stepping:"#9C978E"}[o.mat||"stone"],P=o.poly,t=(o.rot||0)*RAD,u=[Math.cos(t),Math.sin(t)],v=[-u[1],u[0]];let a0=1e9,a1=-1e9,b0=1e9,b1=-1e9;P.forEach(q=>{const a=(q[0]-o.x)*u[0]+(q[1]-o.y)*u[1],b=(q[0]-o.x)*v[0]+(q[1]-o.y)*v[1];a0=Math.min(a0,a);a1=Math.max(a1,a);b0=Math.min(b0,b);b1=Math.max(b1,b)});
   const st=o.type==="drive"?2:1.5;for(let a=a0+st/2;a<a1;a+=st)for(let b=b0+st/2;b<b1;b+=st){const x=o.x+u[0]*a+v[0]*b,y=o.y+u[1]*a+v[1]*b;if(!inPoly([x,y],P))continue;g3Box(x,y,.02,st*.97,.08,st*.97,o.rot||0,col)}})}catch(e){if(window.__T)console.error(e)}}}
+
+/* ================= Fences are lines, not blocks (Oct 27) =================
+   A straight fence stays one run. A fence with more corners runs along its outline, and the side touching
+   the house is left open by default; any side can be turned on or off. Shade and 3D use the fence lines only. */
+/* fence types: how much sun gets through, usual height, color */
+const FTYPE={privacy:{l:"Wood privacy (solid boards)",h:6,d:1,c:"#B08A5E"},shadow:{l:"Shadow box (board-on-board)",h:6,d:.85,c:"#A98258"},vinyl:{l:"Vinyl privacy",h:6,d:1,c:"#EDEAE2"},picket:{l:"Picket",h:3.5,d:.5,c:"#F2EFE6"},lattice:{l:"Lattice or slatted",h:6,d:.55,c:"#B89A72"},chain:{l:"Chain link",h:4,d:.12,c:"#9AA0A3"},iron:{l:"Metal or wrought iron",h:4,d:.15,c:"#2E2E2E"},rail:{l:"Split rail",h:3.5,d:.15,c:"#8A6A47"},wire:{l:"Wire or deer mesh",h:7,d:.06,c:"#6E6E6E"}};
+const fType=o=>FTYPE[o.ftype]?o.ftype:((+o.h||6)>=5?"privacy":"picket");
+function fenceThin(o){return!o.poly&&Math.min(+o.w||0,+o.d||0)<=1.5}
+function fencePts(o){if(o.poly)return o.poly;return corners(o)}
+function fenceAutoOpen(p,o){const P=fencePts(o),H=p.objects.filter(b=>(b.type==="house"||b.homeBldg)&&!gone(b)).map(b=>b.poly||corners(b));if(!H.length||P.length<3)return[];let best=-1,bd=1e9;
+ for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length],m=[(a[0]+b[0])/2,(a[1]+b[1])/2],d=Math.min(...H.map(h=>inPoly(m,h)?0:polyDist(m,h)));if(d<bd){bd=d;best=i}}return bd<8?[best]:[]}
+function fenceOpen(p,o){return Array.isArray(o.open)?o.open:fenceAutoOpen(p,o)}
+function fenceSegs(p,o){if(fenceThin(o)){const t=(o.rot||0)*RAD,long=(+o.w||0)>=(+o.d||0),L=Math.max(+o.w||0,+o.d||0),ax=long?[Math.cos(t),Math.sin(t)]:[-Math.sin(t),Math.cos(t)];return[[[o.x-ax[0]*L/2,o.y-ax[1]*L/2],[o.x+ax[0]*L/2,o.y+ax[1]*L/2]]]}
+ const P=fencePts(o),op=fenceOpen(p,o),out=[];for(let i=0;i<P.length;i++){if(op.includes(i))continue;out.push([P[i],P[(i+1)%P.length]])}return out}
+function fenceHit(p,o,pt){return fenceSegs(p,o).some(([a,b])=>segDist(pt,a,b)<1.5)}
+function fenceCasters(p,o,h){return fenceSegs(p,o).map(([a,b])=>{const dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1,n=[-dy/l*.2,dx/l*.2];return{poly:[[a[0]+n[0],a[1]+n[1]],[b[0]+n[0],b[1]+n[1]],[b[0]-n[0],b[1]-n[1]],[a[0]-n[0],a[1]-n[1]]],h,d:FTYPE[fType(o)].d}})}
+/* 2D: thick fence lines with posts; open sides show as a faint dashed line while selected */
+function fenceDraw(c,o,px,T){const p=prop(),S2=fenceSegs(p,o),sel=S.sel===o.id;c.save();c.lineCap="round";
+ if(sel&&!fenceThin(o)){const P=fencePts(o),op=fenceOpen(p,o);op.forEach(i=>{const a=P[i],b=P[(i+1)%P.length];if(!a||!b)return;c.setLineDash([4*px,4*px]);c.strokeStyle="#7A6A55";c.lineWidth=1.5*px;c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();c.setLineDash([])})}
+ S2.forEach(([a,b])=>{c.strokeStyle="#3E3328";c.lineWidth=Math.max(5*px,.7);c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();c.strokeStyle=FTYPE[fType(o)].c;c.lineWidth=Math.max(3*px,.45);c.stroke();if(FTYPE[fType(o)].d<.3){c.setLineDash([1.5*px,2.5*px]);c.strokeStyle="#3E3328";c.lineWidth=Math.max(1.2*px,.15);c.stroke();c.setLineDash([])}
+  const L=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.max(1,Math.round(L/8));c.fillStyle="#3E3328";for(let i=0;i<=n;i++){const t=i/n;c.beginPath();c.arc(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,Math.max(1.6*px,.25),0,7);c.fill()}});c.restore()}
+/* 3D: posts with boards for tall (privacy) fences, rails for short ones, along each fence line */
+g3Fence=function(o){const p=prop(),h=+o.h||FTYPE[fType(o)].h,T=FTYPE[fType(o)],k=fType(o),gl=G3.gl,clear=(a,f)=>{gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);const was=G3.alpha;G3.alpha=a;f();G3.alpha=was;gl.disable(gl.BLEND)};
+ fenceSegs(p,o).forEach(([a,b])=>{const L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<.2)return;const ang=Math.atan2(b[1]-a[1],b[0]-a[0])/RAD,u=[(b[0]-a[0])/L,(b[1]-a[1])/L],mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,sp=k==="rail"?10:k==="chain"||k==="wire"?10:7,n=Math.max(1,Math.round(L/sp)),post=k==="iron"?"#2E2E2E":k==="chain"||k==="wire"?"#8C9295":k==="vinyl"?"#F4F2EC":k==="rail"?"#7A5A3A":"#9C7A52";
+  for(let i=0;i<=n;i++){const t=i/n;g3Box(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,0,k==="chain"||k==="iron"||k==="wire"?.18:.35,h+.15,k==="chain"||k==="iron"||k==="wire"?.18:.35,0,post)}
+  if(k==="privacy"||k==="vinyl"||k==="shadow")g3Box(mx,my,.1,L,h-.15,k==="shadow"?.22:.12,ang,T.c);
+  else if(k==="lattice")clear(.7,()=>g3Box(mx,my,.2,L,h-.3,.1,ang,T.c));
+  else if(k==="picket"){const m=Math.max(1,Math.round(L/.55));for(let i=0;i<m;i++){const t=(i+.5)/m;g3Box(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,.15,.32,h-.25,.08,ang,T.c)}[.3,.75].forEach(f=>g3Box(mx,my,h*f,L,.18,.1,ang,T.c))}
+  else if(k==="iron"){const m=Math.max(1,Math.round(L/.45));for(let i=0;i<m;i++){const t=(i+.5)/m;g3Box(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,.2,.06,h-.3,.06,0,T.c)}[.15,.9].forEach(f=>g3Box(mx,my,h*f,L,.1,.08,ang,T.c))}
+  else if(k==="rail")[.35,.7].concat(h>4?[1]:[]).forEach(f=>g3Box(mx,my,h*f-.3,L,.35,.28,ang,T.c));
+  else{g3Box(mx,my,h-.1,L,.1,.1,ang,post);clear(k==="wire"?.14:.3,()=>g3Box(mx,my,.05,L,h-.15,.04,ang,T.c))}})};
+/* casters: fences shade only along their lines */
+{const _ca=casters;casters=function(p,Y,mode,date){const F=p.objects.filter(o=>o.type==="fence"&&!gone(o));F.forEach(o=>{o._ft=1;o.type="fence_line"});let out;try{out=_ca.apply(this,arguments)}finally{F.forEach(o=>{o.type="fence";delete o._ft})}
+ F.forEach(o=>{let h=o.h;if(h==null){if(mode!=="worst")return;h=6}if(h<1)return;fenceCasters(p,o,h).forEach(c=>out.push(c))});return out}}
+/* the fence's panel: which sides have fence */
+function fenceTypeHTML(o){const k=fType(o),h=+o.h||FTYPE[k].h;return'<div class="stack ftype" style="gap:6px"><div class="fields"><label class="f">Type of fence<select data-ftype="1">'+Object.entries(FTYPE).map(([v,t])=>'<option value="'+v+'"'+(k===v?" selected":"")+">"+esc(t.l)+"</option>").join("")+'</select></label><label class="f">Fence height ('+uAbbr()+')<input type="number" min="1" max="20" step="any" data-fh="1" value="'+uNum(h)+'"></label></div><div class="chips" role="group" aria-label="Common fence heights">'+[3,4,6,8].map(v=>'<button type="button" class="chip" data-act="fh-pick" data-arg="'+v+'" aria-pressed="'+(Math.abs(h-v)<.01)+'">'+v+" ft</button>").join("")+'</div><p class="tiny muted" style="margin:0">'+(FTYPE[k].d>=.85?"Solid: it shades like a wall.":FTYPE[k].d>=.4?"Partly see-through: it lets some sun through.":"Mostly see-through: it barely shades.")+"</p></div>"}
+function fenceSidesHTML(p,o){if(fenceThin(o))return"";const P=fencePts(o),op=fenceOpen(p,o),auto=!Array.isArray(o.open),ao=fenceAutoOpen(p,o);
+ return'<fieldset class="stack fsides" style="gap:4px;border:0;padding:0;margin:0"><legend class="small"><b>Which sides have fence?</b></legend><p class="tiny muted" style="margin:0">Most yard fences are open toward the house'+(ao.length?": the side next to your house starts open.":".")+' Uncheck any side with no fence, like a gate opening or where the house wall is.</p>'+P.map((a,i)=>{const b=P[(i+1)%P.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);return'<label class="copt small"><input type="checkbox" data-fside="'+i+'"'+(op.includes(i)?"":" checked")+"> Side "+(i+1)+" · "+esc(uLen(L))+(ao.includes(i)?" (next to the house)":"")+"</label>"}).join("")+(auto?"":'<button class="btn link small" type="button" data-act="fence-auto" style="align-self:flex-start">Reset: open toward the house</button>')+"</fieldset>"}
+{const _sc=renderSelCard;renderSelCard=function(){const r=_sc.apply(this,arguments);try{const p=prop(),o=S.sel&&p.objects.find(x=>x.id===S.sel),card=document.querySelector("#selCard .card.sel");if(!o||o.type!=="fence"||!card||card.querySelector(".ftype"))return r;const h='<div class="stack" style="gap:8px">'+fenceTypeHTML(o)+fenceSidesHTML(p,o)+"</div>";const d=document.createElement("div");d.innerHTML=h;const first=card.querySelector(".fields")||card.querySelector("label.f");if(first)first.insertAdjacentElement("afterend",d.firstElementChild);else card.appendChild(d.firstElementChild)}catch(e){if(window.__T)console.error(e)}return r}}
+function fenceChanged(p){p._v=(p._v||0)+1;try{HEAT.key=""}catch(_){}try{G3.key=""}catch(_){}changed(p);try{drawProp()}catch(_){}try{renderSelCard()}catch(_){}try{renderLayerDyn()}catch(_){}}
+document.addEventListener("change",e=>{const el=e.target;if(!el||!el.dataset||el.dataset.fside==null)return;const p=prop(),o=p.objects.find(x=>x.id===S.sel);if(!o||o.type!=="fence")return;pushUndo();const i=+el.dataset.fside,op=fenceOpen(p,o).slice();const k=op.indexOf(i);if(el.checked){if(k>=0)op.splice(k,1)}else if(k<0)op.push(i);o.open=op.sort((a,b)=>a-b);fenceChanged(p);toast("Side "+(i+1)+(el.checked?" has fence.":" is open."));setTimeout(()=>{const f=document.querySelector('[data-fside="'+i+'"]');if(f)f.focus()},30)});
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest('[data-act="fence-auto"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();const p=prop(),o=p.objects.find(x=>x.id===S.sel);if(!o)return;pushUndo();delete o.open;fenceChanged(p);toast("Open toward the house again.")},true);
+/* adding or removing a corner renumbers the sides, so go back to "open toward the house" */
+{let last={};const _dp=drawProp;drawProp=function(){try{const p=prop();if(p)p.objects.forEach(o=>{if(o.type!=="fence"||!Array.isArray(o.open))return;const n=fencePts(o).length;if(last[o.id]!=null&&last[o.id]!==n)delete o.open;last[o.id]=n})}catch(_){}return _dp.apply(this,arguments)}}
+
+document.addEventListener("change",e=>{const el=e.target;if(!el||!el.dataset||(!el.dataset.ftype&&!el.dataset.fh))return;e.stopImmediatePropagation();const p=prop(),o=p.objects.find(x=>x.id===S.sel);if(!o||o.type!=="fence")return;pushUndo();
+ if(el.dataset.ftype){const old=fType(o),oldH=+o.h;o.ftype=el.value;if(!(oldH>0)||Math.abs(oldH-FTYPE[old].h)<.01)o.h=FTYPE[o.ftype].h;delete o.hEst;toast(FTYPE[o.ftype].l+" fence, "+uLen(o.h)+" tall. Shade and 3D updated.")}
+ else{const v=uFrom(+el.value);if(!(v>0&&v<=20)){toast("Type a height from 1 to 20 ft.");return}o.h=v;o.hm=false;delete o.hEst;toast("Fence height "+uLen(v)+".")}
+ fenceChanged(p);setTimeout(()=>{const f=document.querySelector(el.dataset.ftype?"[data-ftype]":"[data-fh]");if(f)f.focus()},30)},true);
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest('[data-act="fh-pick"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();const p=prop(),o=p.objects.find(x=>x.id===S.sel);if(!o||o.type!=="fence")return;pushUndo();o.h=+b.dataset.arg;delete o.hEst;fenceChanged(p);toast("Fence height "+uLen(o.h)+".");setTimeout(()=>{const f=document.querySelector('[data-act="fh-pick"][data-arg="'+b.dataset.arg+'"]');if(f)f.focus()},30)},true);
+
+/* ================= What I see: your own sun observation per bed, and midsummer sun on Right now (Oct 27) ================= */
+const SEEN={full:["Full sun most days","F"],part:["Part sun","P"],shade:["Mostly shade","S"]};
+const seenK=o=>o&&SEEN[o.seen]?o.seen:"";
+/* midsummer sun hours for a bed (June 21, leaves on), cached per map version */
+const SUMH={};
+function summerHours(p,z){const y=+TODAY.slice(0,4),key=p.id+"|"+p._v+"|"+z.id+"|"+S.Y;if(SUMH[key]!=null)return SUMH[key];let h=null;try{const smp=samples(p,S.Y,"known",10,y+"-06-21"),pts=zonePts(z);let t=0;for(const pt of pts)t+=hoursAt(pt,smp,10).h;h=t/pts.length}catch(_){}if(Object.keys(SUMH).length>400)for(const k in SUMH)delete SUMH[k];return SUMH[key]=h}
+const modelSeen=h=>h==null?"":h>=6?"full":h>=2?"part":"shade";
+/* which objects take the most summer sun from a bed (hours lost), for the mismatch note */
+function summerBlockers(p,z){const y=+TODAY.slice(0,4),date=y+"-06-21",pts=zonePts(z),sm=day(p,date).samples.filter(s=>s.m%30===0&&s.alt>3),out=[];
+ for(const o of p.objects){if((!SHADING[o.type]&&o.type!=="woods")||gone(o))continue;let cs;try{cs=casters(Object.assign({},p,{objects:[o]}),S.Y,"known",date)}catch(_){continue}if(!cs.length)continue;let lost=0;for(const s of sm){const st=shadowSet(cs,s.az,s.alt);if(!st)continue;let f=0;for(const pt of pts)f+=1-sunFrac(pt,st);lost+=f/pts.length*.5}if(lost>.25)out.push({o,lost})}return out.sort((a,b)=>b.lost-a.lost).slice(0,3)}
+function seenSel(z,cls){const k=seenK(z),opts='<option value="">Not sure yet</option>'+Object.entries(SEEN).map(([v,t])=>'<option value="'+v+'"'+(k===v?" selected":"")+">"+t[0]+"</option>").join("");
+ if(cls==="seensel")return'<span class="row tiny" style="gap:6px;align-items:center;margin-top:2px"><span>What you see:</span><select data-seen="'+z.id+'" aria-label="What do you see at '+esc(z.name)+'?" style="width:auto;min-height:32px;padding:2px 8px;font-size:.85rem">'+opts+"</select></span>";
+ return'<label class="f small" style="margin:0">What do you see at '+esc(z.name)+'?<select data-seen="'+z.id+'">'+opts+"</select></label>"}
+function seenNote(p,z){const k=seenK(z);if(!k)return"";const h=summerHours(p,z),m=modelSeen(h);if(!m||m===k)return'<span class="tiny" style="display:block;color:#2E6B1E">✓ Matches what you see ('+esc(SEEN[k][0].toLowerCase())+").</span>";
+ const order={shade:0,part:1,full:2},more=order[k]>order[m],bl=more?summerBlockers(p,z):[];
+ return'<span class="tiny" style="display:block;color:var(--tomato-ink)"><b>You see '+esc(SEEN[k][0].toLowerCase())+'</b>; the model says '+esc(SEEN[m][0].toLowerCase())+'. Plant matches use what you see.'+(more&&bl.length?" Check "+bl.map(b=>"<b>"+esc(b.o.name||TYPES[b.o.type])+"</b>").join(" and ")+": a height, lowest branches or tree shape that’s off adds shade the bed doesn’t really get.":more?" Check the heights of nearby trees and buildings.":" Something may be missing from the map: a tree, building or fence that shades this bed.")+"</span>"}
+/* Right now rows: midsummer sun, what you see, and the check */
+{const _rr=rnRow;rnRow=function(p,z,set,s){let h=_rr.apply(this,arguments);try{const sh=summerHours(p,z),add=(sh!=null?'<span class="tiny muted" style="display:block">In midsummer: about '+hrs(sh)+" of direct sun ("+sunClass(sh).t.toLowerCase()+")</span>":"")+seenNote(p,z)+seenSel(z,"seensel");const i=h.lastIndexOf("</div>");h=i>=0?h.slice(0,i)+'<div class="stack" style="gap:2px;flex-basis:100%">'+add+"</div>"+h.slice(i):h+add}catch(e){if(window.__T)console.error(e)}return h}}
+/* a bed's own panel */
+{const _sc=renderSelCard;renderSelCard=function(){const r=_sc.apply(this,arguments);try{const p=prop(),o=S.sel&&p.objects.find(x=>x.id===S.sel),card=document.querySelector("#selCard .card.sel");if(!o||!card||card.querySelector(".seenbox")||!(ZONE_TYPES[o.type]||o.type==="grow"))return r;const sh=summerHours(p,o),d=document.createElement("div");d.className="stack seenbox";d.style.gap="4px";d.innerHTML=(sh!=null?'<span class="small">In midsummer: about <b>'+hrs(sh)+"</b> of direct sun ("+sunClass(sh).t.toLowerCase()+").</span>":"")+seenSel(o)+seenNote(p,o);const first=card.querySelector(".fields")||card.querySelector("label.f");if(first)first.insertAdjacentElement("beforebegin",d);else card.appendChild(d)}catch(e){if(window.__T)console.error(e)}return r}}
+document.addEventListener("change",e=>{const el=e.target;if(!el||!el.dataset||el.dataset.seen==null)return;e.stopImmediatePropagation();const p=prop(),z=p.objects.find(x=>x.id===el.dataset.seen);if(!z)return;pushUndo();if(el.value){z.seen=el.value;z.seenDate=TODAY}else{delete z.seen;delete z.seenDate}changed(p);const id=z.id;
+ try{renderLayerDyn()}catch(_){}try{renderSelCard()}catch(_){}try{renderGlance()}catch(_){}const m=modelSeen(summerHours(p,z));toast(!el.value?"Cleared.":m&&m!==el.value?"Saved. That’s different from the model: plant matches now use what you see.":"Saved. It matches the model.");setTimeout(()=>{const f=document.querySelector('[data-seen="'+id+'"]');if(f)f.focus()},40)},true);
+/* plant matching uses what you see when you've said */
+{const _pf=plantFit;plantFit=function(p,b,pl){const out=_pf.apply(this,arguments);try{const k=seenK(b);if(!k)return out;const i=out.findIndex(x=>/light/i.test(x[1]));const it=pl.s.includes(SEEN[k][1])?["good","Light fits what you see ("+SEEN[k][0].toLowerCase()+")"]:["bad","Wrong light for what you see ("+SEEN[k][0].toLowerCase()+")"];if(i>=0)out[i]=it;else out.unshift(it)}catch(_){}return out}}
 
 /* ---------- init ---------- */
 document.documentElement.lang="en";

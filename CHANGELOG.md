@@ -111,6 +111,17 @@ Feature notes in the order they were added (oldest first). The README describes 
 - Explore is now the Growing Circle: account holders start or join circles by ZIP code, pick crops to grow together, say what each person grows, and post updates, extras to share and requests. Circle leads and the admin can hide posts and remove members; anyone can report a post; posts with street addresses or phone numbers are blocked.
 - New `supabase-setup.sql` with the tables, row-level security, invite and flag functions, and private storage for receipt and map photos. Privacy policy updated (draft-0.9) to describe garden-service accounts and the Growing Circle.
 - No more passwords: sign in or create an account with a 6-digit code sent by email (or by text once a texting service is connected). An authenticator app can be added as a second step from Your account; the admin account must use one, and the database only grants admin access after that step. Saved consultant reports keep syncing; older passphrase-locked reports move over after typing the old passphrase once. Privacy policy updated (draft-0.10).
+## Oct 27, 11:55 PM — What you see, and midsummer sun
+- Every bed and growing place on the Right now card (and in its own panel) now shows "In midsummer: about 7 h of direct sun," so a low October sun isn't mistaken for the growing season.
+- "What you see": pick Full sun most days, Part sun or Mostly shade for each bed. If it matches the model you get a check; if not, the bed is flagged, plant matches in the library and the expected harvest use what you see, and the note names the trees or buildings taking the most summer sun from that bed so you can check their height, lowest branches or shape.
+
+## Oct 27, 11:30 PM — Fences are lines, with type and height
+- A fence is drawn as a fence line with posts, not a filled block. A straight fence stays one run; a fence you gave more corners runs along its outline and is filled by its new corners, not its old rectangle. Tapping inside a fenced yard no longer selects the fence.
+- Fenced yards start open toward the house: the side next to the house has no fence. "Which sides have fence?" in the fence's panel turns each side on or off (for gates or where the house wall is), with a reset.
+- Type of fence: wood privacy, shadow box, vinyl privacy, picket, lattice, chain link, metal or wrought iron, split rail, or wire mesh. Each looks like itself in 3D and shades by how see-through it is (a chain link fence barely shades; a privacy fence shades like a wall). Picking a type fills in its usual height.
+- Fence height: type it, or pick 3, 4, 6 or 8 ft.
+- Shade from fences now comes only from the fence lines, so a fenced yard is no longer counted as shaded inside.
+
 ## Oct 27, 10:20 PM — Roofs, greenhouses, decks and driveways
 - Every building in 3D now has the same pitched roof in the same color: your house, neighbors' houses (tall ones and odd shapes too) and sheds or garages. Rectangles get a gable roof; other outlines get a ridge along their long side. Apartment buildings stay flat.
 - Greenhouse growing areas from setup now show in 3D as greenhouses (they were missing). Irregular ones get glass walls along their outline with a white frame.
