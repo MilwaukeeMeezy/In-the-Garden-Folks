@@ -5,7 +5,7 @@ Last reviewed October 29, 2026. The app is one web page on GitHub Pages; account
 ## Do these once (only you can)
 
 1. **Run the security update.** In Supabase, open SQL Editor, choose New query, paste everything from `security-update.sql`, and press Run. The last result lists each table; every row should say `true`. It is safe to run again.
-   Then do the same with `circles-update.sql` (Neighbor Exchange: neighborhoods, replies, claims, private messages and post photos).
+   Then do the same with `circles-update.sql` (Neighbor Exchange: neighborhoods, replies, claims, private messages and post photos), and then `supplies-update.sql` (shared supplies and remembered barcodes).
 2. **Turn on email confirmation.** Authentication → Sign In / Providers → Email: keep "Confirm email" on.
 3. **Lock the sign-in addresses.** Authentication → URL Configuration: set Site URL to `https://thegardenfolks.com` and list only your own addresses under Redirect URLs.
 4. **Keep the admin's authenticator app on.** The admin only counts as admin after the authenticator step. Save the recovery codes somewhere safe, away from your phone.
@@ -21,6 +21,7 @@ Last reviewed October 29, 2026. The app is one web page on GitHub Pages; account
 - **Database rules:** each customer reads only their own garden, entries and messages; only the admin (after the authenticator step) can change gardens or read the interest list. Saved reports are readable only by the account that saved them, and they are encrypted before upload.
 - **Growing Circles:** members see the members of their own circles only (everyone sees how many members a circle has). Only the circle's creator or the admin can hide or un-flag a post. Members can't make themselves leaders.
 - **Neighbor Exchange:** a neighborhood's posts, photos and replies are visible only to its members. A ZIP code search shows signed-in people the neighborhood names and post titles there, never names, details or photos. Private messages can be read only by the two neighbors, and by the admin only after one of them reports it. Only a member can claim an offer, only for themselves. Each person can post at most 30 times and send 150 replies and 150 messages a day. The same neighborhood name can't be made twice in one ZIP code.
+- **Supplies on hand:** the customer and the consultant can both add and change supplies for that garden; the customer can't change any other kind of entry the consultant made. Remembered barcodes hold only the barcode, product name, type and size, never who scanned it in a way other customers can see. Barcodes are read on the device and the camera runs only after a warning.
 - **Invite links** use long random codes and stop working after 60 days if nobody claims them.
 - **The public interest form** accepts at most 20 sign-ups every 10 minutes and limits the length of every field.
 - **Size limits** stop any one account from filling the database.
