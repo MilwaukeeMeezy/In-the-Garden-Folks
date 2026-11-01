@@ -9715,6 +9715,131 @@ document.head.insertAdjacentHTML("beforeend","<style>.ntbar{display:flex;flex-di
 if(window.__Y)Object.assign(window.__Y,{ntState,natList,NT,ntPass});
 if(SHEETS.credits)SHEETS.credits[1]=SHEETS.credits[1].replace("<h3>Software</h3>","<h3>Native plants</h3><ul><li>Which states each plant is native to: summarized from the natural ranges in the USDA PLANTS Database (plants.usda.gov). Only US ZIP codes get state badges.</li><li>“Deer usually skip it”: Rutgers New Jersey Agricultural Experiment Station deer-resistance ratings.</li><li>Pet warnings: common toxic plants; the ASPCA Animal Poison Control plant list is the full reference.</li></ul><h3>Software</h3>");
 
+/* ---------- Customer Home refresh (v88): calmer, grouped dashboard ---------- */
+document.head.insertAdjacentHTML("beforeend",`<style>
+/* The customer dashboard deliberately uses the site's existing color variables. */
+#v-dash .chome{display:flex;flex-direction:column;gap:18px;color:var(--fg);max-width:1180px;margin:auto}
+#v-dash .chome *{min-width:0}
+#v-dash .ch-welcome{background:linear-gradient(110deg,var(--sage),var(--band) 72%,color-mix(in srgb,var(--sun) 18%,var(--band)));border:1px solid var(--line);border-radius:24px;padding:24px clamp(18px,3vw,32px);display:flex;justify-content:space-between;gap:18px;align-items:center;position:relative;overflow:hidden}
+#v-dash .ch-welcome:after{content:'✿';position:absolute;right:20%;bottom:-76px;font-size:220px;line-height:1;color:var(--leaf);opacity:.065;pointer-events:none}
+#v-dash .ch-welcome h2{font-size:clamp(1.8rem,3vw,2.8rem);line-height:1.09;margin:5px 0 8px}
+#v-dash .ch-welcome p{max-width:58ch;color:var(--muted);font-size:.94rem}
+#v-dash .ch-welcome .ch-tag{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--leaf)}
+#v-dash .ch-sunbox{z-index:1;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);padding:12px 16px;border-radius:16px;min-width:210px}
+#v-dash .ch-sunico{font-size:2rem;line-height:1;color:var(--sun-ink)}
+#v-dash .ch-sunbox strong{display:block;font-size:1rem;color:var(--heading)}
+#v-dash .ch-sunbox span:last-child{color:var(--muted);font-size:.77rem}
+#v-dash .ch-layout{display:grid;grid-template-columns:minmax(240px,1.02fr) minmax(310px,1.27fr) minmax(235px,.94fr);gap:14px;align-items:stretch}
+#v-dash .ch-col{display:flex;flex-direction:column;gap:14px}
+#v-dash .ch-card{display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 4px 19px rgba(27,59,41,.035)}
+#v-dash .ch-card h3{font-size:1.33rem;line-height:1.18}
+#v-dash .ch-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+#v-dash .ch-head .ch-icon{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;background:var(--sage);color:var(--deep);font-size:1.1rem;flex:none}
+#v-dash .ch-head-main{display:flex;align-items:center;gap:9px}
+#v-dash .ch-head small,#v-dash .ch-helper{color:var(--muted);font-size:.77rem;line-height:1.4}
+#v-dash .ch-link{font:700 .82rem var(--f-body);color:var(--heading);background:none;border:0;padding:5px 2px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-align:left}
+#v-dash .ch-meter-row{display:flex;align-items:center;gap:12px;background:color-mix(in srgb,var(--sage) 45%,var(--surface));border-radius:14px;padding:10px}
+#v-dash .ch-ring{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;flex:none;background:conic-gradient(var(--sun) var(--pct),var(--line) 0)}
+#v-dash .ch-ring b{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:var(--surface);color:var(--heading);font-size:1.18rem}
+#v-dash .ch-meter-row p{font-size:.78rem;color:var(--muted)}
+#v-dash .ch-tasklist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0}
+#v-dash .ch-tasklist li{padding:10px 1px;border-bottom:1px solid var(--line)}
+#v-dash .ch-tasklist li:last-child{border-bottom:0}
+#v-dash .ch-tasklist label{font-size:.87rem;line-height:1.35;align-items:flex-start;display:flex;gap:9px;font-weight:650}
+#v-dash .ch-tasklist input{width:19px;height:19px;margin:1px 0 0;flex:none}
+#v-dash .ch-tasklist .ch-finished{text-decoration:line-through;opacity:.65}
+#v-dash .ch-why{font-size:.76rem;margin:5px 0 0 28px;color:var(--muted)}
+#v-dash .ch-why summary{cursor:pointer;font-weight:650}
+#v-dash .ch-why .tdlc{margin:7px 0 0;line-height:1.5}
+#v-dash .ch-full{margin-top:auto;display:block;border-radius:12px;background:var(--sage);border:1px solid transparent;padding:11px 12px;color:var(--heading);font-weight:750;font-size:.84rem;cursor:pointer;text-align:center}
+#v-dash .ch-full:hover{border-color:var(--leaf)}
+#v-dash .ch-map-card{padding:16px;gap:12px}
+#v-dash .ch-map-card .ch-mapframe{position:relative;min-height:300px;display:flex;flex:1;overflow:hidden;border-radius:15px;border:1px solid var(--line);background:var(--lawn);cursor:pointer}
+#v-dash .ch-map-card canvas{height:100%;width:100%;display:block;min-height:300px;aspect-ratio:1.22;object-fit:cover}
+#v-dash .ch-map-foot{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+#v-dash .ch-map-foot .ch-count{font-size:.8rem;color:var(--muted)}
+#v-dash .ch-planrow{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid var(--line);padding:5px 0 10px}
+#v-dash .ch-planrow:last-child{border:0;padding-bottom:0}
+#v-dash .ch-date{flex:0 0 57px;text-align:center;background:color-mix(in srgb,var(--sun) 22%,var(--surface));border-radius:10px;padding:6px 5px;color:var(--heading)}
+#v-dash .ch-date b{display:block;font-size:.75rem;text-transform:uppercase;line-height:1.3}
+#v-dash .ch-date strong{font-size:1.18rem;line-height:1.25}
+#v-dash .ch-planrow p{font-size:.82rem;line-height:1.4;padding-top:4px}
+#v-dash .ch-actiongrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#v-dash .ch-action{background:var(--band);border:1px solid var(--line);color:var(--fg);border-radius:13px;padding:12px 8px;min-height:84px;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:center;font-size:.76rem;font-weight:750;text-align:center;cursor:pointer}
+#v-dash .ch-action:hover{border-color:var(--leaf);background:var(--sage)}
+#v-dash .ch-action span{font-size:1.3rem;line-height:1.1}
+#v-dash .ch-section-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px}
+#v-dash .ch-section-title h2{font-size:1.5rem}
+#v-dash .ch-condition-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+#v-dash .ch-condition{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:9px}
+#v-dash .ch-condition:first-child{border-top:4px solid var(--sun)}
+#v-dash .ch-condition:nth-child(2){border-top:4px solid var(--leaf)}
+#v-dash .ch-condition:nth-child(3){border-top:4px solid var(--water)}
+#v-dash .ch-condition h3{font-size:1.15rem}
+#v-dash .ch-stat{font:700 clamp(1.3rem,2vw,1.7rem)/1.1 var(--f-display);color:var(--heading)}
+#v-dash .ch-condition p{font-size:.78rem;color:var(--muted)}
+#v-dash .ch-statusline{height:9px;border-radius:10px;background:var(--line);overflow:hidden}
+#v-dash .ch-statusline i{display:block;height:100%;background:var(--sun)}
+#v-dash .ch-bottom-grid{display:grid;grid-template-columns:1.18fr .82fr;gap:14px}
+#v-dash .ch-areas{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#v-dash .ch-area{display:flex;flex-direction:column;gap:5px;text-align:left;border:1px solid var(--line);border-radius:13px;background:var(--band);padding:12px;color:var(--fg);cursor:pointer;min-height:84px}
+#v-dash .ch-area b{font-size:.9rem;color:var(--heading)}
+#v-dash .ch-area span{color:var(--muted);font-size:.73rem}
+#v-dash .ch-area:hover{border-color:var(--leaf)}
+#v-dash .ch-record-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#v-dash .ch-record{border:1px solid var(--line);background:var(--band);border-radius:13px;padding:12px;display:flex;flex-direction:column;gap:5px}
+#v-dash .ch-record b{font-size:.88rem;color:var(--heading)}
+#v-dash .ch-record p{font-size:.76rem;color:var(--muted);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#v-dash .ch-community{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#v-dash .ch-community .ch-card{background:color-mix(in srgb,var(--sage) 23%,var(--surface))}
+#v-dash .ch-alerts .li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px;margin-top:4px;display:flex;flex-direction:column;gap:4px}
+#v-dash .ch-alerts .li span{font-size:.77rem}
+#v-dash .ch-alerts .btn{align-self:flex-start}
+#v-dash .ch-footnote{font-size:.73rem;color:var(--muted);margin:0 3px 10px}
+@media(max-width:1100px){#v-dash .ch-layout{grid-template-columns:1fr 1.15fr}#v-dash .ch-side{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr}}
+@media(max-width:750px){#v-dash .ch-layout,#v-dash .ch-condition-grid,#v-dash .ch-bottom-grid,#v-dash .ch-community{grid-template-columns:1fr}#v-dash .ch-side{display:flex;grid-column:auto}#v-dash .ch-welcome{flex-direction:column;align-items:stretch}#v-dash .ch-sunbox{min-width:0}#v-dash .ch-map-card .ch-mapframe{min-height:250px}#v-dash .ch-map-card canvas{min-height:250px}}
+@media(max-width:410px){#v-dash .ch-areas,#v-dash .ch-record-grid{grid-template-columns:1fr}#v-dash .ch-card{padding:15px}}
+</style>`);
+const _oldCustomerDashboard=renderDash;
+function chDate(d){const dt=new Date(d+"T12:00:00");return{mon:dt.toLocaleDateString("en-US",{month:"short"}),day:dt.getDate()}}
+function chOpenSheet(id,title,html){SHEETS[id]=[title,html];openSheet(id)}
+function renderCustomerDashboard(){
+ const p=prop();if(!p)return;
+ const L=tdTasks(p),tasks=L.slice(0,3),finished=tasks.filter(t=>tdIsDone(p,t.key)).length,pct=tasks.length?Math.round(finished/tasks.length*100):0;
+ const lot=p.objects.find(o=>o.type==="lot"),all=bedsOf(p),G=msGroups(p),np=(p.plantings||[]).filter(x=>!x.remove).length;
+ const cl=climFor(p.loc.lat,p.loc.lon),c=nearestCity(p.loc.lat,p.loc.lon),zone=cl&&cl.zone||c&&c.zone||"";
+ const d=day(p),time=liveNow(p.loc),now=new Date(time.date+"T12:00:00"),greeting=greet();
+ const upcoming=tdCalendar(p,100).sort((a,b)=>a.d.localeCompare(b.d)).slice(0,3),at=attention(p),mix=lightMix(p,S.date),meas=all.filter(x=>(x.tests||[]).some(t=>t.kind==="measured")).length;
+ const roof=p.objects.find(o=>o.type==="house"),runoff=roof?Math.round(roof.w*roof.d*.623):null,barrels=p.objects.filter(o=>o.type==="barrel"),capacity=barrels.reduce((n,o)=>n+(+o.cap||0),0);
+ const J=(p.journal||[]).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")),lastNote=J.find(j=>j.kind!=="harvest"),lastHarvest=J.find(j=>j.kind==="harvest");
+ const head=(icon,title,link,act,arg)=>'<div class="ch-head"><div class="ch-head-main"><span class="ch-icon" aria-hidden="true">'+icon+'</span><h3>'+title+'</h3></div>'+(link?'<button type="button" class="ch-link" data-act="'+act+'"'+(arg?' data-arg="'+arg+'"':"")+'>'+link+' →</button>':"")+'</div>';
+ let h='<div class="chome">';
+ h+='<section class="ch-welcome"><div><span class="ch-tag">In the Garden, Folks! · '+esc(greeting)+'</span><h2>Welcome back to your garden 🌱</h2><p><strong>'+esc(p.name)+'</strong> · '+esc(p.place||"Your local growing space")+'. One small step at a time — here is what matters today.</p><div class="row" style="margin-top:12px;gap:6px">'+(zone?'<span class="pill">Growing zone '+esc(zone)+'</span>':"")+'<span class="pill">'+all.length+' beds &amp; containers</span><span class="pill">'+np+' plantings</span></div></div><div class="ch-sunbox"><span class="ch-sunico" aria-hidden="true">☀</span><div><strong>'+esc(now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}))+'</strong><span>Sunrise '+fmtT(d.rise)+' · Sunset '+fmtT(d.set)+'</span></div></div></section>';
+ h+='<section class="ch-layout" aria-label="Your garden overview">';
+ h+='<article class="ch-card">'+head('✓','This week in my garden','My plan','tab','planner')+'<p class="ch-helper">Start with the most useful next steps. Check them off as you go.</p><div class="ch-meter-row"><div class="ch-ring" style="--pct:'+pct+'%"><b>'+pct+'%</b></div><div><strong>'+finished+' of '+tasks.length+' steps done</strong><p>Progress on the tasks shown here</p></div></div>'+(tasks.length?'<ul class="ch-tasklist">'+tasks.map(t=>{const done=tdIsDone(p,t.key);return'<li><label><input type="checkbox" data-tdk="'+esc(t.key)+'"'+(done?' checked':'')+'><span class="'+(done?'ch-finished':'')+'">'+esc(t.txt)+'</span></label><details class="ch-why"><summary>Why this matters</summary>'+tdLC(t.lc)+'</details></li>'}).join('')+'</ul>':'<p class="ch-helper">Nothing due right now. Your next tasks will appear here as your plan develops.</p>')+(L.length>3?'<p class="ch-helper">+'+(L.length-3)+' more task'+(L.length-3===1?'':'s')+' in your plan.</p>':'')+'<button class="ch-full" data-act="tab" data-arg="planner">Open my garden plan →</button></article>';
+ h+='<article class="ch-card ch-map-card">'+head('▧','My garden map','Open map','tab','property')+'<div class="ch-mapframe" role="button" tabindex="0" data-act="tab" data-arg="property" aria-label="Open your garden map"><canvas id="miniCv" aria-label="Preview of your garden map"></canvas><span class="nowchip" id="heroNow" aria-live="polite"></span></div><div class="ch-map-foot"><span class="ch-count">'+(G.length?G.length+' growing area'+(G.length===1?'':'s')+' · ':'')+all.length+' mapped beds &amp; containers</span><button class="ch-link" data-act="ch-spaces">Explore growing spaces →</button></div></article>';
+ h+='<div class="ch-col ch-side"><article class="ch-card">'+head('▦','My plan','Full calendar','tab','planner')+'<p class="ch-helper">The next planting and harvest dates from your plan.</p>'+(upcoming.length?upcoming.map(e=>{const dt=chDate(e.d);return'<div class="ch-planrow"><div class="ch-date"><b>'+dt.mon+'</b><strong>'+dt.day+'</strong></div><p>'+esc(e.txt)+'</p></div>'}).join(''):'<div class="ch-helper">No dated planting events yet. Add crops to your plan to build your calendar.</div>')+'<button class="ch-full" data-act="tab" data-arg="planner">View my calendar →</button></article>';
+ h+='<article class="ch-card">'+head('♡','Support')+'<p class="ch-helper">Need help? These tools connect to the features already in your garden.</p><div class="ch-actiongrid"><button class="ch-action" data-act="sw-open"><span aria-hidden="true">⌕</span>Something wrong?</button><button class="ch-action" data-act="ch-ask"><span aria-hidden="true">✉</span>Ask my consultant</button><button class="ch-action" data-act="tab" data-arg="library"><span aria-hidden="true">❀</span>Find a plant</button><button class="ch-action" data-act="ch-journal"><span aria-hidden="true">✎</span>Add a note</button></div></article></div></section>';
+ h+='<div class="ch-section-title"><h2>Garden conditions</h2><span class="ch-helper">Based on your garden records and map</span></div><section class="ch-condition-grid" aria-label="Garden conditions">';
+ h+='<article class="ch-condition"><h3>☀ Sunlight</h3><div class="ch-stat">'+(mix.n?Math.round(100*mix.F/mix.n)+'% full sun':'No beds yet')+'</div><p>'+(mix.n?mix.F+' of '+mix.n+' mapped spaces get full sun. Estimates assume a clear day.':'Add beds to see modeled sunlight.')+'</p><div class="ch-statusline"><i style="width:'+(mix.n?Math.round(100*mix.F/mix.n):0)+'%"></i></div><button class="ch-link" data-act="goto-layer" data-arg="hours">Explore sun hours →</button></article>';
+ h+='<article class="ch-condition"><h3>☘ Soil &amp; garden health</h3><div class="ch-stat">'+meas+' of '+all.length+' lab-tested</div><p>'+(at.length?esc(at[0].t):'No priority issues found in the recorded checks.')+'</p><button class="ch-link" data-act="goto-layer" data-arg="soil">Review soil &amp; needs →</button></article>';
+ h+='<article class="ch-condition"><h3>💧 Water</h3><div class="ch-stat">'+(capacity?capacity+' gal stored':'Rainwater planning')+'</div><p>'+(runoff!=null?runoff.toLocaleString()+' gallons of roof runoff per inch of rain (modeled). ':'')+(barrels.length?barrels.length+' barrel'+(barrels.length===1?'':'s')+' mapped.':'No rain barrels mapped.')+'</p><button class="ch-link" data-act="goto-layer" data-arg="water">Check water flow →</button></article></section>';
+ h+='<section class="ch-bottom-grid" aria-label="Growing spaces and garden records"><article class="ch-card">'+head('❧','My growing spaces','View all','ch-spaces')+(G.length?'<div class="ch-areas">'+G.slice(0,4).map(g=>'<button type="button" class="ch-area" data-act="ms-area" data-arg="'+esc(g.key)+'"><b>'+esc(g.name)+'</b><span>'+g.spots.length+' mapped space'+(g.spots.length===1?'':'s')+(g.ground.length?' · '+g.ground.length+' in-ground plant'+(g.ground.length===1?'':'s'):'')+'</span><span>View details →</span></button>').join('')+'</div>':'<p class="ch-helper">Your growing areas will show here when they have been mapped.</p>')+(G.length>4?'<button class="ch-link" data-act="ch-spaces">See all '+G.length+' areas →</button>':'')+'</article>';
+ h+='<article class="ch-card">'+head('▤','Garden records','Open journal','ch-journal')+'<p class="ch-helper">Your observations and harvests stay together, ready for next season.</p><div class="ch-record-grid"><div class="ch-record"><b>✎ Notes</b><p>'+(lastNote?esc(lastNote.text):'No notes recorded yet.')+'</p><button class="ch-link" data-act="ch-journal">Add a note →</button></div><div class="ch-record"><b>♧ Harvests</b><p>'+(lastHarvest?esc(lastHarvest.text):'Nothing harvested or logged yet.')+'</p><button class="ch-link" data-act="ch-harvest">Open harvest log →</button></div></div></article></section>';
+ h+='<div class="ch-section-title"><h2>Community &amp; local updates</h2><span class="ch-helper">Your neighbors, your growing area</span></div><section class="ch-community" aria-label="Local gardening community"><article class="ch-card ch-alerts">'+head('⚑','Pest watch &amp; local alerts','See alerts','tab','alerts')+W('around',p)+'</article><article class="ch-card">'+head('♧','From the folks','Growing Circle','tab','explore')+'<p class="ch-helper">Find neighbors growing similar crops, share advice and arrange harvest swaps when you choose to participate.</p><div class="row"><button class="btn sm" data-act="tab" data-arg="explore">Open Growing Circle</button><button class="btn sm" data-act="trade-mode" data-arg="swap">Harvest swaps</button></div></article></section>';
+ h+='<p class="ch-footnote">Sunlight and runoff figures are modeled estimates, not measurements. Community reports are shown with their verification status. Your personal garden remains shared only according to your account privacy settings.</p></div>';
+ const target=document.getElementById('v-dash');if(target)target.innerHTML=h;
+ heroDraw();
+}
+renderDash=function(){if(typeof isCust==='function'&&isCust()&&prop()&&!prop().demo){return renderCustomerDashboard()}return _oldCustomerDashboard.apply(this,arguments)};
+document.addEventListener('click',function(e){const b=e.target.closest&&e.target.closest('[data-act]');if(!b||!(typeof isCust==='function'&&isCust()))return;const p=prop();if(!p)return;
+ if(b.dataset.act==='ch-ask'){chOpenSheet('chask','Ask your consultant',cSec('cask',p));return}
+ if(b.dataset.act==='ch-journal'){chOpenSheet('chjournal','Garden journal',cSec('cjournal',p));return}
+ if(b.dataset.act==='ch-harvest'){chOpenSheet('chharvest','Harvest log',cSec('charvest',p));return}
+ if(b.dataset.act==='ch-spaces'){chOpenSheet('chspaces','My growing spaces',msHomeHTML(p));return}
+},true);
+document.addEventListener('keydown',function(e){if(e.key!=='Enter'&&e.key!==' ')return;const el=e.target;if(el&&el.classList&&el.classList.contains('ch-mapframe')){e.preventDefault();go('property')}},true);
+
 /* ---------- init ---------- */
 document.documentElement.lang="en";
 applyA11y();
