@@ -10285,6 +10285,60 @@ document.head.insertAdjacentHTML("beforeend",'<style id="gc-calendar-css">'+
  '</style>');
 /* ================= end garden calendar enhancement ================= */
 
+
+/* ================= Outline redo / delete controls (My Garden > Outlines) ================= */
+S.olRedo=null;
+const OL_TYPES=new Set(["lot","house","grow","fence","neighbor","apartment","shed","greenhouse","woods","pond"]);
+const olItems=p=>p.objects.filter(o=>OL_TYPES.has(o.type)&&!o.fixed);
+const olCore=o=>o.type==="lot"||o.type==="house"||!!o.homeBldg;
+function olCurrent(){const d=S.olRedo,p=prop();return d&&p&&d.pid===p.id&&p.objects.some(o=>o.id===d.id)?d:null}
+function olRefresh(){renderProperty();drawProp()}
+function olPanel(p){
+ const O=olItems(p),d=olCurrent(),name=o=>o.type==="lot"?"Whole yard":o.name||TYPES[o.type]||"Outline";
+ return '<section class="ol-manage" aria-label="Manage drawn outlines"><h4 style="margin:0">Delete or redraw an outline</h4>'+
+ '<p class="small muted" style="margin:0">Correct an outline without erasing your other beds, plants, buildings or map work. Redraw uses the 2D map. Use Undo to restore an outline you deleted or changed.</p>'+
+ (O.length?'<div class="ilist">'+O.map(o=>'<div class="icard"><div class="stack" style="gap:2px;flex:1;min-width:120px"><b>'+esc(name(o))+'</b><span class="tiny muted">'+esc(TYPES[o.type]||o.type)+(o.poly?' · custom outline':' · rectangular outline')+'</span></div><div class="row" style="gap:5px;flex-wrap:wrap"><button class="btn sm" type="button" data-ol="redraw" data-id="'+esc(o.id)+'"'+(d?' disabled':'')+'>Redraw</button><button class="btn sm" type="button" data-ol="remove" data-id="'+esc(o.id)+'"'+(d?' disabled':'')+'>'+(olCore(o)?"Reset outline":"Delete")+'</button></div></div>').join('')+'</div>':'<p class="small muted">No outlines to manage yet.</p>')+
+ '<p class="tiny muted" style="margin:0">The yard and home are needed for planning, so Reset outline restores their rectangle instead of deleting the property. Other outlined objects can be deleted individually.</p></section>';
+}
+{const previous=renderGlance;renderGlance=function(){const result=previous.apply(this,arguments);try{const p=prop(),host=document.querySelector("#acc-outl .accb");if(host&&!host.querySelector(".ol-manage"))host.insertAdjacentHTML("afterbegin",olPanel(p))}catch(e){console.error(e)}return result}}
+function olToolbar(){const d=olCurrent();if(!d)return "";const o=prop().objects.find(x=>x.id===d.id),n=d.pts.length;return '<div class="ol-drawing toolrow" role="status" aria-live="polite"><div class="stack" style="gap:3px;flex:1;min-width:180px"><b>Redrawing '+esc(o.name||TYPES[o.type])+'</b><span class="small">Tap the corners on the 2D map in order. '+n+' point'+(n===1?'':'s')+' added. The old outline stays unchanged until Finish.</span></div><div class="row" style="gap:6px;flex-wrap:wrap"><button class="btn sm" type="button" data-ol="unpoint"'+(n?'':' disabled')+'>Undo point</button><button class="btn sm primary" type="button" data-ol="finish"'+(n<3?' disabled':'')+'>Finish outline</button><button class="btn sm" type="button" data-ol="cancel">Cancel</button></div></div>'}
+{const previous=renderMapTools;renderMapTools=function(){const result=previous.apply(this,arguments);const el=document.querySelector("#mapTools"),d=olCurrent();if(el&&d&&!el.querySelector(".ol-drawing"))el.insertAdjacentHTML("afterbegin",olToolbar());return result}}
+{const previous=drawHandles;drawHandles=function(c,p,g){previous.apply(this,arguments);const d=olCurrent();if(!d||d.pid!==p.id||!d.pts.length||!c.canvas||c.canvas.id!=="propCv")return;
+ c.save();inScreen(g,c);c.lineWidth=3;c.strokeStyle="#FF6B52";c.fillStyle="#FF6B52";c.setLineDash([7,5]);c.beginPath();d.pts.forEach((q,i)=>i?c.lineTo(q[0]*g.k,q[1]*g.k):c.moveTo(q[0]*g.k,q[1]*g.k));if(d.pts.length>=3)c.closePath();c.stroke();c.setLineDash([]);
+ d.pts.forEach((q,i)=>{c.beginPath();c.arc(q[0]*g.k,q[1]*g.k,5,0,Math.PI*2);c.fill();c.fillStyle="#121412";c.font="bold 12px sans-serif";c.fillText(String(i+1),q[0]*g.k+8,q[1]*g.k-7);c.fillStyle="#FF6B52"});c.restore()}}
+function olAction(act,id){
+ const p=prop(),d=olCurrent();
+ if(act==="cancel"){S.olRedo=null;olRefresh();toast("Redraw cancelled. Your original outline is unchanged.");return}
+ if(act==="unpoint"&&d){d.pts.pop();renderMapTools();drawProp();return}
+ if(act==="finish"&&d){const o=p.objects.find(x=>x.id===d.id),P=d.pts.map(q=>q.slice());if(!o||P.length<3){toast("Add at least three corners before finishing.");return}
+  if(Math.abs(shoelace(P))<.25){toast("The outline is too small. Spread the corners farther apart.");return}
+  pushUndo();o.poly=P;if(o.type==="lot")delete p.lotShape;meFix(p,o);S.olRedo=null;S.sel=o.id;changed(p);olRefresh();toast((o.name||"Outline")+" redrawn. Undo restores its previous shape.");return}
+ if(d)return;
+ const o=p.objects.find(x=>x.id===id);if(!o||!OL_TYPES.has(o.type)||o.fixed)return;
+ if(act==="redraw"){
+  S.olRedo={pid:p.id,id:o.id,pts:[]};S.tool="select";S.sel=null;S.selCorner=null;S.photoEdit=false;S.panMode=false;
+  if(!isMap()){S.view="app";S.tab="garden";S.gsub="map";renderChrome()}
+  if(S.map3d)map3dSet(false);
+  olRefresh();const box=document.querySelector("#propBox");if(box)box.scrollIntoView({block:"center",behavior:reduceMotion()?"auto":"smooth"});
+  toast("Tap each corner of "+(o.name||"the outline")+" on the map, then press Finish outline. Cancel keeps the original.");return
+ }
+ if(act==="remove"){
+  const core=olCore(o),label=o.name||TYPES[o.type];
+  if(!confirm(core?"Reset "+label+" to a rectangle? Its custom outline can be restored with Undo.":"Delete "+label+" from this map? Undo will bring it back."))return;
+  pushUndo();if(core){delete o.poly;if(o.type==="lot")delete p.lotShape}else{p.objects=p.objects.filter(x=>x.id!==o.id);if(S.sel===o.id)S.sel=null}
+  S.selCorner=null;changed(p);olRefresh();toast(core?label+" outline reset. Redraw it whenever you like.":label+" deleted. Undo brings it back.");return
+ }
+}
+document.addEventListener("click",e=>{const btn=e.target.closest&&e.target.closest("[data-ol]");if(!btn)return;e.preventDefault();e.stopImmediatePropagation();olAction(btn.dataset.ol,btn.dataset.id)},true);
+document.addEventListener("pointerdown",e=>{const d=olCurrent();if(!d||!isMap()||e.target!==cvP||e.button!==0)return;
+ e.preventDefault();e.stopImmediatePropagation();const p=prop(),pos=toWorld(cvP,e,p.view);
+ d.pts.push([pos.x,pos.y]);renderMapTools();drawProp()
+},true);
+document.addEventListener("click",e=>{if(olCurrent()&&e.target===cvP){e.preventDefault();e.stopImmediatePropagation()}},true);
+document.addEventListener("keydown",e=>{if(!olCurrent()||e.key!=="Escape")return;e.preventDefault();olAction("cancel")},true);
+document.head.insertAdjacentHTML("beforeend",'<style id="ol-manage-css">.ol-manage{display:flex;flex-direction:column;gap:9px;padding:12px;border:1px solid #B8C7AA;border-radius:12px;background:#F4F8EF}.ol-manage .icard{background:#FAFAF6}.ol-drawing{border:2px solid #FF6B52;background:#FFF5E8;padding:10px;border-radius:10px}.ol-drawing .btn{min-height:40px}@media(max-width:600px){.ol-manage .icard{flex-wrap:wrap}}</style>');
+/* ================= end outline management ================= */
+
 /* ---------- init ---------- */
 document.documentElement.lang="en";
 applyA11y();
