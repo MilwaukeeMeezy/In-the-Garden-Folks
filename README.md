@@ -17,6 +17,7 @@ New to gardening? Tap any word with a dotted underline to see what it means, or 
 | Area | Status |
 |---|---|
 | Garden setup: home type, places you grow, city or ZIP code, photos, which way the home faces, measuring the house and lot (including splitting a townhome row) | Working |
+| Apartment/condo gardener setup: choose a generic three-story apartment building or trace a real footprint, set dimensions and stories, and place a balcony by floor, direction and left/center/right position; view the building and selected balcony in 3D | Working (generic geometry and estimated shade; not an exact building scan) |
 | My Garden map: sun and shade at any date and time, sun hours, water, soil zones, tree line by direction | Working |
 | At a glance panel with a section for each topic, which you can reorder or move under the map | Working |
 | 3D garden: the yard in 3D with sun and shadows, realistic models (trees, bushes, beds, greenhouse, shed, deck, watering tools), slopes and dips you can exaggerate, touch navigation (drag, pinch, twist, two-finger slide, double-tap); drag things to move them; watch plants grow through the season | Working |
