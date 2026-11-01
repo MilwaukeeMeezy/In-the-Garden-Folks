@@ -5642,7 +5642,21 @@ GTIPS.supplies="List what you own, borrowed or reused, and keep one budget for p
 GTIPS.harvest="Log what you pick and keep track of stored food on hand.";
 
 /* ---------- events ---------- */
-function yRe(){renderGlance();if(typeof renderDash==="function"&&S.view==="app"&&S.tab==="home")try{renderDash()}catch(_){}}
+function yRe(){renderGlance();if(typeof renderDash==="function"&&S.view==="app"&&S.tab==="dash")try{renderDash()}catch(_){}}
+/* Harvest inputs can exist in both the hidden garden accordion and the customer dialog.
+   Read and refresh only the form that the customer actually clicked. */
+function yhScope(button){return button.closest("#sheetHost .sheet")||button.closest("#acc-harvest")||document}
+function yhRefreshDialog(button,p){
+ const sheet=button.closest("#sheetHost .sheet");
+ if(!sheet||sheet.querySelector("#sheetT")?.textContent.trim()!=="Harvest log")return;
+ const body=sheet.querySelector(":scope > .stack.small");
+ if(!body)return;
+ const html=harvestHTML(p)[1];
+ SHEETS.chharvest=["Harvest log",html];
+ body.innerHTML=html;
+ body.querySelector("#yhA")?.focus({preventScroll:true});
+}
+
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-ym-space],[data-ym-limit],[data-ym-have],[data-ym-like],[data-ym-mode],[data-act]");if(!b)return;const p=prop();if(!p)return;const M=mny(p),d=b.dataset;
  if(d.ymSpace){M.space=d.ymSpace;changed(p);yRe();return}
  if(d.ymLimit!=null){M.limit=+d.ymLimit;changed(p);yRe();return}
@@ -5664,9 +5678,20 @@ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest
  if(act==="ybb-add"){const m=MATS[arg];p.budget=p.budget||[];p.budget.push({id:nid("b"),item:m[0],planned:m[2],actual:null,status:"planned",src:"manual",k:arg});changed(p);yRe();toast(m[0]+" added to your budget at the rough estimate. Type what you pay when you buy it.");return}
  if(act==="yn-done"||act==="yn-later"||act==="yn-skip"){const N=M.next=M.next||{};if(act==="yn-done"){N[arg]={st:"done",at:TODAY};if(arg.startsWith("t:")){const tk=(p.tasks||[]).find(x=>x.id===arg.slice(2));if(tk)tk.done=true}if(arg.startsWith("pb:")){toast("Marked done. Tick it Fixed in Problems & plan when it’s solved.")}}else N[arg]={st:act==="yn-later"?"later":"skip",at:TODAY,until:addDays(TODAY,act==="yn-later"?3:7)};
   if(act==="yn-skip")N[arg].st="later";Object.keys(N).forEach(k=>{if(N[k].at&&g3Days(N[k].at,TODAY)>60)delete N[k]});changed(p);yRe();if(act!=="yn-done")toast(act==="yn-later"?"Hidden for 3 days.":"Skipped for this week.");else if(!arg.startsWith("pb:"))toast("Nice work.");setTimeout(()=>{const f=$("#nextThree button");if(f)f.focus()},0);return}
- if(act==="yh-add"){const o=($("#yhO")||{}).value,n=(o&&o.trim())||($("#yhN")||{}).value,a=+(($("#yhA")||{}).value),u=($("#yhU")||{}).value||"lb",use=($("#yhUse")||{}).value||"fresh";if(!n||!(a>0)){toast("Pick a crop and type an amount.");return}const dt=($("#yhD")||{}).value;p.harvests=p.harvests||[];p.harvests.push({id:nid("h"),date:isDate(dt)?dt:TODAY,n:n.slice(0,60),amt:a,unit:u,use,left:use==="stored"?a:undefined,bed:($("#yhB")||{}).value||undefined,note:(($("#yhNote")||{}).value||"").trim().slice(0,120)||undefined});changed(p);yRe();toast("Harvest logged: "+a+" "+u+" of "+n+".");return}
- if(act==="yh-del"){p.harvests=(p.harvests||[]).filter(x=>x.id!==arg);changed(p);yRe();return}
- if(act==="yh-use"){const inp=document.querySelector('[data-yh-usekey="'+CSS.escape(arg)+'"]'),v=+(inp&&inp.value);if(!(v>0)){toast("Type how much you used.");return}const [n,u]=arg.split("|");let r=v;(p.harvests||[]).filter(x=>x.use==="stored"&&x.n===n&&x.unit===u).sort((a,b)=>a.date.localeCompare(b.date)).forEach(x=>{const l=x.left!=null?+x.left:+x.amt;const take=Math.min(l,r);x.left=Math.round((l-take)*100)/100;r-=take});changed(p);yRe();toast("Updated what’s on hand.");return}});
+ if(act==="yh-add"){
+  const scope=yhScope(b),field=id=>scope.querySelector("#"+id);
+  const typed=(field("yhO")?.value||"").trim(),n=typed||(field("yhN")?.value||"").trim();
+  const amountText=(field("yhA")?.value||"").trim(),a=Number(amountText);
+  if(!n){toast("Choose a crop or type its name.");(field("yhN")||field("yhO"))?.focus();return}
+  if(!amountText||!Number.isFinite(a)||a<=0){toast("Enter an amount greater than zero.");field("yhA")?.focus();return}
+  const u=field("yhU")?.value||"lb",use=field("yhUse")?.value||"fresh",dt=field("yhD")?.value||"";
+  p.harvests=p.harvests||[];
+  p.harvests.push({id:nid("h"),date:isDate(dt)?dt:TODAY,n:n.slice(0,60),amt:a,unit:u,use,left:use==="stored"?a:undefined,bed:field("yhB")?.value||undefined,note:(field("yhNote")?.value||"").trim().slice(0,120)||undefined});
+  changed(p);yRe();yhRefreshDialog(b,p);toast("Harvest logged: "+a+" "+u+" of "+n+".");return
+ }
+ if(act==="yh-del"){p.harvests=(p.harvests||[]).filter(x=>x.id!==arg);changed(p);yRe();yhRefreshDialog(b,p);toast("Harvest removed.");return}
+ if(act==="yh-use"){const scope=yhScope(b),inp=scope.querySelector('[data-yh-usekey="'+CSS.escape(arg)+'"]'),v=+(inp&&inp.value);if(!(v>0)){toast("Type how much you used.");inp?.focus();return}const [n,u]=arg.split("|");let r=v;(p.harvests||[]).filter(x=>x.use==="stored"&&x.n===n&&x.unit===u).sort((a,b)=>a.date.localeCompare(b.date)).forEach(x=>{const l=x.left!=null?+x.left:+x.amt;const take=Math.min(l,r);x.left=Math.round((l-take)*100)/100;r-=take});changed(p);yRe();yhRefreshDialog(b,p);toast("Updated what’s on hand.");return}
+});
 document.addEventListener("change",e=>{const t=e.target,p=prop();if(!t||!p)return;const M=mny(p),d=t.dataset||{};
  if(t.id==="ymLimit"||t.id==="ymLimit2"){const v=t.value===""?null:Math.max(0,Math.round(+t.value));M.limit=v;changed(p);setTimeout(yRe,0);return}
  if(d.ybSt||d.ybPaid||d.ybBed){const id=d.ybSt||d.ybPaid||d.ybBed,b=(p.budget||[]).find(x=>x.id===id);if(!b)return;if(d.ybSt){b.status=t.value;if(t.value==="free"||t.value==="borrowed"){b.actual=0;const iv=invOf(p).find(x=>x.src==="plan"&&x.status==="needed"&&x.k&&x.k===b.k);if(iv)iv.status=t.value==="free"?"owned":"borrowed"}else if(t.value==="planned")b.actual=null}if(d.ybPaid){b.actual=t.value===""?null:Math.max(0,+t.value);if(b.actual!=null&&(!b.status||b.status==="planned"))b.status="bought";b.date=TODAY;if(b.actual!=null){const iv=invOf(p).find(x=>x.src==="plan"&&x.status==="needed"&&x.k&&x.k===b.k);if(iv)iv.status="owned"}}if(d.ybBed)b.bed=t.value||null;changed(p);setTimeout(yRe,0);return}
@@ -9811,7 +9836,7 @@ function renderCustomerDashboard(){
  const d=day(p),time=liveNow(p.loc),now=new Date(time.date+"T12:00:00"),greeting=greet();
  const upcoming=tdCalendar(p,100).sort((a,b)=>a.d.localeCompare(b.d)).slice(0,3),at=attention(p),mix=lightMix(p,S.date),meas=all.filter(x=>(x.tests||[]).some(t=>t.kind==="measured")).length;
  const roof=p.objects.find(o=>o.type==="house"),runoff=roof?Math.round(roof.w*roof.d*.623):null,barrels=p.objects.filter(o=>o.type==="barrel"),capacity=barrels.reduce((n,o)=>n+(+o.cap||0),0);
- const J=(p.journal||[]).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")),lastNote=J.find(j=>j.kind!=="harvest"),lastHarvest=J.find(j=>j.kind==="harvest");
+ const J=(p.journal||[]).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")),lastNote=J.find(j=>j.kind!=="harvest"),lastHarvest=(p.harvests||[]).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""))[0];
  const head=(icon,title,link,act,arg)=>'<div class="ch-head"><div class="ch-head-main"><span class="ch-icon" aria-hidden="true">'+icon+'</span><h3>'+title+'</h3></div>'+(link?'<button type="button" class="ch-link" data-act="'+act+'"'+(arg?' data-arg="'+arg+'"':"")+'>'+link+' →</button>':"")+'</div>';
  let h='<div class="chome">';
  h+='<section class="ch-welcome"><div><span class="ch-tag">In the Garden, Folks! · '+esc(greeting)+'</span><h2>Welcome back to your garden 🌱</h2><p><strong>'+esc(p.name)+'</strong> · '+esc(p.place||"Your local growing space")+'. One small step at a time — here is what matters today.</p><div class="row" style="margin-top:12px;gap:6px">'+(zone?'<span class="pill">Growing zone '+esc(zone)+'</span>':"")+'<span class="pill">'+all.length+' beds &amp; containers</span><span class="pill">'+np+' plantings</span></div></div><div class="ch-sunbox"><span class="ch-sunico" aria-hidden="true">☀</span><div><strong>'+esc(now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}))+'</strong><span>Sunrise '+fmtT(d.rise)+' · Sunset '+fmtT(d.set)+'</span></div></div></section>';
@@ -9825,7 +9850,7 @@ function renderCustomerDashboard(){
  h+='<article class="ch-condition"><h3>☘ Soil &amp; garden health</h3><div class="ch-stat">'+meas+' of '+all.length+' lab-tested</div><p>'+(at.length?esc(at[0].t):'No priority issues found in the recorded checks.')+'</p><button class="ch-link" data-act="goto-layer" data-arg="soil">Review soil &amp; needs →</button></article>';
  h+='<article class="ch-condition"><h3>💧 Water</h3><div class="ch-stat">'+(capacity?capacity+' gal stored':'Rainwater planning')+'</div><p>'+(runoff!=null?runoff.toLocaleString()+' gallons of roof runoff per inch of rain (modeled). ':'')+(barrels.length?barrels.length+' barrel'+(barrels.length===1?'':'s')+' mapped.':'No rain barrels mapped.')+'</p><button class="ch-link" data-act="goto-layer" data-arg="water">Check water flow →</button></article></section>';
  h+='<section class="ch-bottom-grid" aria-label="Growing spaces and garden records"><article class="ch-card">'+head('❧','My growing spaces','View all','ch-spaces')+(G.length?'<div class="ch-areas">'+G.slice(0,4).map(g=>'<button type="button" class="ch-area" data-act="ms-area" data-arg="'+esc(g.key)+'"><b>'+esc(g.name)+'</b><span>'+g.spots.length+' mapped space'+(g.spots.length===1?'':'s')+(g.ground.length?' · '+g.ground.length+' in-ground plant'+(g.ground.length===1?'':'s'):'')+'</span><span>View details →</span></button>').join('')+'</div>':'<p class="ch-helper">Your growing areas will show here when they have been mapped.</p>')+(G.length>4?'<button class="ch-link" data-act="ch-spaces">See all '+G.length+' areas →</button>':'')+'</article>';
- h+='<article class="ch-card">'+head('▤','Garden records','Open journal','ch-journal')+'<p class="ch-helper">Your observations and harvests stay together, ready for next season.</p><div class="ch-record-grid"><div class="ch-record"><b>✎ Notes</b><p>'+(lastNote?esc(lastNote.text):'No notes recorded yet.')+'</p><button class="ch-link" data-act="ch-journal">Add a note →</button></div><div class="ch-record"><b>♧ Harvests</b><p>'+(lastHarvest?esc(lastHarvest.text):'Nothing harvested or logged yet.')+'</p><button class="ch-link" data-act="ch-harvest">Open harvest log →</button></div></div></article></section>';
+ h+='<article class="ch-card">'+head('▤','Garden records','Open journal','ch-journal')+'<p class="ch-helper">Your observations and harvests stay together, ready for next season.</p><div class="ch-record-grid"><div class="ch-record"><b>✎ Notes</b><p>'+(lastNote?esc(lastNote.text):'No notes recorded yet.')+'</p><button class="ch-link" data-act="ch-journal">Add a note →</button></div><div class="ch-record"><b>♧ Harvests</b><p>'+(lastHarvest?esc(String(lastHarvest.amt)+' '+(lastHarvest.unit||'lb')+' of '+lastHarvest.n+' · '+dshort(lastHarvest.date||TODAY)):'Nothing harvested or logged yet.')+'</p><button class="ch-link" data-act="ch-harvest">Open harvest log →</button></div></div></article></section>';
  h+='<div class="ch-section-title"><h2>Community &amp; local updates</h2><span class="ch-helper">Your neighbors, your growing area</span></div><section class="ch-community" aria-label="Local gardening community"><article class="ch-card ch-alerts">'+head('⚑','Pest watch &amp; local alerts','See alerts','tab','alerts')+W('around',p)+'</article><article class="ch-card">'+head('♧','From the folks','Growing Circle','tab','explore')+'<p class="ch-helper">Find neighbors growing similar crops, share advice and arrange harvest swaps when you choose to participate.</p><div class="row"><button class="btn sm" data-act="tab" data-arg="explore">Open Growing Circle</button><button class="btn sm" data-act="trade-mode" data-arg="swap">Harvest swaps</button></div></article></section>';
  h+='<p class="ch-footnote">Sunlight and runoff figures are modeled estimates, not measurements. Community reports are shown with their verification status. Your personal garden remains shared only according to your account privacy settings.</p></div>';
  const target=document.getElementById('v-dash');if(target)target.innerHTML=h;
@@ -9839,6 +9864,164 @@ document.addEventListener('click',function(e){const b=e.target.closest&&e.target
  if(b.dataset.act==='ch-spaces'){chOpenSheet('chspaces','My growing spaces',msHomeHTML(p));return}
 },true);
 document.addEventListener('keydown',function(e){if(e.key!=='Enter'&&e.key!==' ')return;const el=e.target;if(el&&el.classList&&el.classList.contains('ch-mapframe')){e.preventDefault();go('property')}},true);
+
+/* v90 — customer-led improvements, safe plant placement, structures and expanded catalog */
+(function(){
+// Catalog entries augment, never replace, existing saved plants or native lists.
+const extraFoods=[
+['Sweet cherry','Prunus avium','Fruit','F','', 'Fruit tree; generally needs a compatible pollinizer and well-drained soil.'],
+['Sour cherry','Prunus cerasus','Fruit','F','','Tart pie cherry; many varieties are self-fertile.'],
+['Table grapes (seeded)','Vitis vinifera','Fruit','F','','Bunch grapes for fresh eating; train on a trellis. Check disease resistance for your region.'],
+['Table grapes (seedless)','Vitis labrusca × Vitis vinifera','Fruit','F','','Seedless table grapes; select a variety hardy in your local zone.'],
+['Concord grapes','Vitis labrusca','Fruit','F','','Classic seeded American bunch grape; give a strong arbor or trellis.'],
+['Niagara grapes','Vitis labrusca','Fruit','F','','White American bunch grape; full sun and good airflow.'],
+['Grapes (table / bunch)','Vitis labrusca','Fruit','F','','Regular bunch grapes for eating fresh; train on trellis and choose a locally adapted variety.'],
+['Muscadine grapes','Vitis rotundifolia','Fruit','F','','Heat-adapted grape for warmer regions; check pollination and cold tolerance.'],
+['Blueberries','Vaccinium corymbosum','Fruit','FP','','Needs acidic soil; plan for mature shrub size.'],
+['Raspberries','Rubus idaeus','Fruit','F','','Canes need room; some types bear in fall.'],
+['Blackberries','Rubus fruticosus agg.','Fruit','F','','Train canes on supports.'],
+['Fig','Ficus carica','Fruit','F','','Prune and winter-protect in colder areas.'],
+['Peach','Prunus persica','Fruit','F','','Fruit tree; thinning fruit improves quality.'],
+['Plum','Prunus domestica','Fruit','F','','Check varieties for pollination requirements.'],
+['Pear','Pyrus communis','Fruit','F','','Choose disease-resistant varieties and suitable pollinizers.'],
+['Apple','Malus domestica','Fruit','F','','Most varieties require cross-pollination.'],
+['Pawpaw','Asimina triloba','Fruit','PS','','Understory fruit tree; young plants prefer protection from strong sun.'],
+['Persimmon','Diospyros virginiana','Fruit','F','','Native fruit tree; check male/female pollination needs.'],
+['Elderberry','Sambucus canadensis','Fruit','FP','','Shrub; cook berries before eating.'],
+['Asparagus','Asparagus officinalis','Vegetable','F','','Perennial vegetable; harvest lightly until established.'],
+['Broccoli','Brassica oleracea var. italica','Vegetable','FP','','Cool season; harvest heads before flowers open.'],
+['Cauliflower','Brassica oleracea var. botrytis','Vegetable','F','','Cool season; temperature sensitive.'],
+['Brussels sprouts','Brassica oleracea var. gemmifera','Vegetable','F','','Long cool-season crop.'],
+['Carrots','Daucus carota','Vegetable','F','','Loose, stone-free soil helps roots develop.'],
+['Beets','Beta vulgaris','Vegetable','F','','Edible roots and leaves.'],
+['Radishes','Raphanus sativus','Vegetable','FP','','Quick cool-season crop.'],
+['Turnips','Brassica rapa','Vegetable','FP','','Cool-season roots and greens.'],
+['Cucumbers','Cucumis sativus','Vegetable','F','','Climbing varieties benefit from a trellis.'],
+['Zucchini','Cucurbita pepo','Vegetable','F','','Give plants generous spacing.'],
+['Winter squash','Cucurbita maxima','Vegetable','F','','Long vines; full sun and space.'],
+['Pumpkins','Cucurbita pepo','Vegetable','F','','Long vines, warm soil and pollinators.'],
+['Watermelon','Citrullus lanatus','Fruit','F','','Warm-season vine; choose suitable season length.'],
+['Cantaloupe','Cucumis melo','Fruit','F','','Warm-season vine needing space.'],
+['Okra','Abelmoschus esculentus','Vegetable','F','','Warm-season plant; pick pods young.'],
+['Eggplant','Solanum melongena','Vegetable','F','','Warm-season crop, similar needs to peppers.'],
+['Peas','Pisum sativum','Vegetable','FP','','Cool-season climber; provide a trellis.'],
+['Pole beans','Phaseolus vulgaris','Vegetable','F','','Climbing beans need sturdy support.'],
+['Corn','Zea mays','Vegetable','F','','Plant in blocks for better wind pollination.'],
+['Spinach','Spinacia oleracea','Vegetable','FP','','Cool-season leafy green.'],
+['Arugula','Eruca vesicaria','Vegetable','FP','','Fast cool-season salad crop.'],
+['Collard greens','Brassica oleracea var. viridis','Vegetable','FP','','Cold-tolerant greens.'],
+['Mustard greens','Brassica juncea','Vegetable','FP','','Fast-growing spicy greens.'],
+['Leeks','Allium ampeloprasum','Vegetable','F','','Long-season allium.'],
+['Scallions','Allium fistulosum','Vegetable','F','','Harvest green stems as needed.'],
+['Celery','Apium graveolens','Vegetable','FP','','Keep evenly watered.'],
+['Cilantro','Coriandrum sativum','Herb','FP','','Cool-weather herb that bolts in heat.'],
+['Dill','Anethum graveolens','Herb','F','','Host for swallowtail caterpillars.'],
+['Rosemary','Salvia rosmarinus','Herb','F','ds','Well-drained soil; winter protection in cold climates.'],
+['Oregano','Origanum vulgare','Herb','F','ds','Perennial herb; tolerates dry soil.'],
+['Chives','Allium schoenoprasum','Herb','F','','Perennial edible herb.'],
+['Lemongrass','Cymbopogon citratus','Herb','F','','Tropical grass; bring indoors before frost.'],
+['Sunflowers','Helianthus annuus','Flower','F','','Tall annual flower; pollinators and seed harvest.'],
+['Zinnias','Zinnia elegans','Flower','F','','Warm-season cut flower; deadhead for more blooms.'],
+['Marigolds','Tagetes patula','Flower','F','','Annual flowers; avoid assuming they prevent every pest.'],
+['Dahlias','Dahlia spp.','Flower','F','','Dig and store tubers where the ground freezes.']
+];
+const knownFood=new Set(EDIBLES.map(x=>x.n));for(const x of extraFoods){if(!knownFood.has(x[0])){EDIBLES.push(P(...x));knownFood.add(x[0])}}
+TTYPES.push(['Cherry (fruiting, sweet or sour)','fruit','medium','decid',22]);
+Object.assign(GROW,{
+ 'Sweet cherry':{h:18,s:16,form:'tree',life:'w',d:110,fr:'#AD163F',bl:[4,5]},
+ 'Sour cherry':{h:13,s:12,form:'tree',life:'w',d:105,fr:'#C41E3A',bl:[4,5]},
+ 'Table grapes (seeded)':{h:7,s:5,form:'vine',life:'w',d:120,fr:'#6B3A7A'},
+ 'Table grapes (seedless)':{h:7,s:5,form:'vine',life:'w',d:120,fr:'#6B3A7A'},
+ 'Concord grapes':{h:8,s:6,form:'vine',life:'w',d:120,fr:'#4D315F'},
+ 'Niagara grapes':{h:8,s:6,form:'vine',life:'w',d:120,fr:'#ADCB65'},
+ 'Grapes (table / bunch)':{h:8,s:6,form:'vine',life:'w',d:120,fr:'#6D4E85'},
+ 'Muscadine grapes':{h:8,s:6,form:'vine',life:'w',d:120,fr:'#45325E'},
+ 'Blueberries':{h:5,s:5,form:'shrub',life:'w',fr:'#344B9A'},
+ 'Raspberries':{h:5,s:3,form:'shrub',life:'w',fr:'#B52536'},
+ 'Blackberries':{h:6,s:4,form:'shrub',life:'w',fr:'#2D2542'},
+ 'Pawpaw':{h:15,s:9,form:'tree',life:'w',fr:'#9EA953'},
+ 'Fig':{h:12,s:13,form:'tree',life:'w',fr:'#7B4C73'},
+ 'Peach':{h:15,s:13,form:'tree',life:'w',fr:'#ECA765'},
+ 'Apple':{h:15,s:12,form:'tree',life:'w',fr:'#D43F38'},
+ 'Pear':{h:18,s:11,form:'tree',life:'w',fr:'#B1CB6A'},
+ 'Plum':{h:14,s:12,form:'tree',life:'w',fr:'#70417C'},
+ 'Persimmon':{h:20,s:15,form:'tree',life:'w',fr:'#E9873C'},
+ 'Cucumbers':{h:6,s:3,form:'vine',life:'a',pr:'warm'},
+ 'Pole beans':{h:7,s:2,form:'vine',life:'a',pr:'warm'},
+ 'Peas':{h:5,s:2,form:'vine',life:'a',pr:'cool'},
+ 'Corn':{h:7,s:2,form:'grass',life:'a',pr:'warm'},
+ 'Sunflowers':{h:7,s:3,form:'upright',life:'a',pr:'warm',fl:'#EDC43E'},
+ 'Zinnias':{h:2.5,s:1.5,form:'upright',life:'a',pr:'warm',fl:'#D95380'}
+});
+g3Info.c={};
+
+// New map equipment (non-structural planning illustrations, not engineered construction plans).
+Object.assign(TYPES,{tomatocage:'Ring tomato cage',pvchoops:'PVC garden hoops',pergola:'Pergola'});
+Object.assign(NEWOBJ,{
+ tomatocage:{w:2,d:2,h:5,name:'Ring tomato cage'},
+ pvchoops:{w:8,d:4,h:3,name:'PVC garden hoops'},
+ pergola:{w:10,d:8,h:8,name:'Pergola'}
+});
+TOOLS.splice(TOOLS.findIndex(x=>x[0]==='plant'),0,['tomatocage','+ Ring tomato cage'],['pvchoops','+ PVC hoops'],['pergola','+ Pergola']);
+DUPABLE.push('tomatocage','pvchoops','pergola');
+G3DRAG.push('tomatocage','pvchoops','pergola');
+const _ht=hitTest;hitTest=function(p,pt){for(const o of p.objects.slice().reverse()){if(!['tomatocage','pvchoops','pergola'].includes(o.type))continue;if(inPoly(pt,o.poly||corners(o)))return o}return _ht(p,pt)};
+BEDSTYLE.brick='Brick (stacked border)';
+const _b2=bedStyleDraw;bedStyleDraw=function(c,o,px,T){if(o.style!=='brick')return _b2.apply(this,arguments);const cp=o.poly||corners(o);c.save();path(c,cp);c.fillStyle='#B45B3C';c.fill();c.strokeStyle='#7E3C2C';c.lineWidth=Math.max(.1,px);c.stroke();const w=Math.max(.45,Math.min(.9,o.w*.12,o.d*.12));const ins=corners({x:o.x,y:o.y,w:Math.max(.15,o.w-2*w),d:Math.max(.15,o.d-2*w),rot:o.rot||0});path(c,ins);c.fillStyle=T.soilbed||'#5E3E28';c.fill();c.strokeStyle='#D28E6E';c.lineWidth=px*.8;c.stroke();c.restore();return true};
+const _ysb=y3Struct;y3Struct=function(p,o){if(o?.type==='bed'&&o.style==='brick'){
+ const a=(o.rot||0)*RAD,u=[Math.cos(a),Math.sin(a)],v=[-u[1],u[0]],th=Math.min(.7,o.w*.18,o.d*.18),h=Math.max(.4,Math.min(1.2,+o.h||.9));
+ for(const d of [-1,1]){g3Box(o.x+d*u[0]*(o.w-th)/2,o.y+d*u[1]*(o.w-th)/2,0,th,h,o.d,o.rot,'#B45B3C');g3Box(o.x+d*v[0]*(o.d-th)/2,o.y+d*v[1]*(o.d-th)/2,0,o.w-2*th,h,th,o.rot,'#B45B3C')}
+ g3Box(o.x,o.y,0,Math.max(.2,o.w-2*th),h-.06,Math.max(.2,o.d-2*th),o.rot,'#5E3E28');return true}
+ return _ysb.apply(this,arguments)};
+const _newHandles=drawHandles;drawHandles=function(c,p,g){_newHandles.apply(this,arguments);const O=p.objects.filter(o=>['tomatocage','pvchoops','pergola'].includes(o.type));if(!O.length)return;c.save();inScreen(g,c);for(const o of O){const x=(o.x-g.ox)*g.k,y=(o.y-g.oy)*g.k,w=Math.max(7,(o.w||2)*g.k),d=Math.max(7,(o.d||2)*g.k);c.strokeStyle=o.type==='pergola'?'#735431':o.type==='pvchoops'?'#D7DDE1':'#688669';c.lineWidth=2;c.setLineDash(o.type==='pvchoops'?[5,4]:[]);if(o.type==='tomatocage'){for(const f of [1,.72,.45]){c.beginPath();c.ellipse(x,y,w*f/2,d*f/2,0,0,2*Math.PI);c.stroke()}}else{c.strokeRect(x-w/2,y-d/2,w,d);if(o.type==='pergola'){for(let j=1;j<4;j++){const yy=y-d/2+j*d/4;c.beginPath();c.moveTo(x-w/2,yy);c.lineTo(x+w/2,yy);c.stroke()}}}c.setLineDash([]);c.font='bold 11px sans-serif';c.fillStyle='#263E2E';c.fillText(o.name||TYPES[o.type],x-w/2,y-d/2-5)}c.restore()};
+// 3D support geometry; let the original scene render first, then the accessories.
+const _gardenFrame=g3Frame;g3Frame=function(){_gardenFrame.apply(this,arguments);if(!G3.gl||!G3.cv?.isConnected)return;const p=prop();if(!p)return;for(const o of p.objects){if(gone(o))continue;const type=o.type;if(!['tomatocage','pvchoops','pergola'].includes(type))continue;const h=Math.max(1,o.h||4),a=(o.rot||0)*RAD,u=[Math.cos(a),Math.sin(a)],v=[-u[1],u[0]];const at=(i,j)=>[o.x+i*u[0]+j*v[0],o.y+i*u[1]+j*v[1]];
+ if(type==='tomatocage'){for(let i=0;i<4;i++){const t=i*Math.PI/2,p0=at(Math.cos(t)*o.w*.4,Math.sin(t)*o.d*.4);g3Cyl(p0[0],p0[1],0,.035,h,'#7B967F')}for(let j=1;j<=5;j++){const z=h*j/5;for(let i=0;i<18;i++){const t=i*2*Math.PI/18,tn=(i+1)*2*Math.PI/18,x=at(Math.cos(t)*o.w*.4,Math.sin(t)*o.d*.4),y=at(Math.cos(tn)*o.w*.4,Math.sin(tn)*o.d*.4);g3Box((x[0]+y[0])/2,(x[1]+y[1])/2,z,Math.hypot(y[0]-x[0],y[1]-x[1]),.04,.04,Math.atan2(y[1]-x[1],y[0]-x[0])*DEG,'#7B967F')}}}
+ else if(type==='pvchoops'){for(let k=0;k<Math.max(2,Math.round(o.w/2));k++){const i=-o.w/2+(k+.5)*o.w/Math.max(2,Math.round(o.w/2));for(let j=0;j<12;j++){const x=at(i,-o.d/2+o.d*j/11),y=at(i,-o.d/2+o.d*(j+1)/11),z=h*Math.sin(j*Math.PI/11);g3Box((x[0]+y[0])/2,(x[1]+y[1])/2,z,.045,.045,Math.hypot(y[0]-x[0],y[1]-x[1]),o.rot,'#E6ECE8')}}}
+ else{for(const i of [-1,1])for(const j of [-1,1]){const pt=at(i*o.w/2,j*o.d/2);g3Box(pt[0],pt[1],0,.38,h,.38,0,'#957049')}for(let j=0;j<5;j++){const pt=at(0,-o.d/2+j*o.d/4);g3Box(pt[0],pt[1],h,o.w,.22,.3,o.rot,'#94704B')}for(let i=0;i<4;i++){const pt=at(-o.w/2+i*o.w/3,0);g3Box(pt[0],pt[1],h+.15,.25,.22,o.d,o.rot,'#A9875B')}}}
+};
+
+// Correct placement against the physical bed geometry; never scatter beyond the selected bed.
+function v90BedAt(p,x,y){return bedsOf(p).slice().reverse().find(b=>b.type==='container'?Math.hypot(x-b.x,y-b.y)<=b.w*.45:inPoly([x,y],b.poly||corners(b)))||null}
+function v90BaseZ(b){return b?(b.type==='container'?1.4:.9):0}
+function v90Layout(p,n,qty,cx,cy){const target=v90BedAt(p,cx,cy),g=g3Info(n),sep=Math.max(.35,Math.min(2,Number(g?.s||1.5)*.7)),candidates=[];
+ if(target){const cols=Math.ceil(Math.sqrt(qty*Math.max(1,target.w)/Math.max(1,target.d))),rows=Math.ceil(qty/cols),turn=(target.rot||0)*RAD,U=[Math.cos(turn),Math.sin(turn)],V=[-U[1],U[0]];for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const fx=((i+.5)/cols-.5)*target.w*.82,fy=((j+.5)/rows-.5)*target.d*.82,x=target.x+U[0]*fx+V[0]*fy,y=target.y+U[1]*fx+V[1]*fy;if(v90BedAt(p,x,y)?.id===target.id)candidates.push([x,y])}}
+ else{const cols=Math.ceil(Math.sqrt(qty)),rows=Math.ceil(qty/cols);for(let j=0;j<rows;j++)for(let i=0;i<cols;i++)candidates.push([cx+(i-(cols-1)/2)*sep,cy+(j-(rows-1)/2)*sep])}
+ return{target,spots:candidates.slice(0,qty).filter(([x,y])=>x>=0&&x<=p.view.W&&y>=0&&y<=p.view.H)}
+}
+document.addEventListener('pointerdown',function(e){if(e.target?.id!=='propCv'||S.tool!=='plant'||S.photoEdit)return;const p=prop(),n=S.plantPick;if(!n)return;const cv=e.target,w=toWorld(cv,e,p.view),qty=Math.max(1,Math.min(50,Math.round(S.plantQty||1))),L=v90Layout(p,n,qty,w.x,w.y);e.preventDefault();e.stopImmediatePropagation();if(!L.spots.length){toast('The selected bed has no available placement points. Select a larger bed or reduce the quantity.');return}
+ pushUndo();p.plantings=p.plantings||[];for(const [x,y] of L.spots){const b=L.target,q={id:nid('pl'),n,x,y,z:v90BaseZ(b),pd:g3PlantDate(p,n,+TODAY.slice(0,4)),bed:b?.id||null};p.plantings.push(q)}if(L.target){L.target.plants=L.target.plants||[];bedRelist(p,L.target,n)}changed(p);G3.key='';drawProp();renderLayerDyn();undoSync();toast(L.spots.length+' '+n+' placed '+(L.target?'inside '+L.target.name:'on the ground')+'. Undo takes back this placement only.'+(L.spots.length<qty?' Some plants did not fit.':''));
+},true);
+// Existing map placements were never meant to be silently lost in a large undo.
+document.addEventListener('click',function(e){const b=e.target.closest?.('[data-act="undo"]');if(!b||!UNDO.length)return;const p=prop(),e0=UNDO[UNDO.length-1];if(e0.id!==p.id)return;let previous;try{previous=JSON.parse(e0.s)}catch(_){return}const current=p.plantings||[],past=previous.plantings||[],oldIDs=new Set(past.map(q=>q.id)),count=current.filter(q=>!oldIDs.has(q.id)).length;if(count>1&&!confirmBox(b,'Undo will remove '+count+' plants from your map.')){e.preventDefault();e.stopImmediatePropagation()}},true);
+// Keep 3D moves on valid surfaces. A missed surface should not send plants away.
+const _g3Dragged=g3DragEnd;g3DragEnd=function(D){if(D?.kind==='pl'&&D.ref){const p=prop(),q=D.ref,b=D.surf&&p.objects.find(o=>o.id===D.surf&&['bed','container'].includes(o.type));if(b)q.z=v90BaseZ(b);else if(D.surf==null)q.z=0;q.x=Math.min(p.view.W,Math.max(0,q.x));q.y=Math.min(p.view.H,Math.max(0,q.y))}return _g3Dragged.apply(this,arguments)};
+// The "move plant" tap in 3D also needs to reconcile the old and new bed lists.
+const _v90Tap=g3Tap;g3Tap=function(cx,cy){if(S.g3?.move&&S.g3.sel){const p=prop(),q=(p.plantings||[]).find(x=>x.id===S.g3.sel),h=g3Hit(cx,cy);if(!q||!h)return;const b=h.surf&&p.objects.find(o=>o.id===h.surf&&['bed','container'].includes(o.type)),old=q.bed;pushUndo();q.x=Math.min(p.view.W,Math.max(0,h.x));q.y=Math.min(p.view.H,Math.max(0,h.y));q.z=v90BaseZ(b);if(old&&old!==b?.id){q.bed=null;bedUnlist(p,Object.assign({},q,{bed:old}))}q.bed=b?.id||null;if(b)bedRelist(p,b,q.n);S.g3.move=false;changed(p);G3.key='';render3D();toast(q.n+' moved '+(b?'to '+b.name:'onto the ground')+'. Undo is available.');return}return _v90Tap.apply(this,arguments)};
+// Repair old floating plant records on render; never remove or relocate saved plants silently.
+const _g3PlantVisible=g3Plant;g3Plant=function(pl,st,sel){let q=pl;if(pl?.bed){const b=prop()?.objects?.find(o=>o.id===pl.bed&&['bed','container'].includes(o.type));if(b){const z=v90BaseZ(b);if(Math.abs((pl.z||0)-z)>.08)q=Object.assign({},pl,{z})}}return _g3PlantVisible(q,st,sel)};
+
+// Real-time current conditions only after the customer requests them; location remains rounded.
+const V90WX=new Map();
+async function v90Current(p){if(!p||p.demo)return;const key=lkey(p.loc.lat,p.loc.lon);if(V90WX.get(key)?.busy)return;V90WX.set(key,{busy:true});const slot=document.querySelector('#v-dash #ch-weather');if(slot)slot.textContent='Loading current weather…';try{const j=await getJSON('https://api.open-meteo.com/v1/forecast?latitude='+r1(p.loc.lat)+'&longitude='+r1(p.loc.lon)+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,is_day,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto');const c=j.current;if(!c||!Number.isFinite(+c.temperature_2m))throw new Error('No current data');V90WX.set(key,{at:Date.now(),c});}catch(err){V90WX.set(key,{error:true,at:Date.now()})}const el=document.querySelector('#v-dash #ch-weather');if(el)el.innerHTML=v90Weather(p)}
+function v90Weather(p){const key=lkey(p.loc.lat,p.loc.lon),r=V90WX.get(key),c=r?.c,desc=code=>code===0?'Clear skies':code<=3?'Partly cloudy':code<=48?'Foggy':code<=67?'Rain':code<=77?'Snow':code<=82?'Showers':code<=86?'Snow showers':code<=99?'Thunderstorms':'Current conditions';if(p.demo)return '<span class="ch-weather-quiet">Live weather unavailable in demo</span>';if(!c)return '<button type="button" class="ch-link" data-act="v90-weather">'+(r?.error?'Retry live weather':'☁ Check current weather')+'</button>';
+ return '<span class="ch-wx-big">'+Math.round(c.temperature_2m)+'°F</span><span>'+esc(desc(+c.weather_code))+'<small>Feels like '+Math.round(c.apparent_temperature)+'°F · Wind '+Math.round(c.wind_speed_10m)+' mph</small><small>Live weather · Open-Meteo · '+new Date(r.at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})+'</small></span><button type="button" class="ch-link" data-act="v90-weather" aria-label="Refresh live weather">↻</button>'}
+const _customerV90=renderCustomerDashboard;renderCustomerDashboard=function(){const r=_customerV90.apply(this,arguments),p=prop(),w=document.querySelector('#v-dash .ch-sunbox');if(!p||!w)return r;const a=document.createElement('div');a.className='ch-weather';a.id='ch-weather';a.setAttribute('aria-live','polite');a.innerHTML=v90Weather(p);w.appendChild(a);
+ const home=document.querySelector('#v-dash .chome'),main=home?.querySelector('.ch-layout');if(!home||!main)return r;
+ const items=tdTasks(p).filter(t=>!tdIsDone(p,t.key)).slice(0,3),pref=p.dashboardPrefs||{},mode=pref.level||'Simple',length=pref.minutes||15;
+ const card=document.createElement('section');card.className='ch-v90-start';card.innerHTML='<div class="ch-v90-top"><div><span class="ch-tag">YOUR NEXT BEST STEP</span><h3>What does my garden need today?</h3><p class="ch-helper">Small steps chosen from your own garden plan. Only do what fits your day.</p></div><div class="ch-v90-opts"><label>Details <select data-v90-pref="level"><option'+(mode==='Simple'?' selected':'')+'>Simple</option><option'+(mode==='Detailed'?' selected':'')+'>Detailed</option></select></label><label>Time available <select data-v90-pref="minutes">'+[5,15,30].map(n=>'<option value="'+n+'"'+(+length===n?' selected':'')+'>'+n+' min</option>').join('')+'</select></label></div></div>'+
+ (items.length?'<div class="ch-v90-tasks">'+items.map((t,i)=>'<article><b>'+esc(t.txt)+'</b><span>'+ (i===0?'Start here':'Next when ready')+' · from your garden plan</span>'+(mode==='Detailed'?'<details><summary>Why this matters</summary>'+tdLC(t.lc)+'</details>':'<details><summary>Explain why</summary>'+tdLC(t.lc)+'</details>')+'<button type="button" class="ch-link" data-act="tab" data-arg="planner">Open this in my plan →</button></article>').join('')+'</div>':'<p class="ch-helper">No urgent tasks in your plan. Explore your garden or add a note about how things are growing.</p>')+'<p class="ch-v90-disclaimer">Times are your preferred session length—not a promise that every task fits. Skip or ask for help with anything difficult.</p>';
+ home.insertBefore(card,main);
+ const shortcuts=document.createElement('div');shortcuts.className='ch-v90-actions';shortcuts.setAttribute('aria-label','Quick garden actions');shortcuts.innerHTML='<button data-act="ch-journal">✎ Add note</button><button data-act="ch-harvest">♧ Log harvest</button><button data-act="sw-open">⌕ Plant problem</button><button data-act="ch-spaces">▧ Growing spaces</button><button data-act="tab" data-arg="planner">▦ My plan</button>';home.insertBefore(shortcuts,main);
+ const progress=document.createElement('section');progress.className='ch-v90-progress';const plants=(p.plantings||[]).filter(q=>!q.remove).length,harvests=(p.harvests||[]).length,notes=(p.journal||[]).filter(j=>j.kind!=='harvest').length;progress.innerHTML='<h3>🌿 Your garden progress <small>Recorded achievements, not a grade</small></h3><div><span><b>'+plants+'</b> plants mapped</span><span><b>'+harvests+'</b> harvests logged</span><span><b>'+notes+'</b> garden notes</span></div><p class="ch-helper">No activity recorded yet? That is okay. Start with one observation.</p><button type="button" data-act="ch-journal" class="ch-link">Add a garden note →</button></section>';const bottom=home.querySelector('.ch-bottom-grid');if(bottom)bottom.insertAdjacentElement('afterend',progress);
+ const budget=document.createElement('div');budget.className='ch-v90-guide';budget.innerHTML='<strong>💚 Grow with what you have</strong><p>Save money by planning with materials, plants and supplies you already own. Check your supplies before buying new equipment.</p><button class="ch-link" data-act="tab" data-arg="planner">Explore my plan and budget →</button>';if(bottom)bottom.insertAdjacentElement('afterend',budget);
+ const foot=home.querySelector('.ch-footnote');if(foot)foot.insertAdjacentHTML('beforebegin','<div class="ch-v90-guide"><strong>Garden your way</strong><p>Short sessions, seated work, or less bending? Use your existing Garden your way preferences for personalized help. Missing soil records are unknown, not evidence of unhealthy soil.</p><button class="ch-link" data-act="tab" data-arg="profile">Accessibility &amp; preferences →</button></div>');return r};
+document.addEventListener('click',e=>{const b=e.target.closest?.('[data-act="v90-weather"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();v90Current(prop())},true);
+document.addEventListener('change',e=>{const f=e.target.dataset?.v90Pref;if(!f)return;const p=prop();p.dashboardPrefs=p.dashboardPrefs||{};p.dashboardPrefs[f]=f==='minutes'?+e.target.value:e.target.value;changed(p);renderDash()},true);
+document.head.insertAdjacentHTML('beforeend',`<style>
+#v-dash .ch-sunbox{flex-wrap:wrap;gap:8px}#v-dash .ch-weather{width:100%;border-top:1px solid var(--line);padding-top:8px;display:flex;gap:10px;align-items:center;justify-content:center}#v-dash .ch-wx-big{font-size:27px;font-weight:800}#v-dash .ch-weather small{display:block;font-size:11px;color:var(--muted);line-height:1.5}#v-dash .ch-v90-start{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--leaf);border-radius:19px;padding:18px 20px}#v-dash .ch-v90-top{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;align-items:start}#v-dash .ch-v90-start h3{font-size:clamp(19px,2vw,25px);margin:4px 0}#v-dash .ch-v90-opts{display:flex;gap:8px;flex-wrap:wrap}#v-dash .ch-v90-opts label{font-size:12px;color:var(--muted)}#v-dash .ch-v90-opts select{display:block;background:var(--band);color:var(--fg);border:1px solid var(--line);padding:5px;border-radius:9px;max-width:142px}#v-dash .ch-v90-tasks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}#v-dash .ch-v90-tasks article{background:var(--band);border:1px solid var(--line);border-radius:13px;padding:12px;display:flex;flex-direction:column;gap:6px}#v-dash .ch-v90-tasks article b{line-height:1.4}#v-dash .ch-v90-tasks article span,#v-dash .ch-v90-disclaimer{font-size:12px;color:var(--muted)}#v-dash .ch-v90-tasks article .ch-link{margin-top:auto;text-align:left}#v-dash .ch-v90-actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}#v-dash .ch-v90-actions button{border:1px solid var(--line);border-radius:12px;background:var(--band);color:var(--fg);min-height:48px;cursor:pointer;font-weight:700}#v-dash .ch-v90-actions button:hover{border-color:var(--leaf)}#v-dash .ch-v90-guide{border:1px solid var(--line);border-radius:13px;padding:12px 18px;background:var(--band)}#v-dash .ch-v90-guide p{font-size:13px;margin:5px 0}#v-dash .ch-v90-guide .ch-link{font-size:13px}#v-dash .ch-v90-progress{padding:15px 18px;background:var(--surface);border:1px solid var(--line);border-radius:15px}#v-dash .ch-v90-progress h3{font-size:20px;margin:0 0 10px}#v-dash .ch-v90-progress h3 small{font-size:12px;color:var(--muted);font-weight:400}#v-dash .ch-v90-progress>div{display:flex;flex-wrap:wrap;gap:8px}#v-dash .ch-v90-progress>div span{border-radius:10px;background:var(--sage);padding:8px 12px}#v-dash .ch-v90-progress .ch-helper{font-size:12px;margin:8px 0}@media(max-width:820px){#v-dash .ch-v90-tasks{grid-template-columns:1fr}#v-dash .ch-v90-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>`);
+})();
 
 /* ---------- init ---------- */
 document.documentElement.lang="en";
