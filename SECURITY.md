@@ -1,20 +1,23 @@
 # Security checklist
 
-Last reviewed October 29, 2026. The app is one web page on GitHub Pages; accounts, synced gardens, messages, Growing Circles and saved reports live in Supabase. Every table is protected by row-level security, so the database itself decides who can read or change each row, even if someone skips the app.
+Last reviewed November 7, 2026. The app is one web page on GitHub Pages; accounts, synced gardens, messages, Growing Circles and saved reports live in Supabase. Every table is protected by row-level security, so the database itself decides who can read or change each row, even if someone skips the app.
 
 ## Do these once (only you can)
 
 1. **Run the security update.** In Supabase, open SQL Editor, choose New query, paste everything from `security-update.sql`, and press Run. The last result lists each table; every row should say `true`. It is safe to run again.
    Then do the same with `circles-update.sql` (Neighbor Exchange: neighborhoods, replies, claims, private messages and post photos), and then `supplies-update.sql` (shared supplies and remembered barcodes).
-2. **Turn on email confirmation.** Authentication → Sign In / Providers → Email: keep "Confirm email" on.
-3. **Lock the sign-in addresses.** Authentication → URL Configuration: set Site URL to `https://thegardenfolks.com` and list only your own addresses under Redirect URLs.
-4. **Keep the admin's authenticator app on.** The admin only counts as admin after the authenticator step. Save the recovery codes somewhere safe, away from your phone.
-5. **Check sign-in rate limits.** Authentication → Rate Limits: keep the defaults or lower them. Turn on bot protection (CAPTCHA) if it's offered on your plan.
-6. **Leaked-password protection.** If your Supabase plan offers it (Authentication → Passwords), turn it on.
-7. **Protect text-message sign-in from fraud.** In Twilio: Messaging → Settings → Geo permissions, allow the United States only. Set a monthly spending limit or alert. Scammers trigger floods of codes to expensive numbers ("SMS pumping"), and these two settings stop it.
-8. **Two-step sign-in everywhere.** Turn on two-factor sign-in for GitHub, Supabase, Twilio, your domain registrar and the email account they all send to.
-9. **Never share these.** The Supabase `service_role` key and the Twilio Auth Token never go in the app, a chat, an email or GitHub. If one ever leaks, rotate it in that service right away.
-10. **Backups.** Supabase backs up paid projects daily. On the free plan, download a copy now and then (Database → Backups, or Table Editor → Export).
+   Then run `storage-limits.sql`: photo storage refuses anything that isn't a photo or is over 10 MB.
+   Now and then, run `security-check.sql`. It changes nothing; it lists any table without row-level security, any public or unlimited storage bucket, and any rule that lets signed-out visitors change data (only the interest form should appear). "No problems found" means every check passed.
+2. **Delete old copies of the app from GitHub.** Files like `60.html` through `109.html` are full older versions of the app, and anyone can open them at thegardenfolks.com. They share the sign-in with the real app, so a bug fixed in `index.html` stays open in every old copy. Keep only `index.html` (and at most one test copy you delete after testing). Fastest way: on the repository page press the `.` key to open the web editor, select the old files, delete them, and commit.
+3. **Turn on email confirmation.** Authentication → Sign In / Providers → Email: keep "Confirm email" on.
+4. **Lock the sign-in addresses.** Authentication → URL Configuration: set Site URL to `https://thegardenfolks.com` and list only your own addresses under Redirect URLs.
+5. **Keep the admin's authenticator app on.** The admin only counts as admin after the authenticator step. Save the recovery codes somewhere safe, away from your phone.
+6. **Check sign-in rate limits.** Authentication → Rate Limits: keep the defaults or lower them. Turn on bot protection (CAPTCHA) if it's offered on your plan.
+7. **Leaked-password protection.** If your Supabase plan offers it (Authentication → Passwords), turn it on.
+8. **Protect text-message sign-in from fraud.** In Twilio: Messaging → Settings → Geo permissions, allow the United States only. Set a monthly spending limit or alert. Scammers trigger floods of codes to expensive numbers ("SMS pumping"), and these two settings stop it.
+9. **Two-step sign-in everywhere.** Turn on two-factor sign-in for GitHub, Supabase, Twilio, your domain registrar and the email account they all send to.
+10. **Never share these.** The Supabase `service_role` key and the Twilio Auth Token never go in the app, a chat, an email or GitHub. If one ever leaks, rotate it in that service right away.
+11. **Backups.** Supabase backs up paid projects daily. On the free plan, download a copy now and then (Database → Backups, or Table Editor → Export).
 
 ## What the app does
 
@@ -24,7 +27,8 @@ Last reviewed October 29, 2026. The app is one web page on GitHub Pages; account
 - **Supplies on hand:** the customer and the consultant can both add and change supplies for that garden; the customer can't change any other kind of entry the consultant made. Remembered barcodes hold only the barcode, product name, type and size, never who scanned it in a way other customers can see. Barcodes are read on the device and the camera runs only after a warning.
 - **Invite links** use long random codes and stop working after 60 days if nobody claims them.
 - **The public interest form** accepts at most 20 sign-ups every 10 minutes and limits the length of every field.
-- **Size limits** stop any one account from filling the database.
+- **Size limits** stop any one account from filling the database, and photo storage takes only images up to 10 MB.
+- **Keys:** the only key in the app is Supabase's publishable key, which is meant to be public; row-level security is what protects the data. No secret key has ever been committed to the repository (checked across its full history on November 7, 2026).
 - **Content Security Policy:** the page may only load scripts from itself (and the receipt reader from jsdelivr), and may only send data to Supabase and the weather, map and photo services it uses. Injected code can't send data anywhere else.
 - **Text from people is escaped** before it's shown, so names, notes and messages can't run code. The report editor keeps only plain text from pastes, and saved reports are cleaned before they're shown again.
 - **No outside libraries** are loaded except the receipt reader, which loads only when someone scans a receipt.
