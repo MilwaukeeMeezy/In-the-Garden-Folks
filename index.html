@@ -927,7 +927,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
 <div id="setup" class="wrap" hidden></div>
 <div id="acct" class="wrap" hidden></div>
 
-<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 17, 9:18 PM</p>
+<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 17, 9:37 PM</p>
   <span class="small muted">In the Garden, Folks! · working prototype</span>
   <div class="row small">
     <button class="btn link" data-act="help-open">Plain-language help</button>
@@ -3258,7 +3258,7 @@ function renderSetup(){
   (w.satBusy?'<p class="small" role="status">Getting the satellite view…</p>':"")+(w.satErr?'<p class="small" role="alert"><b>'+esc(w.satErr)+"</b></p>":"")+(w.pics==="sat"&&w.photos.overhead&&w.photos.overhead.sat?'<p class="small" role="status">✓ Satellite view ready. You\'ll see it in the next step.</p>':"")+
   '<p class="tiny muted">Satellite imagery: when you choose it, the app asks Esri\'s World Imagery service for the map squares around your home. That shares your home\'s approximate map position with Esri. Imagery can be months or years old. Imagery © Esri, Maxar, Earthstar Geographics.</p></div>'}
  if(w.step===2){const o=w.photos.overhead,L=wzLoc(w);
-  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 17, 9:18 PM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
+  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 17, 9:37 PM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
   let R=wzCompass(w);
   if(o&&!o.sat)R+='<div class="ctlgrp"><span class="small"><b>1. Turn the photo</b> until north is at the top of the dial.</span><div class="row" role="group" aria-label="Turn the top photo">'+[[-90,"↺ 90°"],[-15,"↺ 15°"],[-1,"↺ 1°"],[1,"↻ 1°"],[15,"↻ 15°"],[90,"↻ 90°"]].map(b2=>'<button class="btn sm" type="button" data-act="wz-prot" data-arg="'+b2[0]+'" aria-label="Turn the photo '+Math.abs(b2[0])+" degrees "+(b2[0]<0?"left":"right")+'">'+b2[1]+"</button>").join("")+"</div></div>";
   else if(o&&o.sat)R+='<p class="tiny muted">Satellite pictures already have north at the top. Imagery © Esri, Maxar, Earthstar Geographics.</p>';
@@ -4944,7 +4944,7 @@ document.addEventListener("change",e=>{const t=e.target;if(!t||!t.dataset||!(t.d
 /* make the map's drawing area cover everything (an irregular traced building can stick out past it) */
 function viewCover(m,mg){mg=mg||8;let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;m.objects.forEach(o=>{if(gone(o))return;(o.poly||corners(o)).forEach(q=>{if(!isFinite(q[0])||!isFinite(q[1]))return;x0=Math.min(x0,q[0]);y0=Math.min(y0,q[1]);x1=Math.max(x1,q[0]);y1=Math.max(y1,q[1])})});if(x0>x1)return;
  const dx=x0<mg?mg-x0:0,dy=y0<mg?mg-y0:0;if(dx||dy){m.objects.forEach(o=>{o.x+=dx;o.y+=dy;if(o.poly)o.poly.forEach(q=>{q[0]+=dx;q[1]+=dy})});(m.plantings||[]).forEach(q=>{q.x+=dx;q.y+=dy});((m.water||{}).spouts||[]).forEach(q=>{q.x+=dx;q.y+=dy});["photoAlign","lotmapAlign"].forEach(k=>{if(m[k]){m[k].x+=dx;m[k].y+=dy}})}
- const W0=m.view.W,H0=m.view.H;m.view.W=Math.max(m.view.W,Math.ceil(x1+dx+mg));m.view.H=Math.max(m.view.H,Math.ceil(y1+dy+mg));/* pictures are placed relative to the middle of the map: keep them where they were */["photoAlign","lotmapAlign"].forEach(k=>{if(m[k]){m[k].x-=(m.view.W-W0)/2;m[k].y-=(m.view.H-H0)/2}})}
+ const W0=m.view.W,H0=m.view.H;m.view.W=Math.max(m.view.W,Math.ceil(x1+dx+mg));m.view.H=Math.max(m.view.H,Math.ceil(y1+dy+mg));/* pictures are placed relative to the middle of the map and sized relative to its width: keep them where and how big they were */["photoAlign","lotmapAlign"].forEach(k=>{if(m[k]){m[k].x-=(m.view.W-W0)/2;m[k].y-=(m.view.H-H0)/2;if(m.view.W!==W0&&m[k].s)m[k].s*=W0/m.view.W}})}
 function aptLayout(m,w){if(!m.aptHome)return;const b=m.objects.find(o=>o.homeBldg&&!gone(o));if(!b)return;if(m.water)m.water.spouts=[];const fl=Math.max(1,(w.apt&&+w.apt.floor)||1);m.apt=Object.assign({},m.apt||{},{floor:fl});
  const W=w.aptWin||{},K=["N","E","S","W"],BR={N:0,E:90,S:180,W:270},NM={N:"North",E:"East",S:"South",W:"West"};
  const PN=(w.aptPins||[]).filter(q=>isFinite(q.nx)&&isFinite(q.ny)),MH=w.mapHouse&&w.mapHouse.poly,BPy=b.poly;let pinXf=null;
@@ -11699,15 +11699,24 @@ document.addEventListener("click",async e=>{const b=e.target.closest&&e.target.c
   msg.textContent="Loading the satellite picture…";const o=await satFetch(lat,lon,null);inp.value="";
   const ph=PHOTOS[p.id]=PHOTOS[p.id]||{};ph.overhead={url:o.url,img:o.img,alt:"Satellite view of the lot from above, north at the top",taken:ymd(new Date()),sat:o.sat};delete ph.overhead._v;
   S.usePhoto=true;p.photoAlign=fitToLot(p,o.img);changed(p);(S.offerClear=S.offerClear||{})[p.id]=1;try{await savePhotos(p.id)}catch(_){}
-  try{renderPhotos();drawProp()}catch(_){}const m2=$("#satMsg");if(m2)m2.textContent="Done. The satellite view is now the top view and shows under the map. Use the line-up tools below to match it to the lot.";toast("Got the satellite view. It’s saved as the top view.")}
+  try{renderPhotos();drawProp()}catch(_){}const m2=$("#satMsg");if(m2)m2.textContent="Done. The satellite view is now the top view and shows under the map. Use the line-up tools below to match it to the lot.";toast("Got the satellite view. It’s saved as the top view.");try{trStart("overhead",{ftpp:o.sat&&o.sat.ft?o.sat.ft/o.img.width:0})}catch(_){}}
  catch(er){msg.textContent=er&&er.message==="nf"?"Couldn’t find that address. Add the city and state, like 2417 S 9th St, Milwaukee, WI.":"Couldn’t load the satellite picture. Check your connection, or add your own top photo instead.";b.disabled=false}},true);
 
 
 /* ---------- Turn your house to match: two modes ---------- */
-{const _rs=rotateSpace;rotateSpace=function(p,delta,force){const keep=p&&!odHouseMode(p)&&odHasPhoto(p)&&p.photoAlign?JSON.parse(JSON.stringify(p.photoAlign)):null;
- /* the lot map is a picture of the real street: turning the pointer never turns it */
- const keepL=p&&!odHouseMode(p)&&p.lotmapAlign?JSON.parse(JSON.stringify(p.lotmapAlign)):null;
- const r=_rs.apply(this,arguments);if(keep&&delta)p.photoAlign=keep;if(keepL&&delta)p.lotmapAlign=keepL;return r}}
+{const _rs=rotateSpace;rotateSpace=function(p,delta,force){
+ /* Turning the pointer never turns the top photo or the lot map (they are pictures of the real place).
+    They keep their angle and size, and stay in the same spot on the ground: when the map re-centers
+    itself after turning, the pictures move with it, so drawings stay lined up with them. */
+ const ptr=p&&delta&&!odHouseMode(p),lot=p&&p.objects.find(o=>o.type==="lot"),W0=p&&p.view.W,H0=p&&p.view.H,lx0=lot?lot.x:0,ly0=lot?lot.y:0;
+ const keep=ptr&&odHasPhoto(p)&&p.photoAlign?JSON.parse(JSON.stringify(p.photoAlign)):null;
+ const keepL=ptr&&p.lotmapAlign?JSON.parse(JSON.stringify(p.lotmapAlign)):null;
+ const al0=p&&p.photoAlign?p.photoAlign:null,la0=p&&p.lotmapAlign?p.lotmapAlign:null;
+ const r=_rs.apply(this,arguments);
+ /* pictures are sized relative to the map's width: when the map resizes itself, keep them the same real size */
+ if(p&&W0&&p.view.W!==W0){const f=W0/p.view.W;[keep,keepL].forEach(a=>{if(a&&a.s)a.s*=f});if(p.photoAlign&&p.photoAlign.s&&!keep)p.photoAlign.s*=f;if(p.lotmapAlign&&p.lotmapAlign.s&&!keepL)p.lotmapAlign.s*=f}
+ if(keep||keepL){const sx=lot?lot.x-lx0:0,sy=lot?lot.y-ly0:0,fix=a=>{a.x=a.x+W0/2+sx-p.view.W/2;a.y=a.y+H0/2+sy-p.view.H/2;return a};if(keep)p.photoAlign=fix(keep);if(keepL)p.lotmapAlign=fix(keepL)}
+ return r}}
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest('[data-act="od-mode"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();S.odMode=b.dataset.arg==="house"?"house":"pointer";S.odPhoto=S.odMode==="house";try{renderPhotos();renderGlance()}catch(_){}const n=document.querySelector('[data-act="od-mode"][data-arg="'+S.odMode+'"]');if(n)n.focus();toast(S.odMode==="house"?"Turn the house: the pointer stays put while you move, turn and resize the house photo.":"Turn the pointer: the house photo stays put; you can only resize it.")},true);
 
 
@@ -11732,7 +11741,7 @@ function lmFixBar(){try{const row=document.querySelector(".dimrow");if(!row)retu
  if(!show){if(el)el.remove();return}
  if(!el){el=document.createElement("div");el.id="lmFix";el.setAttribute("role","status");el.style.cssText="flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0;padding:10px 12px;border:2px solid #111;border-radius:12px;background:#fff7d6;color:#111";row.insertAdjacentElement("afterend",el)}
  const deg=Math.round(((a.r||0)%360+540)%360-180);
- el.innerHTML='<span class="small" style="flex:1 1 240px"><b>Your lot map is '+(a.f?"mirrored"+(deg?" and turned "+Math.abs(deg)+"°":""):"turned "+Math.abs(deg)+"°")+'</b> from the picture you uploaded.</span><button class="btn sm" type="button" data-act="pal-upright">⬆ Put it back the way I uploaded it</button>'}catch(e){if(window.__T)console.error(e)}}
+ el.innerHTML='<span class="small" style="flex:1 1 240px"><b>Your lot map is '+(a.f?"mirrored"+(deg?" and turned "+Math.abs(deg)+"°":""):"turned "+Math.abs(deg)+"°")+'</b> from the picture you uploaded.</span><button class="btn sm" type="button" data-act="pal-upright">⬆ Put it back the way I uploaded it</button><button class="btn sm" type="button" data-tr="start" data-arg="lotmap">✏ Trace house &amp; lot from it</button>'}catch(e){if(window.__T)console.error(e)}}
 {const _mms=mapModeSet;mapModeSet=function(){const r=_mms.apply(this,arguments);lmFixBar();return r}}
 {const _rmt=renderMapTools;renderMapTools=function(){const r=_rmt.apply(this,arguments);lmFixBar();return r}}
 /* ---------- outline redraw: Finish / Undo point / Cancel right above the map, where the corners are tapped ---------- */
@@ -11742,6 +11751,82 @@ function olTopBar(){try{const row=document.querySelector(".dimrow");if(!row)retu
  el.innerHTML=olToolbar()}catch(e){if(window.__T)console.error(e)}}
 {const _rmt2=renderMapTools;renderMapTools=function(){const r=_rmt2.apply(this,arguments);olTopBar();const mt=document.querySelector("#mapTools .ol-drawing");if(mt&&document.getElementById("olTop"))mt.remove();return r}}
 {const _dp2=drawProp;drawProp=function(){const r=_dp2.apply(this,arguments);if(olCurrent()||document.getElementById("olTop"))olTopBar();return r}}
+/* ================= Trace your house and lot from a picture (same steps as setup) =================
+   After a lot map or top view is added in the garden: 1) the scale, 2) tap the house corners,
+   3) tap the lot corners (or keep the lot). The house and lot outlines are rebuilt from the taps,
+   and the picture is placed under them, upright, so everything lines up. */
+S.trace=null;
+function trPic(p,k){return(PHOTOS[p.id]||{})[k]}
+function trStart(k,o){const p=prop();if(!p||p.demo)return;const ph=trPic(p,k);if(!ph||!ph.img){toast("Add the picture first.");return}
+ const known=o&&o.ftpp>0?o.ftpp:0,bar=known?null:(()=>{try{return mapFindBar(ph.img)}catch(_){return null}})();
+ S.trace={pid:p.id,k,step:known?"house":"bar",ftpp:known,bar,auto:!!bar,barTaps:[],len:10,unit:"m",house:[],lot:[]};
+ if(k==="lotmap"){S.mapBase="lot"}else{S.mapBase=null;S.usePhoto=true}
+ if(S.map3d)map3dSet(false);renderMapTools();drawProp();trRender();setTimeout(()=>{const b=$("#trBox");if(b)b.scrollIntoView({block:"start",behavior:reduceMotion()?"auto":"smooth"})},60)}
+function trCur(){const t=S.trace,p=prop();return t&&p&&t.pid===p.id&&trPic(p,t.k)&&trPic(p,t.k).img?t:null}
+function trHTML(){const t=trCur();if(!t)return"";const p=prop(),ph=trPic(p,t.k),I=ph.img,ar=I.height/I.width*100,nm=t.k==="lotmap"?"lot map":"top view";
+ const pts=(a,close,col,lab)=>a.length?'<polyline points="'+a.map(q=>(q[0]*100)+","+(q[1]*ar)).join(" ")+(close&&a.length>2?" "+(a[0][0]*100)+","+(a[0][1]*ar):"")+'" fill="'+(close&&a.length>2?col+"33":"none")+'" stroke="'+col+'" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-dasharray="'+(close?"none":"6 4")+'"/>'+a.map((q,i)=>'<circle cx="'+(q[0]*100)+'" cy="'+(q[1]*ar)+'" r="1.4" fill="'+col+'" stroke="#fff" stroke-width="1.5" vector-effect="non-scaling-stroke"/><text x="'+(q[0]*100+1.8)+'" y="'+(q[1]*ar-1.6)+'" font-size="3.6" font-weight="700" fill="#111" stroke="#fff" stroke-width="2.5" paint-order="stroke" vector-effect="non-scaling-stroke">'+(lab||"")+(i+1)+'</text>').join(""):"";
+ const bar=t.step==="bar"?(t.bar?[t.bar.a,t.bar.b]:t.barTaps):[];
+ let say="",btns="";
+ if(t.step==="bar"){
+  if(t.bar){say='<b>Step 1 of 3: the scale.</b> We found the scale bar (the line marked in blue). What length does it show?';
+   btns='<label class="f" style="width:110px">Length<input type="number" id="trLen" min="1" max="2000" step="any" value="'+t.len+'"></label><label class="f" style="width:110px">Unit<select id="trUnit"><option value="m"'+(t.unit==="m"?" selected":"")+'>meters (m)</option><option value="ft"'+(t.unit==="ft"?" selected":"")+'>feet (ft)</option></select></label><button class="btn sm primary" type="button" data-tr="bar-ok">Next: the house</button><button class="btn sm" type="button" data-tr="bar-redo">That’s not the scale bar</button>'}
+  else{say='<b>Step 1 of 3: the scale.</b> '+(t.barTaps.length<2?'Tap the <b>'+(t.barTaps.length?"other end":"left end")+'</b> of the scale bar on the picture (the short line marked like “10 m” or “50 ft”).':'Now enter the length the scale bar shows.');
+   btns=(t.barTaps.length===2?'<label class="f" style="width:110px">Length<input type="number" id="trLen" min="1" max="2000" step="any" value="'+t.len+'"></label><label class="f" style="width:110px">Unit<select id="trUnit"><option value="m"'+(t.unit==="m"?" selected":"")+'>meters (m)</option><option value="ft"'+(t.unit==="ft"?" selected":"")+'>feet (ft)</option></select></label><button class="btn sm primary" type="button" data-tr="bar-ok">Next: the house</button>':"")+(t.barTaps.length?'<button class="btn sm" type="button" data-tr="bar-undo">Undo point</button>':"")+'<button class="btn sm" type="button" data-tr="bar-none">There’s no scale bar</button>'}}
+ else if(t.step==="house"){say='<b>Step 2 of 3: your house.</b> Tap each corner of your house on the picture, going around in order. '+t.house.length+' corner'+(t.house.length===1?"":"s")+' so far.'+(t.ftpp?"":' <span class="small">With no scale bar, the house keeps its current width, so tap the <b>front</b> corners first.</span>');
+  btns='<button class="btn sm primary" type="button" data-tr="house-ok"'+(t.house.length<3?" disabled":"")+'>Next: the lot</button><button class="btn sm" type="button" data-tr="undo"'+(t.house.length?"":" disabled")+'>Undo point</button>'}
+ else{say='<b>Step 3 of 3: your lot.</b> Tap each corner of your lot (the property lines) in order, or skip to keep the lot you have. '+t.lot.length+' corner'+(t.lot.length===1?"":"s")+' so far.';
+  btns='<button class="btn sm primary" type="button" data-tr="finish"'+(t.lot.length&&t.lot.length<3?" disabled":"")+'>'+(t.lot.length>=3?"Finish and save":"Skip, finish and save")+'</button><button class="btn sm" type="button" data-tr="undo"'+(t.lot.length?"":" disabled")+'>Undo point</button><button class="btn sm" type="button" data-tr="back">Back to the house</button>'}
+ return '<div id="trBox" class="card" role="region" aria-label="Trace your house and lot from the '+nm+'" style="flex-basis:100%;margin:8px 0;border:3px solid #111"><div class="row between" style="align-items:flex-start;gap:8px"><h3 style="margin:0">Trace from your '+nm+'</h3><button class="btn sm" type="button" data-tr="cancel">Cancel</button></div>'+
+  '<p class="small" role="status" aria-live="polite" style="margin:6px 0">'+say+'</p>'+
+  '<div id="trPic" style="position:relative;width:100%;max-width:900px;margin:0 auto;touch-action:manipulation;cursor:crosshair;border:2px solid #111;border-radius:10px;overflow:hidden"><img src="'+ph.url+'" alt="Your '+nm+'. Tap the corners as asked above." style="display:block;width:100%;height:auto;pointer-events:none"><svg viewBox="0 0 100 '+ar+'" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" aria-hidden="true">'+
+  pts(bar,false,"#1E6BFF","")+pts(t.house,t.step!=="house",'#FF6B1A',"H")+pts(t.lot,t.step==="lot"&&false,"#16A34A","L")+'</svg></div>'+
+  '<div class="row" style="gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:8px">'+btns+'</div>'+
+  '<p class="tiny muted" style="margin:6px 0 0">Your beds, plants and other things stay where they are. Undo puts the old outlines back.</p></div>'}
+function trRender(){try{const row=document.querySelector(".dimrow");let el=document.getElementById("trBox");const t=trCur();if(!t||!row){if(el)el.remove();return}
+ const h=trHTML(),tmp=document.createElement("div");tmp.innerHTML=h;const n=tmp.firstElementChild;if(el)el.replaceWith(n);else row.insertAdjacentElement("afterend",n)}catch(e){if(window.__T)console.error(e)}}
+function trReadLen(){const t=S.trace,a=$("#trLen"),u=$("#trUnit");if(a&&+a.value>0)t.len=+a.value;if(u)t.unit=u.value}
+function trApply(){const t=trCur();if(!t)return;const p=prop(),ph=trPic(p,t.k),I=ph.img,W=I.width,H=I.height,px=q=>[q[0]*W,q[1]*H];
+ const h=p.objects.find(o=>o.type==="house"),lot=p.objects.find(o=>o.type==="lot");if(!h){toast("Add your house to the map first.");return}
+ const HP=t.house.map(px);let ftpp=t.ftpp;
+ if(!ftpp){const e=Math.hypot(HP[1][0]-HP[0][0],HP[1][1]-HP[0][1]);if(e<4){toast("Tap the house corners a little farther apart.");return}ftpp=(h.w||20)/e}
+ const pc=[HP.reduce((a,q)=>a+q[0],0)/HP.length,HP.reduce((a,q)=>a+q[1],0)/HP.length],c0=[h.x,h.y],toW=q=>[Math.round((c0[0]+(q[0]-pc[0])*ftpp)*10)/10,Math.round((c0[1]+(q[1]-pc[1])*ftpp)*10)/10];
+ const HW=HP.map(toW);if(Math.abs(shoelace(HW))<4){toast("That house outline is very small. Check the scale, or tap the corners again.");return}
+ pushUndo();
+ h.poly=HW;meFix(p,h);
+ if(lot&&t.lot.length>=3){lot.poly=t.lot.map(px).map(toW);delete p.lotShape;meFix(p,lot)}
+ const V=p.view,cw=toW([W/2,H/2]),K=t.k==="lotmap"?"lotmapAlign":"photoAlign",old=p[K]||{};
+ p[K]={x:cw[0]-V.W/2,y:cw[1]-V.H/2,s:ftpp*W/V.W,r:0,o:old.o||(t.k==="lotmap"?.9:.85),exact:true};
+ try{rotateSpace(p,0,true)}catch(_){}
+ if(t.k==="lotmap")S.mapBase="lot";else S.usePhoto=true;
+ S.trace=null;if(S.offerClear)delete S.offerClear[p.id];S.sel=h.id;S.zoom=null;S.zoomCtr=null;changed(p);
+ try{savePhotos(p.id)}catch(_){}renderProperty();renderMapTools();drawProp();renderPhotos();trRender();
+ const sq=Math.round(Math.abs(shoelace(h.poly)));toast("Saved. Your house ("+sq+" sq ft)"+(t.lot.length>=3?" and lot were":" was")+" traced from the picture, and the picture is lined up under them. Undo puts the old outlines back.")}
+document.addEventListener("click",e=>{const pic=e.target.closest&&e.target.closest("#trPic");const t=trCur();
+ if(pic&&t){e.preventDefault();const r=pic.getBoundingClientRect(),q=[Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))];
+  if(t.step==="bar"){if(t.bar)return;if(t.barTaps.length<2)t.barTaps.push(q)}else if(t.step==="house")t.house.push(q);else t.lot.push(q);trRender();return}
+ const b=e.target.closest&&e.target.closest("[data-tr]");if(!b)return;e.preventDefault();e.stopImmediatePropagation();const a=b.dataset.tr;
+ if(a==="start"){trStart(b.dataset.arg);return}
+ if(!t)return;
+ if(a==="cancel"){S.trace=null;trRender();toast("Tracing cancelled. Nothing changed.");return}
+ if(a==="bar-redo"){t.bar=null;t.barTaps=[];trRender();return}
+ if(a==="bar-undo"){t.barTaps.pop();trRender();return}
+ if(a==="bar-none"){t.bar=null;t.barTaps=[];t.ftpp=0;t.step="house";trRender();return}
+ if(a==="bar-ok"){trReadLen();const ph=trPic(prop(),t.k),I=ph.img,ab=t.bar?[t.bar.a,t.bar.b]:t.barTaps;if(ab.length<2){toast("Tap both ends of the scale bar first.");return}
+  const d=Math.hypot((ab[0][0]-ab[1][0])*I.width,(ab[0][1]-ab[1][1])*I.height);if(d<8){toast("Those two points are too close. Tap the two ends of the scale bar.");t.barTaps=[];trRender();return}
+  t.ftpp=(t.unit==="m"?t.len*3.28084:t.len)/d;t.step="house";trRender();return}
+ if(a==="undo"){(t.step==="house"?t.house:t.lot).pop();trRender();return}
+ if(a==="house-ok"){if(t.house.length<3){toast("Tap at least three corners of the house.");return}t.step="lot";trRender();return}
+ if(a==="back"){t.step="house";trRender();return}
+ if(a==="finish"){if(t.lot.length&&t.lot.length<3){toast("Tap at least three lot corners, or remove them to keep your lot.");return}trApply();return}
+},true);
+document.addEventListener("change",e=>{if(e.target&&(e.target.id==="trLen"||e.target.id==="trUnit")&&S.trace)trReadLen()},true);
+/* start tracing as soon as a new lot map or top view finishes loading (same as setup) */
+document.addEventListener("change",e=>{const t=e.target;if(!t||!t.dataset||!/^(overhead|lotmap)$/.test(t.dataset.photo||"")||!t.files||!t.files[0])return;const p=prop();if(!p||p.demo)return;const k=t.dataset.photo,old=trPic(p,k),t0=Date.now();
+ const wait=()=>{const ph=trPic(p,k);if(ph&&ph.img&&ph!==old){if(prop()===p)trStart(k);return}if(Date.now()-t0<15000)setTimeout(wait,250)};setTimeout(wait,300)},true);
+{const _rmt3=renderMapTools;renderMapTools=function(){const r=_rmt3.apply(this,arguments);trRender();return r}}
+/* a way back in: trace buttons where the pictures are */
+function trButtons(p){if(!p||p.demo)return"";const ph=PHOTOS[p.id]||{};let h="";if(ph.lotmap&&ph.lotmap.img)h+='<button class="btn sm" type="button" data-tr="start" data-arg="lotmap">✏ Trace house &amp; lot from the lot map</button>';if(ph.overhead&&ph.overhead.img)h+='<button class="btn sm" type="button" data-tr="start" data-arg="overhead">✏ Trace house &amp; lot from the top view</button>';return h?'<div class="row" id="trStarts" style="gap:6px;flex-wrap:wrap;margin:6px 0">'+h+'</div>':""}
+{const _rp=renderPhotos;renderPhotos=function(){const r=_rp.apply(this,arguments);try{const b=$("#photoBody");if(b&&!b.querySelector("#trStarts")){const h=trButtons(prop());if(h)b.insertAdjacentHTML("afterbegin",h)}}catch(e){if(window.__T)console.error(e)}return r}}
 /* ---------- init ---------- */
 document.documentElement.lang="en";
 applyA11y();
