@@ -590,6 +590,9 @@ figure.media img,figure.media video,.postart svg,.preview img,.preview video{bor
 .gsec{position:relative}
 .gsec{padding-top:14px}
 .gsgrip{cursor:grab;touch-action:none;line-height:1}
+.gsec[data-gsec="photos"]:has(> #photoCard[hidden]){display:none}
+.glgrip{cursor:grab;touch-action:none;background:#121412!important;color:#C9F25A!important;border-color:#121412!important;min-width:34px;font-weight:700;margin-right:4px}
+details.acc.gldrag{opacity:.85;outline:3px dashed #121412;outline-offset:2px}
 .gsec>.gsgrip{position:absolute;top:0;right:12px;z-index:4;width:34px;height:26px;font-size:.95rem;background:#121412;color:#C9F25A;border:none;border-radius:8px 8px 0 0}
 .gsec.gdrag{outline:3px dashed #121412;outline-offset:3px;opacity:.85}
 .gsec:has(> #selCard:empty){display:none}
@@ -878,6 +881,10 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
         <div id="photoTools"></div>
         <div class="gsortc stack" id="gsortL" style="gap:10px" aria-label="Under the map">
         <div id="glDock" class="stack" style="gap:8px" aria-label="At a glance tabs under the map"></div>
+        <div class="gsec" data-gsec="photos"><button type="button" class="gsgrip" aria-label="Move house and yard photos. Drag, or use the arrow keys." title="Drag to rearrange">⠿</button><section class="card" id="photoCard" aria-labelledby="photoT" hidden>
+      <div class="row between"><h3 id="photoT" tabindex="-1">House &amp; yard photos</h3><div class="row"><span class="pill good">Location data removed on upload</span><button class="btn sm" data-act="photos-close">Close photos</button></div></div>
+      <div id="photoBody" class="stack"></div>
+    </section></div>
         <div class="gsec" data-gsec="layer"><button type="button" class="gsgrip" aria-label="Move view details. Drag, or use the up and down arrow keys." title="Drag to rearrange">⠿</button><div id="layerDyn" class="stack"></div></div>
         <p class="tiny muted gsdrop">Drag ⠿ a section here (or press the right arrow on its ⠿) to keep it under the map.</p>
         </div>
@@ -903,10 +910,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
         <div class="gsec" data-gsec="words"><button type="button" class="gsgrip" aria-label="Move map in words. Drag, or use the up and down arrow keys." title="Drag to rearrange">⠿</button><details class="card" id="mapWords"><summary>Map in words</summary><div id="mapWordsBody" class="stack small"></div></details></div>
       </div>
     </div>
-    <section class="card" id="photoCard" aria-labelledby="photoT" hidden>
-      <div class="row between"><h3 id="photoT" tabindex="-1">House &amp; yard photos</h3><div class="row"><span class="pill good">Location data removed on upload</span><button class="btn sm" data-act="photos-close">Close photos</button></div></div>
-      <div id="photoBody" class="stack"></div>
-    </section>
+
   </section>
 
         <section class="view sub" id="v-plants" hidden></section>
@@ -927,7 +931,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
 <div id="setup" class="wrap" hidden></div>
 <div id="acct" class="wrap" hidden></div>
 
-<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 17, 9:37 PM</p>
+<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 18, 3:31 AM</p>
   <span class="small muted">In the Garden, Folks! · working prototype</span>
   <div class="row small">
     <button class="btn link" data-act="help-open">Plain-language help</button>
@@ -3258,7 +3262,7 @@ function renderSetup(){
   (w.satBusy?'<p class="small" role="status">Getting the satellite view…</p>':"")+(w.satErr?'<p class="small" role="alert"><b>'+esc(w.satErr)+"</b></p>":"")+(w.pics==="sat"&&w.photos.overhead&&w.photos.overhead.sat?'<p class="small" role="status">✓ Satellite view ready. You\'ll see it in the next step.</p>':"")+
   '<p class="tiny muted">Satellite imagery: when you choose it, the app asks Esri\'s World Imagery service for the map squares around your home. That shares your home\'s approximate map position with Esri. Imagery can be months or years old. Imagery © Esri, Maxar, Earthstar Geographics.</p></div>'}
  if(w.step===2){const o=w.photos.overhead,L=wzLoc(w);
-  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 17, 9:37 PM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
+  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 18, 3:31 AM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
   let R=wzCompass(w);
   if(o&&!o.sat)R+='<div class="ctlgrp"><span class="small"><b>1. Turn the photo</b> until north is at the top of the dial.</span><div class="row" role="group" aria-label="Turn the top photo">'+[[-90,"↺ 90°"],[-15,"↺ 15°"],[-1,"↺ 1°"],[1,"↻ 1°"],[15,"↻ 15°"],[90,"↻ 90°"]].map(b2=>'<button class="btn sm" type="button" data-act="wz-prot" data-arg="'+b2[0]+'" aria-label="Turn the photo '+Math.abs(b2[0])+" degrees "+(b2[0]<0?"left":"right")+'">'+b2[1]+"</button>").join("")+"</div></div>";
   else if(o&&o.sat)R+='<p class="tiny muted">Satellite pictures already have north at the top. Imagery © Esri, Maxar, Earthstar Geographics.</p>';
@@ -3294,7 +3298,7 @@ function renderSetup(){
    h+=measCard(w,k,'<i class="gdot" style="background:'+(GROWCOL[k]||"#121412")+'" aria-hidden="true"></i>'+placeName(k),'<div class="row" style="align-items:flex-end;gap:8px"><label class="f" style="width:120px">Width (ft)<input type="number" min="1" max="400" step="0.5" data-areaw="'+k+'" data-def="'+(Math.round(D[k][0]*2)/2)+'" value="'+(Math.round(v[0]*2)/2)+'"></label><label class="f" style="width:120px">Depth (ft)<input type="number" min="0.5" max="400" step="0.5" data-aread="'+k+'" data-def="'+(Math.round(D[k][1]*2)/2)+'" value="'+(Math.round(v[1]*2)/2)+'"></label><span class="tiny muted">'+(pl&&pl.poly?"Irregular: "+Math.round(pl.area).toLocaleString()+" sq ft (width and depth are the outer edges)":pl?Math.round(pl.area).toLocaleString()+" sq ft":Math.round(v[0]*v[1])+" sq ft")+"</span></div>"+((k==="patio"||k==="balcony")&&!aptMode(w)?'<label class="f small" style="width:auto;margin-top:6px">Patio door onto it<select data-wdoorpos="'+k+'" style="width:auto">'+[["middle","In the middle"],["left","On the left"],["right","On the right"],["none","No door here"]].map(([x,l])=>'<option value="'+x+'"'+(x===((w.doorPosK||{})[k]||"middle")?" selected":"")+">"+l+"</option>").join("")+'</select></label><p class="tiny muted" style="margin:2px 0 0">Left and right as you stand inside looking out.</p>':"")+(k==="door"&&!aptMode(w)&&!w.kinds.some(x=>(x==="patio"||x==="balcony")&&((w.doorPosK||{})[x]||"middle")!=="none")?(()=>{const v=w.doorFace!=null?+w.doorFace:Math.round((((+w.face||180)+180)%360)/45)*45%360;return'<label class="f small" style="width:auto;margin-top:6px">The patio door faces<select data-wdoorface="1" style="width:auto">'+[0,45,90,135,180,225,270,315].map(d=>'<option value="'+d+'"'+(d===v?" selected":"")+">"+cap(WORDS[dir16(d)])+"</option>").join("")+'</select></label><p class="tiny muted" style="margin:2px 0 0">It starts on the back of the house. You can drag it along the walls in My Garden.</p>'})():""),sum,!!(photo&&w.measRef),mode==="map"?(w.mapRef?'<button class="btn sm" type="button" data-act="map-step" data-arg="area:'+k+'">📏 '+((w.areaPlots||{})[k]?"Redo on the map":"Measure on the map")+"</button>":"Measure the lot first"):photo&&!w.measRef?"Measure the lot first":"")});
   h+='</div><p class="tiny muted">Sizes are for planning only. They aren\'t legal boundaries. In My Garden, each place shows as a thin outline you can turn on and off, move and resize.</p>'+(mode==="map"?"</div></div>":"")+'</div>'}
  if(w.step===4){const pr=w.loc?w.loc.label:w.preset>=0?PRESETS[w.preset].name:"Not set",np=Object.keys(w.photos).length,o=w.photos.overhead;h+='<div class="card stack"><h2>Ready to plan</h2><p style="margin:0">Check everything below, then save. You can change any of it later in My Garden.</p><ul class="wrev"><li><b>'+esc(w.name)+"</b> · "+esc(w.kinds.map(placeName).join(", "))+"</li><li>"+esc(pr)+(w.ad?" · address used to set things up, not saved":"")+"</li><li>Front faces "+WORDS[dir16(w.face)]+"</li><li>"+(aptMode(w)?"Apartment about "+w.houseWidth+" × "+w.houseDepth+" ft ("+Math.round(w.houseWidth*w.houseDepth).toLocaleString()+" sq ft, from what you typed) on floor "+((w.apt&&w.apt.floor)||1)+(w.aptBldgW&&w.aptBldgD?" · building footprint about "+w.aptBldgW+" × "+w.aptBldgD+" ft ("+Math.round(w.aptBldgW*w.aptBldgD).toLocaleString()+" sq ft"+(w.bldgTraced?", traced from the map":", starter size")+")":"")+((()=>{const c=w.fplan&&fpCalc(w),sp=c&&c.ftpp?c.spaces.filter(x=>x.w):[];return sp.length?sp.map(x=>" · "+x.kind+" "+x.w+" × "+x.d+" ft ("+Math.round(x.w*x.d)+" sq ft)"+(x.face!=null?", faces "+WORDS[dir16(x.face)]:"")).join(""):w.kinds.filter(k=>k==="balcony"||k==="window").map(k=>{const v=(w.areas||{})[k]||growDefaults(w)[k];return" · "+placeName(k).toLowerCase()+" "+v[0]+" × "+v[1]+" ft ("+Math.round(v[0]*v[1])+" sq ft)"}).join("")})())+(w.ad&&w.ad.shape?" · your building"+((w.ad.near||[]).filter(n=>n.on!==false).length?" and "+(w.ad.near||[]).filter(n=>n.on!==false).length+" nearby buildings":"")+" from OpenStreetMap":""):(ny?"Growing space ":"Lot ")+w.lotWidth+" × "+w.lotDepth+" ft · "+(ny?"wall":"house")+" "+w.houseWidth+" × "+w.houseDepth+" ft, "+w.houseHeight+" ft tall")+"</li><li>"+(o?(o.sat?"Satellite top view":"Your own top photo")+" · ":"")+np+" photo"+(np===1?"":"s")+"</li></ul>"+(canSave()?'<p class="small">This garden will be saved on this device.</p>'+(np?'<label class="check small"><input type="checkbox" data-keepphotos="1" '+(S.keepPhotos?"checked":"")+"> Keep my house photos in my profile on this device</label>":""):'<div class="warnbox"><span aria-hidden="true">i</span><span>Saving is off, so this garden lasts until you close the page. <button class="btn link small" data-act="privacy-choices">Turn on saving</button></span></div>')+"</div>"}
- h+='<div class="row between">'+(w.step>0?'<button class="btn" data-act="wiz-back">Back</button>':"<span></span>")+(w.step<4?'<button class="btn primary" data-act="wiz-next">Next</button>':'<button class="btn primary" data-act="wiz-finish">Save and open my dashboard</button>')+"</div></div>";
+ h+='<div class="row between">'+(w.step>0?'<button class="btn" data-act="wiz-back">Back</button>':"<span></span>")+(w.step<4?'<button class="btn primary" data-act="wiz-next">Next</button>':'<button class="btn primary" data-act="wiz-finish">'+(w.retrace?"Save the new outline and go back to my garden":"Save and open my dashboard")+'</button>')+"</div></div>";
  const keepY=window.scrollY,same=S._setupStep===w.step;S._setupStep=w.step;$("#setup").innerHTML=h;if(same){if(Math.abs(window.scrollY-keepY)>2)window.scrollTo(0,keepY);requestAnimationFrame(()=>{if(S._setupStep===w.step&&S.view==="setup"&&Math.abs(window.scrollY-keepY)>2)window.scrollTo(0,keepY)})}
 }
 function wizExtras(w){const st=w.stories||(aptMode(w)?3:Math.max(1,Math.round((w.houseHeight||20)/12)));return'<div class="row" style="gap:12px;flex-wrap:wrap;align-items:flex-end;margin-top:6px"><label class="f small" style="width:auto">'+(aptMode(w)?"Stories in the building":"Stories (floors)")+'<select data-wstories="1" style="width:auto">'+[1,2,3,4,5,6,8,10,12,15,20].map(n=>'<option value="'+n+'"'+(n===st?" selected":"")+">"+n+"</option>").join("")+'</select></label><span class="small"><b>This home has:</b></span>'+[["deck","A deck"],["balcony","A balcony"],["patio","A patio"]].map(([k,l])=>'<label class="check small"><input type="checkbox" data-whas="'+k+'"'+(w.kinds.includes(k)?" checked":"")+"> "+l+"</label>").join("")+'</div><p class="tiny muted" style="margin:4px 0 0">Each one you tick gets its own outline to measure below and on the map.</p>'}
@@ -3320,7 +3324,7 @@ function readWiz(){const w=S.wiz,v=id=>$(id)?$(id).value:null;
   const oLW=w.lotWidth,oLD=w.lotDepth;w.lotWidth=n("#wzLW",2,300,w.lotWidth);w.lotDepth=n("#wzLD",2,400,w.lotDepth);if(w.lotPolyLocal&&(oLW!==w.lotWidth||oLD!==w.lotDepth)&&oLW>0&&oLD>0){const kx=w.lotWidth/oLW,ky=w.lotDepth/oLD;w.lotPolyLocal=w.lotPolyLocal.map(q=>[q[0]*kx,q[1]*ky]);if(w.lotArea)w.lotArea=Math.round(w.lotArea*kx*ky)}w.houseWidth=n("#wzHW",2,200,w.houseWidth);w.houseDepth=n("#wzHD",1,200,w.houseDepth);w.houseHeight=n("#wzHH",6,120,w.houseHeight);w.setback=n("#wzSB",0,200,w.setback);
   if(w.sizeSrc&&before!==[w.lotWidth,w.lotDepth,w.houseWidth,w.houseDepth,w.setback].join())w.sizeSrc="own";
   if(w.houseWidth>w.lotWidth&&!noYard(w))w.lotWidth=w.houseWidth;if(w.setback+w.houseDepth>w.lotDepth)w.setback=Math.max(0,w.lotDepth-w.houseDepth)}}
-function finishWiz(){const w=S.wiz;cmpStop();let loc,locName;if(w.loc){const L=w.loc;loc={lat:L.lat,lon:L.lon,tz:L.tz,dst:L.dst,tzName:L.tzName,region:L.region,name:L.short,zip:L.zip||null};locName=L.short}else if(w.preset>=0){const pr=PRESETS[w.preset];loc={lat:pr.lat,lon:pr.lon,tz:pr.tz,dst:pr.dst,region:pr.region};locName=pr.name}else{toast("Pick your city or ZIP code first.");w.step=1;renderSetup();return}
+function finishWiz(){const w=S.wiz;cmpStop();if(w&&w.retrace&&w._pm===undefined){w._pm=PHOTOS.mine;w._pp=S.props.mine;w._hadMine=Object.prototype.hasOwnProperty.call(S.props,"mine")}let loc,locName;if(w.loc){const L=w.loc;loc={lat:L.lat,lon:L.lon,tz:L.tz,dst:L.dst,tzName:L.tzName,region:L.region,name:L.short,zip:L.zip||null};locName=L.short}else if(w.preset>=0){const pr=PRESETS[w.preset];loc={lat:pr.lat,lon:pr.lon,tz:pr.tz,dst:pr.dst,region:pr.region};locName=pr.name}else{toast("Pick your city or ZIP code first.");w.step=1;renderSetup();return}
  if(!w.kinds.length){toast("Pick where you're growing first.");w.step=0;renderSetup();return}
  w.kind=w.kinds.map(placeName).join(", ");if(aptMode(w))aptFit(w);const m=makeMine(Object.assign({},w,{loc,locName,kind:noYard(w)?"Patio or containers":w.kind}));m.kind=w.kind;m.kinds=w.kinds.slice();if(aptMode(w)){m.apt=Object.assign({},w.apt||{});m.aptHome=true;m._aptW=w}makeGrowAreas(m,w.kinds,w.areas,w.areaPlots).forEach(a=>{if((a.kind==="balcony"||a.kind==="window")&&w.apt)a.apt=Object.assign({},w.apt);m.objects.push(a)});if(aptMode(w)){delete m._aptW;aptPlace(w,m)}if(w.lotPolyLocal){const lot=m.objects.find(x=>x.type==="lot"),t=(lot.rot||0)*RAD,u=[Math.cos(t),Math.sin(t)],v=[-u[1],u[0]];m.lotShape=w.lotPolyLocal.map(q=>{const A=-lot.w/2+q[1],B=-lot.d/2+q[0];return[lot.x+u[0]*A+v[0]*B,lot.y+u[1]*A+v[1]*B]});m._lf={x:lot.x,y:lot.y};lotUnify(m);m.lotArea=w.lotArea}{const tw=w.town||(w.kinds.includes("rowhouse")?{mode:"mid",fences:true}:null);if(tw&&!noYard(w))townApply(m,tw.mode,tw.fences)}m.faceLock=w.faceLock!==false;if(w.stories)setStories(m,w.stories);growsOf(m).forEach(g=>{if(g.kind==="deck"&&g.deckZ==null)g.deckZ=2;if(g.kind==="balcony"&&!m.aptHome&&!g.apt&&(w.stories||1)>1)g.apt={floor:2}});m.showGrow=true;S.props.mine=m;PHOTOS.mine={};Object.entries(w.photos).forEach(([k,v])=>PHOTOS.mine[k]=v);
  try{const ms=w.mapShot,R=[w.mapRef,w.measRef].find(r=>r&&r.iw&&ms&&ms.img&&Math.abs(r.iw-ms.img.width)<2&&r.offA!=null);if(ms&&ms.img&&R){const lot=m.objects.find(x=>x.type==="lot"),t=(lot.rot||0)*RAD,u=[Math.cos(t),Math.sin(t)],v=[-u[1],u[0]],V=m.view,LF0=m._lf||{x:lot.x,y:lot.y},toW=q0=>{const L=mLocal(R,q0),q=[L[0]-R.offA,L[1]-R.offD],A=-lot.w/2+q[1],B=-lot.d/2+q[0];return[LF0.x+u[0]*A+v[0]*B,LF0.y+u[1]*A+v[1]*B]},c=toW([.5,.5]),a=toW([0,.5]),b=toW([1,.5]),d=toW([.5,0]),xd=[b[0]-a[0],b[1]-a[1]],yd=[c[0]-d[0],c[1]-d[1]],flip=xd[0]*yd[1]-xd[1]*yd[0]<0;PHOTOS.mine.lotmap={url:ms.url,img:ms.img,alt:"Map screenshot of the lot from setup"};m.lotmapAlign={x:c[0]-V.W/2,y:c[1]-V.H/2,s:Math.hypot(xd[0],xd[1])/V.W,r:Math.atan2(xd[1],xd[0])*DEG,o:.9,f:flip?1:0,exact:true};
@@ -3350,7 +3354,7 @@ function finishWiz(){const w=S.wiz;cmpStop();let loc,locName;if(w.loc){const L=w
  try{if(m.aptHome)viewCover(m)}catch(err){if(window.__T)console.error(err)}
  try{if(!m.aptHome){const mates=growsOf(m).filter(g=>(g.kind==="patio"||g.kind==="balcony")&&((w.doorPosK||{})[g.kind]||"middle")!=="none");if(mates.length){m.objects=m.objects.filter(o=>!(o.type==="grow"&&o.kind==="door"));mates.forEach(mt=>m.objects.push({id:nid("g"),type:"grow",kind:"door",name:"Patio door"+(mates.length>1?" ("+placeName(mt.kind).toLowerCase()+")":""),x:mt.x,y:mt.y,w:6,d:2,rot:0,plants:[],apt:{floor:(mt.apt&&+mt.apt.floor)||1,above:"open",sides:"open",with:mt.id,matePos:(w.doorPosK||{})[mt.kind]||"middle",dtype:"sliding"}}));if(!m.kinds.includes("door"))m.kinds.push("door")}}}catch(err){if(window.__T)console.error(err)}
  try{if(!m.aptHome)growsOf(m).filter(g=>g.kind==="door").forEach(g=>{if(g.apt&&g.apt.with){genericAptPosition(m,g);return}const dm=(w.areas||{}).door||[6,2];g.name="Patio door";g.apt=Object.assign({floor:1,above:"open",sides:"open"},g.apt||{},{face:w.doorFace!=null?+w.doorFace:((+w.face||180)+180)%360,doorW:Math.max(3,Math.min(16,+dm[0]||6))});genericAptPosition(m,g)})}catch(err){if(window.__T)console.error(err)}
- if(typeof clAfterSetup==="function"&&clAfterSetup(m))return;savePhotos("mine");S.propId="mine";S.wiz=null;if(m.photoAlign)setTimeout(()=>{if(S.props.mine===m)runDetect(m,true)},600);S.sel=null;S.spot=null;S.Y=0;S.zoom=null;persist();go("dash");toast(canSave()?"Your garden is saved on this device.":"Your garden is ready. Saving is off, so it lasts until you leave.")}
+ if(w.retrace){retraceApply(w,m);return}if(typeof clAfterSetup==="function"&&clAfterSetup(m))return;savePhotos("mine");S.propId="mine";S.wiz=null;if(m.photoAlign)setTimeout(()=>{if(S.props.mine===m)runDetect(m,true)},600);S.sel=null;S.spot=null;S.Y=0;S.zoom=null;persist();go("dash");toast(canSave()?"Your garden is saved on this device.":"Your garden is ready. Saving is off, so it lasts until you leave.")}
 
 /* ================= v2: navigation, status, explore, globe, trade, alerts, profile, mood ================= */
 const NAV=[["dash","Home"],["garden","My Garden"],["library","Plant library"],["explore","Explore"],["trade","Trade"],["alerts","Alerts"],["profile","Profile"]];
@@ -3827,7 +3831,7 @@ case"select-obj":S.sel=arg;S.tool="select";if(S.layer!=="shade"&&S.layer!=="hour
   renderProperty();drawProp();toast("Saved. Your front faces "+WORDS[dir16(hd)]+" ("+hd+"°), from your compass. If the outline no longer sits on your roof, drag the house onto it.");break}
  case"sel-obj":S.sel=arg;renderSelCard();renderMapTools();drawProp();{const c2=$("#propBox");if(c2)c2.scrollIntoView({block:"center",behavior:reduceMotion()?"auto":"smooth"})}toast("Drag it to move, or drag a corner square to resize.");break;
  case"grow-make":{const a=makeGrowAreas(p,p.kinds||[]);if(a.length){pushUndo();a.forEach(x=>p.objects.push(x));p.showGrow=true;changed(p);renderProperty();drawProp();toast("Outlines added. Pick one to drag or resize it.")}break}
- case"gsort-reset":{S.gorder=null;LS.del("gorder3");const def={gsortL:["layer"],gsortR:["time","glance","sel","tools","found","years","words"]};S.gorder=def;gsortApply();S.gorder=null;toast("Layout reset.");break}
+ case"gsort-reset":{S.gorder=null;LS.del("gorder3");const def={gsortL:["photos","layer"],gsortR:["time","glance","sel","tools","found","years","words"]};S.gorder=def;gsortApply();S.gorder=null;toast("Layout reset.");break}
 case"soil-pick":{S.soilSel=S.soilSel===arg?null:arg;S.sel=S.soilSel;renderProperty();drawProp();const b=$('[data-act="soil-pick"][data-arg="'+arg+'"]');if(b)b.focus();break}
 case"cand-add":{S.tool="candadd:"+arg;S.showFound=true;renderProperty();toast("Tap the map where the "+arg+" is.");break}
 case"found-close":{S.showFound=false;renderMapTools();const g=$("#acc-found summary");if(g)g.focus();break}
@@ -11699,7 +11703,7 @@ document.addEventListener("click",async e=>{const b=e.target.closest&&e.target.c
   msg.textContent="Loading the satellite picture…";const o=await satFetch(lat,lon,null);inp.value="";
   const ph=PHOTOS[p.id]=PHOTOS[p.id]||{};ph.overhead={url:o.url,img:o.img,alt:"Satellite view of the lot from above, north at the top",taken:ymd(new Date()),sat:o.sat};delete ph.overhead._v;
   S.usePhoto=true;p.photoAlign=fitToLot(p,o.img);changed(p);(S.offerClear=S.offerClear||{})[p.id]=1;try{await savePhotos(p.id)}catch(_){}
-  try{renderPhotos();drawProp()}catch(_){}const m2=$("#satMsg");if(m2)m2.textContent="Done. The satellite view is now the top view and shows under the map. Use the line-up tools below to match it to the lot.";toast("Got the satellite view. It’s saved as the top view.");try{trStart("overhead",{ftpp:o.sat&&o.sat.ft?o.sat.ft/o.img.width:0})}catch(_){}}
+  try{renderPhotos();drawProp()}catch(_){}const m2=$("#satMsg");if(m2)m2.textContent="Done. The satellite view is now the top view and shows under the map. Use the line-up tools below to match it to the lot.";toast("Got the satellite view. It’s saved as the top view.");}
  catch(er){msg.textContent=er&&er.message==="nf"?"Couldn’t find that address. Add the city and state, like 2417 S 9th St, Milwaukee, WI.":"Couldn’t load the satellite picture. Check your connection, or add your own top photo instead.";b.disabled=false}},true);
 
 
@@ -11741,7 +11745,7 @@ function lmFixBar(){try{const row=document.querySelector(".dimrow");if(!row)retu
  if(!show){if(el)el.remove();return}
  if(!el){el=document.createElement("div");el.id="lmFix";el.setAttribute("role","status");el.style.cssText="flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0;padding:10px 12px;border:2px solid #111;border-radius:12px;background:#fff7d6;color:#111";row.insertAdjacentElement("afterend",el)}
  const deg=Math.round(((a.r||0)%360+540)%360-180);
- el.innerHTML='<span class="small" style="flex:1 1 240px"><b>Your lot map is '+(a.f?"mirrored"+(deg?" and turned "+Math.abs(deg)+"°":""):"turned "+Math.abs(deg)+"°")+'</b> from the picture you uploaded.</span><button class="btn sm" type="button" data-act="pal-upright">⬆ Put it back the way I uploaded it</button><button class="btn sm" type="button" data-tr="start" data-arg="lotmap">✏ Trace house &amp; lot from it</button>'}catch(e){if(window.__T)console.error(e)}}
+ el.innerHTML='<span class="small" style="flex:1 1 240px"><b>Your lot map is '+(a.f?"mirrored"+(deg?" and turned "+Math.abs(deg)+"°":""):"turned "+Math.abs(deg)+"°")+'</b> from the picture you uploaded.</span><button class="btn sm" type="button" data-act="pal-upright">⬆ Put it back the way I uploaded it</button><button class="btn sm" type="button" data-act="retrace" data-arg="lotmap">✏ Redo house &amp; lot outline from it</button>'}catch(e){if(window.__T)console.error(e)}}
 {const _mms=mapModeSet;mapModeSet=function(){const r=_mms.apply(this,arguments);lmFixBar();return r}}
 {const _rmt=renderMapTools;renderMapTools=function(){const r=_rmt.apply(this,arguments);lmFixBar();return r}}
 /* ---------- outline redraw: Finish / Undo point / Cancel right above the map, where the corners are tapped ---------- */
@@ -11751,82 +11755,63 @@ function olTopBar(){try{const row=document.querySelector(".dimrow");if(!row)retu
  el.innerHTML=olToolbar()}catch(e){if(window.__T)console.error(e)}}
 {const _rmt2=renderMapTools;renderMapTools=function(){const r=_rmt2.apply(this,arguments);olTopBar();const mt=document.querySelector("#mapTools .ol-drawing");if(mt&&document.getElementById("olTop"))mt.remove();return r}}
 {const _dp2=drawProp;drawProp=function(){const r=_dp2.apply(this,arguments);if(olCurrent()||document.getElementById("olTop"))olTopBar();return r}}
-/* ================= Trace your house and lot from a picture (same steps as setup) =================
-   After a lot map or top view is added in the garden: 1) the scale, 2) tap the house corners,
-   3) tap the lot corners (or keep the lot). The house and lot outlines are rebuilt from the taps,
-   and the picture is placed under them, upright, so everything lines up. */
-S.trace=null;
-function trPic(p,k){return(PHOTOS[p.id]||{})[k]}
-function trStart(k,o){const p=prop();if(!p||p.demo)return;const ph=trPic(p,k);if(!ph||!ph.img){toast("Add the picture first.");return}
- const known=o&&o.ftpp>0?o.ftpp:0,bar=known?null:(()=>{try{return mapFindBar(ph.img)}catch(_){return null}})();
- S.trace={pid:p.id,k,step:known?"house":"bar",ftpp:known,bar,auto:!!bar,barTaps:[],len:10,unit:"m",house:[],lot:[]};
- if(k==="lotmap"){S.mapBase="lot"}else{S.mapBase=null;S.usePhoto=true}
- if(S.map3d)map3dSet(false);renderMapTools();drawProp();trRender();setTimeout(()=>{const b=$("#trBox");if(b)b.scrollIntoView({block:"start",behavior:reduceMotion()?"auto":"smooth"})},60)}
-function trCur(){const t=S.trace,p=prop();return t&&p&&t.pid===p.id&&trPic(p,t.k)&&trPic(p,t.k).img?t:null}
-function trHTML(){const t=trCur();if(!t)return"";const p=prop(),ph=trPic(p,t.k),I=ph.img,ar=I.height/I.width*100,nm=t.k==="lotmap"?"lot map":"top view";
- const pts=(a,close,col,lab)=>a.length?'<polyline points="'+a.map(q=>(q[0]*100)+","+(q[1]*ar)).join(" ")+(close&&a.length>2?" "+(a[0][0]*100)+","+(a[0][1]*ar):"")+'" fill="'+(close&&a.length>2?col+"33":"none")+'" stroke="'+col+'" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-dasharray="'+(close?"none":"6 4")+'"/>'+a.map((q,i)=>'<circle cx="'+(q[0]*100)+'" cy="'+(q[1]*ar)+'" r="1.4" fill="'+col+'" stroke="#fff" stroke-width="1.5" vector-effect="non-scaling-stroke"/><text x="'+(q[0]*100+1.8)+'" y="'+(q[1]*ar-1.6)+'" font-size="3.6" font-weight="700" fill="#111" stroke="#fff" stroke-width="2.5" paint-order="stroke" vector-effect="non-scaling-stroke">'+(lab||"")+(i+1)+'</text>').join(""):"";
- const bar=t.step==="bar"?(t.bar?[t.bar.a,t.bar.b]:t.barTaps):[];
- let say="",btns="";
- if(t.step==="bar"){
-  if(t.bar){say='<b>Step 1 of 3: the scale.</b> We found the scale bar (the line marked in blue). What length does it show?';
-   btns='<label class="f" style="width:110px">Length<input type="number" id="trLen" min="1" max="2000" step="any" value="'+t.len+'"></label><label class="f" style="width:110px">Unit<select id="trUnit"><option value="m"'+(t.unit==="m"?" selected":"")+'>meters (m)</option><option value="ft"'+(t.unit==="ft"?" selected":"")+'>feet (ft)</option></select></label><button class="btn sm primary" type="button" data-tr="bar-ok">Next: the house</button><button class="btn sm" type="button" data-tr="bar-redo">That’s not the scale bar</button>'}
-  else{say='<b>Step 1 of 3: the scale.</b> '+(t.barTaps.length<2?'Tap the <b>'+(t.barTaps.length?"other end":"left end")+'</b> of the scale bar on the picture (the short line marked like “10 m” or “50 ft”).':'Now enter the length the scale bar shows.');
-   btns=(t.barTaps.length===2?'<label class="f" style="width:110px">Length<input type="number" id="trLen" min="1" max="2000" step="any" value="'+t.len+'"></label><label class="f" style="width:110px">Unit<select id="trUnit"><option value="m"'+(t.unit==="m"?" selected":"")+'>meters (m)</option><option value="ft"'+(t.unit==="ft"?" selected":"")+'>feet (ft)</option></select></label><button class="btn sm primary" type="button" data-tr="bar-ok">Next: the house</button>':"")+(t.barTaps.length?'<button class="btn sm" type="button" data-tr="bar-undo">Undo point</button>':"")+'<button class="btn sm" type="button" data-tr="bar-none">There’s no scale bar</button>'}}
- else if(t.step==="house"){say='<b>Step 2 of 3: your house.</b> Tap each corner of your house on the picture, going around in order. '+t.house.length+' corner'+(t.house.length===1?"":"s")+' so far.'+(t.ftpp?"":' <span class="small">With no scale bar, the house keeps its current width, so tap the <b>front</b> corners first.</span>');
-  btns='<button class="btn sm primary" type="button" data-tr="house-ok"'+(t.house.length<3?" disabled":"")+'>Next: the lot</button><button class="btn sm" type="button" data-tr="undo"'+(t.house.length?"":" disabled")+'>Undo point</button>'}
- else{say='<b>Step 3 of 3: your lot.</b> Tap each corner of your lot (the property lines) in order, or skip to keep the lot you have. '+t.lot.length+' corner'+(t.lot.length===1?"":"s")+' so far.';
-  btns='<button class="btn sm primary" type="button" data-tr="finish"'+(t.lot.length&&t.lot.length<3?" disabled":"")+'>'+(t.lot.length>=3?"Finish and save":"Skip, finish and save")+'</button><button class="btn sm" type="button" data-tr="undo"'+(t.lot.length?"":" disabled")+'>Undo point</button><button class="btn sm" type="button" data-tr="back">Back to the house</button>'}
- return '<div id="trBox" class="card" role="region" aria-label="Trace your house and lot from the '+nm+'" style="flex-basis:100%;margin:8px 0;border:3px solid #111"><div class="row between" style="align-items:flex-start;gap:8px"><h3 style="margin:0">Trace from your '+nm+'</h3><button class="btn sm" type="button" data-tr="cancel">Cancel</button></div>'+
-  '<p class="small" role="status" aria-live="polite" style="margin:6px 0">'+say+'</p>'+
-  '<div id="trPic" style="position:relative;width:100%;max-width:900px;margin:0 auto;touch-action:manipulation;cursor:crosshair;border:2px solid #111;border-radius:10px;overflow:hidden"><img src="'+ph.url+'" alt="Your '+nm+'. Tap the corners as asked above." style="display:block;width:100%;height:auto;pointer-events:none"><svg viewBox="0 0 100 '+ar+'" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" aria-hidden="true">'+
-  pts(bar,false,"#1E6BFF","")+pts(t.house,t.step!=="house",'#FF6B1A',"H")+pts(t.lot,t.step==="lot"&&false,"#16A34A","L")+'</svg></div>'+
-  '<div class="row" style="gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:8px">'+btns+'</div>'+
-  '<p class="tiny muted" style="margin:6px 0 0">Your beds, plants and other things stay where they are. Undo puts the old outlines back.</p></div>'}
-function trRender(){try{const row=document.querySelector(".dimrow");let el=document.getElementById("trBox");const t=trCur();if(!t||!row){if(el)el.remove();return}
- const h=trHTML(),tmp=document.createElement("div");tmp.innerHTML=h;const n=tmp.firstElementChild;if(el)el.replaceWith(n);else row.insertAdjacentElement("afterend",n)}catch(e){if(window.__T)console.error(e)}}
-function trReadLen(){const t=S.trace,a=$("#trLen"),u=$("#trUnit");if(a&&+a.value>0)t.len=+a.value;if(u)t.unit=u.value}
-function trApply(){const t=trCur();if(!t)return;const p=prop(),ph=trPic(p,t.k),I=ph.img,W=I.width,H=I.height,px=q=>[q[0]*W,q[1]*H];
- const h=p.objects.find(o=>o.type==="house"),lot=p.objects.find(o=>o.type==="lot");if(!h){toast("Add your house to the map first.");return}
- const HP=t.house.map(px);let ftpp=t.ftpp;
- if(!ftpp){const e=Math.hypot(HP[1][0]-HP[0][0],HP[1][1]-HP[0][1]);if(e<4){toast("Tap the house corners a little farther apart.");return}ftpp=(h.w||20)/e}
- const pc=[HP.reduce((a,q)=>a+q[0],0)/HP.length,HP.reduce((a,q)=>a+q[1],0)/HP.length],c0=[h.x,h.y],toW=q=>[Math.round((c0[0]+(q[0]-pc[0])*ftpp)*10)/10,Math.round((c0[1]+(q[1]-pc[1])*ftpp)*10)/10];
- const HW=HP.map(toW);if(Math.abs(shoelace(HW))<4){toast("That house outline is very small. Check the scale, or tap the corners again.");return}
+/* ================= Redo the house & lot outline from a lot map, using the setup steps themselves =================
+   Opens the same "Size → trace on a map" step people use when they first set up a garden, with this garden's
+   picture already loaded. When it's finished, the setup result's house, lot and picture placement go into THIS
+   garden (nothing new is created); beds, plants and other things move along with the house. */
+function retraceStart(k){const p=prop();if(!p||p.demo){toast("Open your own garden first.");return}
+ const ph=(PHOTOS[p.id]||{})[k||"lotmap"],h=p.objects.find(o=>o.type==="house"),lot=p.objects.find(o=>o.type==="lot"),w=newWiz();
+ w.retrace={pid:p.id,k:k||"lotmap"};w.name=p.name||w.name;w.kinds=(p.kinds&&p.kinds.length?p.kinds:["back"]).slice();w.face=p.face!=null?p.face:w.face;
+ if(p.loc){w.loc=Object.assign({},p.loc,{short:p.loc.name||p.place||"",label:p.loc.name||p.place||""});w.preset=-1}
+ if(lot){w.lotDepth=Math.round(lot.w)||w.lotDepth;w.lotWidth=Math.round(lot.d)||w.lotWidth}
+ if(h){w.houseHeight=h.h||w.houseHeight}
+ w.step=3;w.sizeMode="map";mStacks(w);w.mUndo.lot=[];w.mRedo.lot=[];w.mapAreaTaps={};w.mapHouse=null;w.mapLot=[];w.mapLotDone=false;w.mapPair=[];w.mapRef=null;w.mapErr="";
+ if(ph&&ph.img){if(ph.sat&&ph.sat.ft){w.mapShot={url:ph.url,img:ph.img,bar:{a:[0,.5],b:[1,.5]},autoBar:false,autoBarVal:null,barTaps:[]};w.mapBarLen=Math.round(ph.sat.ft);w.mapBarUnit="ft";w.mapStep="house"}
+  else{const bar=mapFindBar(ph.img);w.mapShot={url:ph.url,img:ph.img,bar,autoBar:!!bar,autoBarVal:bar,barTaps:[]};w.mapStep=bar?"house":"bar"}}
+ S.wiz=w;S.view="setup";renderChrome();renderSetup();window.scrollTo({top:0});
+ toast(ph&&ph.img?"Your "+(k==="overhead"?"top view":"lot map")+" is loaded. Tap your house, then your lot, the same as setup.":"Add a map screenshot of your lot, then tap your house and lot.")}
+{const _rs2=renderSetup;renderSetup=function(){const r=_rs2.apply(this,arguments);try{const w=S.wiz;if(w&&w.retrace){const z=document.querySelector(".wiz");const p=S.props[w.retrace.pid];if(z&&!z.querySelector("#rtBanner"))z.insertAdjacentHTML("afterbegin",'<div id="rtBanner" role="status" style="margin:0 0 12px;padding:12px 14px;border:3px solid #111;border-radius:12px;background:#fff7d6;color:#111"><b>Redoing the outline for '+esc((p&&p.name)||"your garden")+'.</b> <span class="small">These are the same steps as setup. When you press the finish button at the end, only the house and lot outline and the map picture are updated. Your beds, plants and notes stay.</span><div style="margin-top:8px"><button class="btn sm" type="button" data-act="retrace-cancel">Cancel and go back to my garden</button></div></div>')}}catch(e){if(window.__T)console.error(e)}return r}}
+function retraceApply(w,m){/* setup writes its result into the "mine" slot: put back whatever was there */if(w._hadMine)S.props.mine=w._pp;else delete S.props.mine;if(w._pm!==undefined)PHOTOS.mine=w._pm;const p=S.props[w.retrace.pid];if(!p){S.wiz=null;go("dash");return}
+ const hO=p.objects.find(o=>o.type==="house"),hN=m.objects.find(o=>o.type==="house"),lN=m.objects.find(o=>o.type==="lot");if(!hN||!lN){toast("Finish tracing your house and lot first.");return}
  pushUndo();
- h.poly=HW;meFix(p,h);
- if(lot&&t.lot.length>=3){lot.poly=t.lot.map(px).map(toW);delete p.lotShape;meFix(p,lot)}
- const V=p.view,cw=toW([W/2,H/2]),K=t.k==="lotmap"?"lotmapAlign":"photoAlign",old=p[K]||{};
- p[K]={x:cw[0]-V.W/2,y:cw[1]-V.H/2,s:ftpp*W/V.W,r:0,o:old.o||(t.k==="lotmap"?.9:.85),exact:true};
- try{rotateSpace(p,0,true)}catch(_){}
- if(t.k==="lotmap")S.mapBase="lot";else S.usePhoto=true;
- S.trace=null;if(S.offerClear)delete S.offerClear[p.id];S.sel=h.id;S.zoom=null;S.zoomCtr=null;changed(p);
- try{savePhotos(p.id)}catch(_){}renderProperty();renderMapTools();drawProp();renderPhotos();trRender();
- const sq=Math.round(Math.abs(shoelace(h.poly)));toast("Saved. Your house ("+sq+" sq ft)"+(t.lot.length>=3?" and lot were":" was")+" traced from the picture, and the picture is lined up under them. Undo puts the old outlines back.")}
-document.addEventListener("click",e=>{const pic=e.target.closest&&e.target.closest("#trPic");const t=trCur();
- if(pic&&t){e.preventDefault();const r=pic.getBoundingClientRect(),q=[Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))];
-  if(t.step==="bar"){if(t.bar)return;if(t.barTaps.length<2)t.barTaps.push(q)}else if(t.step==="house")t.house.push(q);else t.lot.push(q);trRender();return}
- const b=e.target.closest&&e.target.closest("[data-tr]");if(!b)return;e.preventDefault();e.stopImmediatePropagation();const a=b.dataset.tr;
- if(a==="start"){trStart(b.dataset.arg);return}
- if(!t)return;
- if(a==="cancel"){S.trace=null;trRender();toast("Tracing cancelled. Nothing changed.");return}
- if(a==="bar-redo"){t.bar=null;t.barTaps=[];trRender();return}
- if(a==="bar-undo"){t.barTaps.pop();trRender();return}
- if(a==="bar-none"){t.bar=null;t.barTaps=[];t.ftpp=0;t.step="house";trRender();return}
- if(a==="bar-ok"){trReadLen();const ph=trPic(prop(),t.k),I=ph.img,ab=t.bar?[t.bar.a,t.bar.b]:t.barTaps;if(ab.length<2){toast("Tap both ends of the scale bar first.");return}
-  const d=Math.hypot((ab[0][0]-ab[1][0])*I.width,(ab[0][1]-ab[1][1])*I.height);if(d<8){toast("Those two points are too close. Tap the two ends of the scale bar.");t.barTaps=[];trRender();return}
-  t.ftpp=(t.unit==="m"?t.len*3.28084:t.len)/d;t.step="house";trRender();return}
- if(a==="undo"){(t.step==="house"?t.house:t.lot).pop();trRender();return}
- if(a==="house-ok"){if(t.house.length<3){toast("Tap at least three corners of the house.");return}t.step="lot";trRender();return}
- if(a==="back"){t.step="house";trRender();return}
- if(a==="finish"){if(t.lot.length&&t.lot.length<3){toast("Tap at least three lot corners, or remove them to keep your lot.");return}trApply();return}
-},true);
-document.addEventListener("change",e=>{if(e.target&&(e.target.id==="trLen"||e.target.id==="trUnit")&&S.trace)trReadLen()},true);
-/* start tracing as soon as a new lot map or top view finishes loading (same as setup) */
-document.addEventListener("change",e=>{const t=e.target;if(!t||!t.dataset||!/^(overhead|lotmap)$/.test(t.dataset.photo||"")||!t.files||!t.files[0])return;const p=prop();if(!p||p.demo)return;const k=t.dataset.photo,old=trPic(p,k),t0=Date.now();
- const wait=()=>{const ph=trPic(p,k);if(ph&&ph.img&&ph!==old){if(prop()===p)trStart(k);return}if(Date.now()-t0<15000)setTimeout(wait,250)};setTimeout(wait,300)},true);
-{const _rmt3=renderMapTools;renderMapTools=function(){const r=_rmt3.apply(this,arguments);trRender();return r}}
-/* a way back in: trace buttons where the pictures are */
-function trButtons(p){if(!p||p.demo)return"";const ph=PHOTOS[p.id]||{};let h="";if(ph.lotmap&&ph.lotmap.img)h+='<button class="btn sm" type="button" data-tr="start" data-arg="lotmap">✏ Trace house &amp; lot from the lot map</button>';if(ph.overhead&&ph.overhead.img)h+='<button class="btn sm" type="button" data-tr="start" data-arg="overhead">✏ Trace house &amp; lot from the top view</button>';return h?'<div class="row" id="trStarts" style="gap:6px;flex-wrap:wrap;margin:6px 0">'+h+'</div>':""}
-{const _rp=renderPhotos;renderPhotos=function(){const r=_rp.apply(this,arguments);try{const b=$("#photoBody");if(b&&!b.querySelector("#trStarts")){const h=trButtons(prop());if(h)b.insertAdjacentHTML("afterbegin",h)}}catch(e){if(window.__T)console.error(e)}return r}}
+ const dx=hO?hN.x-hO.x:0,dy=hO?hN.y-hO.y:0,mv=o=>{o.x+=dx;o.y+=dy;if(o.poly)o.poly.forEach(q=>{q[0]+=dx;q[1]+=dy})};
+ const keep=p.objects.filter(o=>o.type!=="house"&&o.type!=="lot");keep.forEach(mv);(p.plantings||[]).forEach(q=>{q.x+=dx;q.y+=dy});
+ const W=p.water||{};(W.spouts||[]).forEach(q=>{q.x+=dx;q.y+=dy});(W.lows||[]).forEach(q=>{if(q.x!=null){q.x+=dx;q.y+=dy}});(W.marks||[]).forEach(q=>{if(q.x!=null){q.x+=dx;q.y+=dy}});if(W.gauge&&W.gauge.x!=null){W.gauge.x+=dx;W.gauge.y+=dy}
+ const oldH=hO||{},oldL=p.objects.find(o=>o.type==="lot")||{};hN.id=oldH.id||hN.id;lN.id=oldL.id||lN.id;["name","h","stories","roof"].forEach(k=>{if(oldH[k]!=null)hN[k]=oldH[k]});
+ p.objects=[lN,hN].concat(keep);
+ if(m.lotShape)p.lotShape=m.lotShape;else delete p.lotShape;if(m.lotArea)p.lotArea=m.lotArea;p.face=m.face;p.rot=m.rot;p.view=m.view;
+ const ms=w.mapShot,ph=PHOTOS[p.id]=PHOTOS[p.id]||{};
+ if(ms&&ms.img&&m.lotmapAlign){if(w.retrace.k==="overhead"){ph.overhead=Object.assign({},ph.overhead||{},{url:ms.url,img:ms.img});delete ph.overhead._v;p.photoAlign=Object.assign({},m.lotmapAlign,{o:.85});delete p.photoAlign.f;S.usePhoto=true}
+  else{const old=ph.lotmap||{};ph.lotmap={url:ms.url,img:ms.img,alt:old.alt||"Map screenshot of the lot",taken:old.taken||ymd(new Date())};p.lotmapAlign=m.lotmapAlign;S.mapBase="lot"}}
+ try{viewCover(p)}catch(_){}
+ if(w._pm!==undefined)PHOTOS.mine=w._pm;
+ S.wiz=null;S.propId=p.id;S.sel=null;S.spot=null;S.zoom=null;if(S.offerClear)delete S.offerClear[p.id];changed(p);persist();try{savePhotos(p.id)}catch(_){}
+ go("property");setTimeout(()=>{try{renderProperty();drawProp()}catch(_){}},50);toast("Saved. Your house and lot outline were redone from the map, and the map is lined up under them. Undo puts the old outline back.")}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest('[data-act="retrace"],[data-act="retrace-cancel"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();
+ if(b.dataset.act==="retrace"){retraceStart(b.dataset.arg||"lotmap");return}
+ const w=S.wiz,pid=w&&w.retrace&&w.retrace.pid;S.wiz=null;if(pid)S.propId=pid;go("property");toast("Cancelled. Nothing changed.")},true);
+/* the button, wherever the house pictures and outlines are */
+function retraceBtns(){const p=prop();if(!p||p.demo)return"";const ph=PHOTOS[p.id]||{};return'<div class="row rtBtns" style="gap:6px;flex-wrap:wrap;margin:8px 0"><button class="btn sm primary" type="button" data-act="retrace" data-arg="lotmap">✏ '+(ph.lotmap?"Redo house &amp; lot outline from the lot map":"Add a lot map and trace my house &amp; lot")+'</button>'+(ph.overhead&&ph.overhead.img&&ph.overhead.sat?'<button class="btn sm" type="button" data-act="retrace" data-arg="overhead">✏ Trace from the satellite view</button>':"")+'</div>'}
+function retraceInject(){try{["#photoBody",".ol-manage","#acc-photos > .accb"].forEach(sel=>{document.querySelectorAll(sel).forEach(b=>{if(!b.querySelector(".rtBtns")){const h=retraceBtns();if(h)b.insertAdjacentHTML("afterbegin",h)}})})}catch(e){if(window.__T)console.error(e)}}
+{const _rp=renderPhotos;renderPhotos=function(){const r=_rp.apply(this,arguments);retraceInject();return r}}
+{const _rmt3=renderMapTools;renderMapTools=function(){const r=_rmt3.apply(this,arguments);retraceInject();return r}}
+/* ---------- At a glance: a ⠿ handle on every box (drag, or arrow keys); ⤓ still puts a box under the map ---------- */
+function glDecorate(){[["glance",false],["glDock",true]].forEach(([id,isD])=>{const box=document.getElementById(id);if(!box)return;
+ box.querySelectorAll(":scope > details.acc").forEach(d=>{const sm=d.querySelector(":scope > summary");if(!sm)return;const k=d.id.replace("acc-",""),t=(d.querySelector(".acct")||{}).textContent||k;
+  if(sm.querySelector(".glgrip")&&sm.dataset.gld===String(isD))return;sm.querySelectorAll(".glmv,.glgrip").forEach(x=>x.remove());sm.dataset.gld=String(isD);
+  const g=document.createElement("button");g.type="button";g.className="btn sm glgrip";g.dataset.k=k;g.textContent="⠿";g.title="Drag to move";g.setAttribute("aria-label","Move "+t+". Drag, or use the up and down arrow keys.");sm.insertBefore(g,sm.firstChild);
+  const sp=document.createElement("span");sp.className="glmv";sp.innerHTML='<button class="btn sm" type="button" data-act="gl-dock" data-arg="'+k+'" aria-label="'+(isD?"Move "+esc(t)+" back to At a glance":"Move "+esc(t)+" under the map")+'" title="'+(isD?"Back to At a glance":"Move under the map")+'">'+(isD?"⤒":"⤓")+"</button>";sm.appendChild(sp)})})}
+function glSaveOrder(box){const ids=[...box.querySelectorAll(":scope > details.acc")].map(x=>x.id.replace("acc-",""));if(box.id==="glDock"){S.glDock=ids;if(canSave())LS.set("gldock",ids)}else{S.glOrder=ids;if(canSave())LS.set("glorder",ids)}}
+(()=>{let D=null;
+ document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest(".glgrip"))e.preventDefault()},true);
+ document.addEventListener("pointerdown",e=>{const g=e.target.closest&&e.target.closest(".glgrip");if(!g)return;e.preventDefault();const d=g.closest("details.acc");D={d,box:d.parentNode,moved:false};d.classList.add("gldrag");try{g.setPointerCapture(e.pointerId)}catch(_){}});
+ document.addEventListener("pointermove",e=>{if(!D)return;const sibs=[...D.box.querySelectorAll(":scope > details.acc")].filter(x=>x!==D.d);for(const x of sibs){const r=x.getBoundingClientRect();if(e.clientY>r.top&&e.clientY<r.bottom){const before=e.clientY<r.top+r.height/2;const ref=before?x:x.nextSibling;if(ref!==D.d&&D.d.nextSibling!==ref){D.box.insertBefore(D.d,ref);D.moved=true}break}}if(e.clientY<60)window.scrollBy(0,-12);else if(e.clientY>innerHeight-60)window.scrollBy(0,12)});
+ const up=()=>{if(!D)return;D.d.classList.remove("gldrag");if(D.moved){glSaveOrder(D.box);toast("Moved.")}D=null};document.addEventListener("pointerup",up);document.addEventListener("pointercancel",up);
+ document.addEventListener("keydown",e=>{const g=e.target.closest&&e.target.closest(".glgrip");if(!g||(e.key!=="ArrowUp"&&e.key!=="ArrowDown"))return;e.preventDefault();const d=g.closest("details.acc"),box=d.parentNode,L=[...box.querySelectorAll(":scope > details.acc")],i=L.indexOf(d),j=i+(e.key==="ArrowUp"?-1:1);if(j<0||j>=L.length){toast(j<0?"Already at the top.":"Already at the bottom.");return}
+  if(e.key==="ArrowUp")box.insertBefore(d,L[j]);else box.insertBefore(d,L[j].nextSibling);glSaveOrder(box);g.focus();toast("Moved "+(e.key==="ArrowUp"?"up":"down")+". Now "+(j+1)+" of "+L.length+".")});
+ const watch=()=>["glance","glDock"].forEach(id=>{const b=document.getElementById(id);if(b&&!b._glObs){b._glObs=new MutationObserver(()=>glDecorate());b._glObs.observe(b,{childList:true})}});
+ {const _rg9=renderGlance;renderGlance=function(){const r=_rg9.apply(this,arguments);try{watch();glDecorate();retraceInject()}catch(e){if(window.__T)console.error(e)}return r}}
+})();
 /* ---------- init ---------- */
 document.documentElement.lang="en";
 applyA11y();
