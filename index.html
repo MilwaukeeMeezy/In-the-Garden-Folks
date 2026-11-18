@@ -927,7 +927,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
 <div id="setup" class="wrap" hidden></div>
 <div id="acct" class="wrap" hidden></div>
 
-<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 17, 7:07 PM</p>
+<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 17, 7:13 PM</p>
   <span class="small muted">In the Garden, Folks! · working prototype</span>
   <div class="row small">
     <button class="btn link" data-act="help-open">Plain-language help</button>
@@ -3256,7 +3256,7 @@ function renderSetup(){
   (w.satBusy?'<p class="small" role="status">Getting the satellite view…</p>':"")+(w.satErr?'<p class="small" role="alert"><b>'+esc(w.satErr)+"</b></p>":"")+(w.pics==="sat"&&w.photos.overhead&&w.photos.overhead.sat?'<p class="small" role="status">✓ Satellite view ready. You\'ll see it in the next step.</p>':"")+
   '<p class="tiny muted">Satellite imagery: when you choose it, the app asks Esri\'s World Imagery service for the map squares around your home. That shares your home\'s approximate map position with Esri. Imagery can be months or years old. Imagery © Esri, Maxar, Earthstar Geographics.</p></div>'}
  if(w.step===2){const o=w.photos.overhead,L=wzLoc(w);
-  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 17, 7:07 PM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
+  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 17, 7:13 PM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
   let R=wzCompass(w);
   if(o&&!o.sat)R+='<div class="ctlgrp"><span class="small"><b>1. Turn the photo</b> until north is at the top of the dial.</span><div class="row" role="group" aria-label="Turn the top photo">'+[[-90,"↺ 90°"],[-15,"↺ 15°"],[-1,"↺ 1°"],[1,"↻ 1°"],[15,"↻ 15°"],[90,"↻ 90°"]].map(b2=>'<button class="btn sm" type="button" data-act="wz-prot" data-arg="'+b2[0]+'" aria-label="Turn the photo '+Math.abs(b2[0])+" degrees "+(b2[0]<0?"left":"right")+'">'+b2[1]+"</button>").join("")+"</div></div>";
   else if(o&&o.sat)R+='<p class="tiny muted">Satellite pictures already have north at the top. Imagery © Esri, Maxar, Earthstar Geographics.</p>';
@@ -10582,7 +10582,7 @@ function renderCustomerDashboard(){
  const target=document.getElementById('v-dash');if(target)target.innerHTML=h;
  heroDraw();
 }
-renderDash=function(){if(S.dash&&S.dash.calm&&typeof isCust==='function'&&isCust()&&prop()&&!prop().demo){return renderCustomerDashboard()}return _oldCustomerDashboard.apply(this,arguments)};
+renderDash=function(){if(typeof isCust==='function'&&isCust()&&prop()&&!prop().demo){return renderCustomerDashboard()}return _oldCustomerDashboard.apply(this,arguments)};
 document.addEventListener('click',function(e){const b=e.target.closest&&e.target.closest('[data-act]');if(!b||!(typeof isCust==='function'&&isCust()))return;const p=prop();if(!p)return;
  if(b.dataset.act==='ch-ask'){chOpenSheet('chask','Ask your consultant',cSec('cask',p));return}
  if(b.dataset.act==='ch-journal'){chOpenSheet('chjournal','Garden journal',cSec('cjournal',p));return}
@@ -11368,12 +11368,11 @@ async function cphUpload(p){const ph=PHOTOS[p.id]||{},refs=Object.assign({},((pr
  refs.extra=RX;
  if(ch){prefSet(p,"cphotos",refs);changed(p)}return!fail}
 function phAll(p){const ph=PHOTOS[p.id]||{},L=[];PSLOTS.forEach(x=>{const o=ph[x[0]];if(o&&o.url)L.push({key:x[0],o,kind:x[0],name:x[1]})});(ph.extra||[]).forEach(e=>{if(e&&e.url)L.push({key:"x:"+e.id,o:e,kind:"",name:e.label||"Photo"})});return L}
-function phCardHTML(p,bare){const L=phAll(p),n=L.length,show=L.slice(0,8);
- return(bare?'<div class="card stack" id="phHome" style="gap:8px">':'<section class="card stack" id="phHome" aria-labelledby="phHomeT" style="gap:8px"><h3 id="phHomeT" style="margin:0">Your photos</h3>')
+function phCardHTML(p){const L=phAll(p),n=L.length,show=L.slice(0,8);
+ return'<section class="card stack" id="phHome" aria-labelledby="phHomeT" style="gap:8px"><h3 id="phHomeT" style="margin:0">Your photos</h3>'
   +(n?'<p class="tiny muted" style="margin:0">Tap a photo to say what it shows, add a label or description, or delete it.</p><div class="shw-grid">'+show.map(x=>'<button type="button" class="shw-th phpick" data-act="ph-edit" data-arg="'+esc(p.id)+"|"+esc(x.key)+'" aria-label="Edit photo: '+esc(x.o.label||x.name)+'"><img src="'+x.o.url+'" alt=""><span class="tiny">'+esc(x.kind?x.name:(x.o.label||"Photo"))+(x.o.shareId?" · <b>Shared</b>":"")+"</span></button>").join("")+"</div>"+(n>show.length?'<p class="tiny muted" style="margin:0">'+n+' photos in all. <button class="btn link small" type="button" data-act="ph-open" data-arg="'+esc(p.id)+'">See all</button></p>':"")
    :'<p class="small" style="margin:0">Add any photos of your garden: beds, plants, problem spots, a top view or a screenshot of your lot. You can say what each one shows later.</p>')
-  +'<div class="row" style="gap:6px;flex-wrap:wrap"><label class="btn primary">+ Add photos<input type="file" accept="image/*,.heic" multiple id="phAddAny" class="sr"></label>'+'<button class="btn" type="button" data-act="ph-open" data-arg="'+esc(p.id)+'">Photo tools</button>'+(n&&!p.demo?'<button class="btn" type="button" data-act="ph-save" data-arg="'+esc(p.id)+'">💾 Save photos</button>':"")+'</div><p class="tiny muted" style="margin:0" data-phstat="'+esc(p.id)+'">'+phStatusText(p)+"</p>"+(bare?"</div>":"</section>")}
-{const i=SECTIONS.findIndex(x=>x[0]==="today");SECTIONS.splice(i>=0?i+1:SECTIONS.length,0,["cphotos","Your photos","Add any photo. Tap one to edit, crop or share it."]);const _shp=secHTML;secHTML=function(id,p){if(id==="cphotos"){try{loadPhotosFor(p.id)}catch(_){}return phCardHTML(p,true)}return _shp.apply(this,arguments)}}
+  +'<div class="row" style="gap:6px;flex-wrap:wrap"><label class="btn primary">+ Add photos<input type="file" accept="image/*,.heic" multiple id="phAddAny" class="sr"></label>'+'<button class="btn" type="button" data-act="ph-open" data-arg="'+esc(p.id)+'">Photo tools</button>'+(n&&!p.demo?'<button class="btn" type="button" data-act="ph-save" data-arg="'+esc(p.id)+'">💾 Save photos</button>':"")+'</div><p class="tiny muted" style="margin:0" data-phstat="'+esc(p.id)+'">'+phStatusText(p)+"</p></section>"}
 function phRefresh(p){try{savePhotos(p.id)}catch(_){}try{if(S.view==="app"&&S.tab==="dash")renderDash();if(isMap())renderPhotos();if(S.tab==="profile")renderProfile()}catch(_){}}
 document.addEventListener("change",e=>{const el=e.target;if(!el||el.id!=="phAddAny")return;const p=prop();if(!p)return;const fs=[...el.files];if(!fs.length)return;const pp=PHOTOS[p.id]=PHOTOS[p.id]||{};pp.extra=pp.extra||[];const room=24-pp.extra.length;if(room<=0){toast("You've reached 24 photos. Remove one to add another.");return}
  const take=fs.slice(0,room);let n=0;take.forEach(file=>{const lm=file.lastModified?new Date(file.lastModified):null;stripImage(file,(url,img)=>{pp.extra.push({id:nid("ph"),url,img,alt:"",label:"",taken:lm?ymd(lm)+"T"+pad(lm.getHours())+":"+pad(lm.getMinutes()):"",at:null,marks:[]});n++;if(n===take.length){phRefresh(p);if(n===1){const id=pp.extra[pp.extra.length-1].id;phEditSheet(p.id,"x:"+id);toast("Photo added and saved. Say what it shows, or share it if you like.")}else toast(n+" photos added and saved. Tap one to say what it shows or to share it.")}})});el.value=""});
@@ -11430,6 +11429,36 @@ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest
 window.__startLabel=function(){const b=document.querySelector('#home .k-go[data-act="start"]');if(!b)return;let has=!!S.props.mine;try{if(CL.on&&isCust())has=Object.keys(S.props).some(k=>S.props[k].cloud);if(CL.on&&isAdmin())has=false}catch(_){}b.textContent=S.wiz?"Continue my setup":has?"Open my garden":"Start my garden"};
 {const _rc=renderChrome;renderChrome=function(){const r=_rc.apply(this,arguments);try{if(S.view==="home")window.__startLabel()}catch(_){}return r}}
 {const _rd=renderDash;renderDash=function(){const r=_rd.apply(this,arguments);try{const p=prop(),v=$("#v-dash");if(p&&v&&!document.getElementById("phHome")){loadPhotosFor(p.id);const hero=v.querySelector(".dhero"),wel=v.querySelector(".chome .ch-welcome");if(hero)hero.insertAdjacentHTML("afterend",phCardHTML(p));else if(wel)wel.insertAdjacentHTML("afterend",phCardHTML(p));else v.insertAdjacentHTML("beforeend",phCardHTML(p))}}catch(e){if(window.__T)console.error(e)}return r}}
+/* ---------- client Home: same layout, plus the bold colors, the date warning and the Home cards it was missing ---------- */
+const CH_ADD=[["today","Today","A little progress goes a long way."],["health","Garden health","What needs a look, from your own records."],["tasks","Upcoming tasks","Small steps, big gardens."],["around","Around you","Pests and reports near your area."],["folks","From the folks","Real people, real gardens. Nothing here is made up."],["cviews","Sun, shade & water views","Drag the time to watch shadows move."]];
+function chExtras(){const home=document.querySelector("#v-dash .chome"),p=prop();if(!home||!p||home.dataset.extras)return;home.dataset.extras="1";const wel=home.querySelector(".ch-welcome");
+ try{const a=alertBanner(p);if(a&&wel){wel.insertAdjacentHTML("afterend",'<div class="ch-alert" id="chAlert">'+a+"</div>");altSay(p)}}catch(e){if(window.__T)console.error(e)}
+ const foot=home.querySelector(".ch-footnote");
+ CH_ADD.forEach(([id,t,sub])=>{let body="";try{body=id==="cviews"?(typeof cSec==="function"?cSec(id,p):""):secHTML(id,p)}catch(e){if(window.__T)console.error(e);return}if(!body)return;
+  const h='<section class="ch-x ch-x-'+id+'" id="chx-'+id+'" aria-labelledby="chxh-'+id+'"><div class="ch-section-title"><h2 id="chxh-'+id+'">'+t+'</h2><span class="ch-helper">'+sub+"</span></div>"+body+"</section>";
+  if(foot)foot.insertAdjacentHTML("beforebegin",h);else home.insertAdjacentHTML("beforeend",h)});
+ try{heroDraw()}catch(_){}}
+{const _rdx=renderDash;renderDash=function(){const r=_rdx.apply(this,arguments);try{chExtras()}catch(e){if(window.__T)console.error(e)}return r}}
+(function(){const st=document.createElement("style");st.textContent=`
+#v-dash .chome .ch-welcome{background:#121412;color:#F3F6EE;border-color:#121412}
+#v-dash .chome .ch-welcome h2{color:#C9F25A}#v-dash .chome .ch-welcome .ch-tag{color:#C9F25A}#v-dash .chome .ch-welcome > div:first-child p,#v-dash .chome .ch-welcome > div:first-child strong{color:#F3F6EE}
+#v-dash .chome .ch-welcome .chip,#v-dash .chome .ch-welcome .ch-chip{background:#2A332A;color:#F3F6EE}
+#v-dash .chome .ch-welcome .ch-movebar .btn{background:#F3F6EE;color:#121412}
+#v-dash .chome .ch-card,#v-dash .chome .ch-condition{border:0;color:#121412}
+#v-dash .chome .ch-u[data-key="c-this-week-in-my-garden"] .ch-card{background:#C9F25A}
+#v-dash .chome .ch-u[data-key="c-my-plan"] .ch-card{background:#F7C948}
+#v-dash .chome .ch-u[data-key="c-support"] .ch-card{background:#9C9DFC}
+#v-dash .chome .ch-u[data-key="c-my-growing-spaces"] .ch-card{background:#8DB4EA}
+#v-dash .chome .ch-u[data-key="c-garden-records"] .ch-card{background:#FF8A70}
+#v-dash .chome .ch-condition:nth-child(1){background:#F7C948}#v-dash .chome .ch-condition:nth-child(2){background:#C9F25A}#v-dash .chome .ch-condition:nth-child(3){background:#8DB4EA}
+#v-dash .chome .ch-community .ch-card:nth-child(1){background:#FF8A70}#v-dash .chome .ch-community .ch-card:nth-child(2){background:#7DD321}
+#v-dash .chome .ch-v90-progress{background:#C9F25A;color:#121412;border:0}
+#v-dash .chome .ch-card .ch-helper,#v-dash .chome .ch-condition p,#v-dash .chome .ch-card p{color:#121412}
+#v-dash .chome .ch-statusline{background:rgba(18,20,18,.18)}#v-dash .chome .ch-statusline i{background:#121412}
+#v-dash .chome .ch-x{display:flex;flex-direction:column;gap:12px}#v-dash .chome .ch-x .ch-section-title{margin:0}
+#v-dash .chome .ch-alert{margin:0}
+`;document.head.appendChild(st)})();
+
 {const _rd2=renderDash;renderDash=function(){const r=_rd2.apply(this,arguments);try{chArrange()}catch(e){if(window.__T)console.error(e)}return r}}
 {const _rp=renderPhotos;renderPhotos=function(){try{const p=prop();if(p)loadPhotosFor(p.id)}catch(_){}const r=_rp.apply(this,arguments);try{const el=$("#photoBody"),p=prop();if(el&&p&&!p.demo){const bar='<div class="row phsave" style="gap:8px;align-items:center;flex-wrap:wrap"><button class="btn primary" type="button" data-act="ph-save" data-arg="'+esc(p.id)+'">💾 Save photos</button><span class="tiny muted" data-phstat="'+esc(p.id)+'">'+phStatusText(p)+"</span></div>";el.insertAdjacentHTML("afterbegin",bar);el.insertAdjacentHTML("beforeend",bar)}
   if(el&&p){const ph=PHOTOS[p.id]||{};el.querySelectorAll(".pslot").forEach(ps=>{const slot=ps.querySelector("input[data-photo]"),lab=ps.querySelector("input[data-plabel]");let key=null,o=null;if(slot&&ph[slot.dataset.photo]){key=slot.dataset.photo;o=ph[key]}else if(lab){const e=(ph.extra||[]).find(x=>x.id===lab.dataset.plabel);if(e){key="x:"+e.id;o=e}}if(!key)return;
