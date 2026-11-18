@@ -931,7 +931,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
 <div id="setup" class="wrap" hidden></div>
 <div id="acct" class="wrap" hidden></div>
 
-<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 18, 3:31 AM</p>
+<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 18, 4:26 AM</p>
   <span class="small muted">In the Garden, Folks! · working prototype</span>
   <div class="row small">
     <button class="btn link" data-act="help-open">Plain-language help</button>
@@ -3262,7 +3262,7 @@ function renderSetup(){
   (w.satBusy?'<p class="small" role="status">Getting the satellite view…</p>':"")+(w.satErr?'<p class="small" role="alert"><b>'+esc(w.satErr)+"</b></p>":"")+(w.pics==="sat"&&w.photos.overhead&&w.photos.overhead.sat?'<p class="small" role="status">✓ Satellite view ready. You\'ll see it in the next step.</p>':"")+
   '<p class="tiny muted">Satellite imagery: when you choose it, the app asks Esri\'s World Imagery service for the map squares around your home. That shares your home\'s approximate map position with Esri. Imagery can be months or years old. Imagery © Esri, Maxar, Earthstar Geographics.</p></div>'}
  if(w.step===2){const o=w.photos.overhead,L=wzLoc(w);
-  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 18, 3:31 AM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
+  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 18, 4:26 AM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
   let R=wzCompass(w);
   if(o&&!o.sat)R+='<div class="ctlgrp"><span class="small"><b>1. Turn the photo</b> until north is at the top of the dial.</span><div class="row" role="group" aria-label="Turn the top photo">'+[[-90,"↺ 90°"],[-15,"↺ 15°"],[-1,"↺ 1°"],[1,"↻ 1°"],[15,"↻ 15°"],[90,"↻ 90°"]].map(b2=>'<button class="btn sm" type="button" data-act="wz-prot" data-arg="'+b2[0]+'" aria-label="Turn the photo '+Math.abs(b2[0])+" degrees "+(b2[0]<0?"left":"right")+'">'+b2[1]+"</button>").join("")+"</div></div>";
   else if(o&&o.sat)R+='<p class="tiny muted">Satellite pictures already have north at the top. Imagery © Esri, Maxar, Earthstar Geographics.</p>';
@@ -11765,6 +11765,8 @@ function retraceStart(k){const p=prop();if(!p||p.demo){toast("Open your own gard
  if(p.loc){w.loc=Object.assign({},p.loc,{short:p.loc.name||p.place||"",label:p.loc.name||p.place||""});w.preset=-1}
  if(lot){w.lotDepth=Math.round(lot.w)||w.lotDepth;w.lotWidth=Math.round(lot.d)||w.lotWidth}
  if(h){w.houseHeight=h.h||w.houseHeight}
+ /* bring the garden's top view too, so setup shows box 3 "Your top photo" with Line up */
+ {const ov=(PHOTOS[p.id]||{}).overhead;if(ov&&ov.img&&(k||"lotmap")!=="overhead")w.photos.overhead={url:ov.url,img:ov.img,sat:ov.sat,alt:ov.alt||"Top view"}}
  w.step=3;w.sizeMode="map";mStacks(w);w.mUndo.lot=[];w.mRedo.lot=[];w.mapAreaTaps={};w.mapHouse=null;w.mapLot=[];w.mapLotDone=false;w.mapPair=[];w.mapRef=null;w.mapErr="";
  if(ph&&ph.img){if(ph.sat&&ph.sat.ft){w.mapShot={url:ph.url,img:ph.img,bar:{a:[0,.5],b:[1,.5]},autoBar:false,autoBarVal:null,barTaps:[]};w.mapBarLen=Math.round(ph.sat.ft);w.mapBarUnit="ft";w.mapStep="house"}
   else{const bar=mapFindBar(ph.img);w.mapShot={url:ph.url,img:ph.img,bar,autoBar:!!bar,autoBarVal:bar,barTaps:[]};w.mapStep=bar?"house":"bar"}}
@@ -11783,6 +11785,8 @@ function retraceApply(w,m){/* setup writes its result into the "mine" slot: put 
  const ms=w.mapShot,ph=PHOTOS[p.id]=PHOTOS[p.id]||{};
  if(ms&&ms.img&&m.lotmapAlign){if(w.retrace.k==="overhead"){ph.overhead=Object.assign({},ph.overhead||{},{url:ms.url,img:ms.img});delete ph.overhead._v;p.photoAlign=Object.assign({},m.lotmapAlign,{o:.85});delete p.photoAlign.f;S.usePhoto=true}
   else{const old=ph.lotmap||{};ph.lotmap={url:ms.url,img:ms.img,alt:old.alt||"Map screenshot of the lot",taken:old.taken||ymd(new Date())};p.lotmapAlign=m.lotmapAlign;S.mapBase="lot"}}
+ /* top view lined up in box 3: place it the way setup does */
+ if(w.retrace.k!=="overhead"&&w.mapPaired&&w.measRef&&m.photoAlign){p.photoAlign=Object.assign({},m.photoAlign);S.usePhoto=true}
  try{viewCover(p)}catch(_){}
  if(w._pm!==undefined)PHOTOS.mine=w._pm;
  S.wiz=null;S.propId=p.id;S.sel=null;S.spot=null;S.zoom=null;if(S.offerClear)delete S.offerClear[p.id];changed(p);persist();try{savePhotos(p.id)}catch(_){}
