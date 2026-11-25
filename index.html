@@ -932,7 +932,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
 <div id="setup" class="wrap" hidden></div>
 <div id="acct" class="wrap" hidden></div>
 
-<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 24, 7:47 PM</p>
+<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 24, 9:14 PM</p>
   <span class="small muted">In the Garden, Folks! · working prototype</span>
   <div class="row small">
     <button class="btn link" data-act="help-open">Plain-language help</button>
@@ -3263,7 +3263,7 @@ function renderSetup(){
   (w.satBusy?'<p class="small" role="status">Getting the satellite view…</p>':"")+(w.satErr?'<p class="small" role="alert"><b>'+esc(w.satErr)+"</b></p>":"")+(w.pics==="sat"&&w.photos.overhead&&w.photos.overhead.sat?'<p class="small" role="status">✓ Satellite view ready. You\'ll see it in the next step.</p>':"")+
   '<p class="tiny muted">Satellite imagery: when you choose it, the app asks Esri\'s World Imagery service for the map squares around your home. That shares your home\'s approximate map position with Esri. Imagery can be months or years old. Imagery © Esri, Maxar, Earthstar Geographics.</p></div>'}
  if(w.step===2){const o=w.photos.overhead,L=wzLoc(w);
-  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 24, 7:47 PM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
+  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 24, 9:14 PM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
   let R=wzCompass(w);
   if(o&&!o.sat)R+='<div class="ctlgrp"><span class="small"><b>1. Turn the photo</b> until north is at the top of the dial.</span><div class="row" role="group" aria-label="Turn the top photo">'+[[-90,"↺ 90°"],[-15,"↺ 15°"],[-1,"↺ 1°"],[1,"↻ 1°"],[15,"↻ 15°"],[90,"↻ 90°"]].map(b2=>'<button class="btn sm" type="button" data-act="wz-prot" data-arg="'+b2[0]+'" aria-label="Turn the photo '+Math.abs(b2[0])+" degrees "+(b2[0]<0?"left":"right")+'">'+b2[1]+"</button>").join("")+"</div></div>";
   else if(o&&o.sat)R+='<p class="tiny muted">Satellite pictures already have north at the top. Imagery © Esri, Maxar, Earthstar Geographics.</p>';
@@ -12165,6 +12165,79 @@ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest
  if(how==="open"){crOpen(r);return}
  if(how==="dl"){crOpen(r);window.__rxFile=w==="plan"?"garden-success-plan":w==="own"?"my-garden-report":"full-analysis-report";try{rptDownload()}finally{window.__rxFile=null;crClose()}return}
  crOpen(r);setTimeout(()=>window.print(),50)},true);
+/* ---------- Home: three questions (what to do today, how is my garden, what's new), each box with a short line saying what it's for ---------- */
+document.head.insertAdjacentHTML("beforeend",`<style>
+#v-dash .hm{display:flex;flex-direction:column;gap:4px;color:var(--ink)}
+#v-dash .hm-hi{margin:0 0 4px;font-size:.9rem;color:var(--muted)}
+#v-dash .hm-grp{padding:9px 14px;border-radius:14px;margin:14px 0 2px;color:#121412}
+#v-dash .hm-grp h2{margin:0;font-size:1.35rem;text-transform:uppercase}
+#v-dash .hm-grp p{margin:2px 0 0;font-size:.9rem}
+#v-dash .hm-g1{background:#C9F25A}#v-dash .hm-g2{background:#F2C94C}#v-dash .hm-g3{background:#E8735A}#v-dash .hm-g4{background:#9FB4F5}
+#v-dash .hm-hint{font-size:.82rem;margin:10px 0 5px;padding:5px 10px;border-left:4px solid;border-radius:0 8px 8px 0;color:#121412}
+#v-dash .hm-hint b{font-weight:800}
+#v-dash .hm-h1{background:#E9F7C4;border-color:#5a9a12}#v-dash .hm-h2{background:#FCEFC2;border-color:#C79400}#v-dash .hm-h3{background:#FBDCD3;border-color:#C9472B}#v-dash .hm-h4{background:#E3E8FB;border-color:#4B5FC6}
+#v-dash .hm-card{border:2px solid var(--ink);border-radius:16px;padding:14px;background:var(--surface)}
+#v-dash .hm-todo{background:#F3FBE0;color:#121412}#v-dash .hm-cond{background:#FFF8E1;color:#121412}
+#v-dash .hm-wx{display:flex;gap:14px;flex-wrap:wrap;align-items:center;background:#121412;color:#fff;border-radius:12px;padding:10px 14px;margin-bottom:10px}
+#v-dash .hm-wx b{color:#D7F35B}#v-dash .hm-wx .btn{background:#D7F35B;color:#121412}
+#v-dash .hm-todo h3{margin:0 0 6px;font-size:1.05rem;text-transform:uppercase}
+#v-dash .hm-task{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid #bbb;border-radius:10px;padding:8px 10px;margin:6px 0;color:#121412}
+#v-dash .hm-task input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:#5a9a12}
+#v-dash .hm-task .done{text-decoration:line-through;color:#666}
+#v-dash .hm-task details{font-size:.82rem;margin-top:2px}#v-dash .hm-task summary{cursor:pointer;color:#444}
+#v-dash .hm-old{margin-top:6px;font-size:.88rem}#v-dash .hm-old summary{cursor:pointer;font-weight:700}
+#v-dash .hm-row{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;align-items:start}
+#v-dash .hm-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+#v-dash .hm-stats{display:flex;flex-direction:column;gap:8px}
+#v-dash .hm-stat{border:2px solid #121412;border-radius:12px;padding:9px 11px;color:#121412;text-align:left;font:inherit;cursor:pointer}
+#v-dash .hm-stat small{display:block;font-weight:800;font-size:.75rem;letter-spacing:.04em}
+#v-dash .hm-stat strong{display:block;font-size:1.35rem;line-height:1.15}
+#v-dash .hm-stat span{font-size:.8rem}
+#v-dash .hm-views{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+#v-dash .hm-alerts{background:#E8735A;color:#121412}#v-dash .hm-alerts h3,#v-dash .hm-nb h3{margin:0 0 6px;text-transform:uppercase;font-size:1.05rem}
+#v-dash .hm-alerts .li{background:#fff;border:1px solid #bbb;border-left:5px solid #C9472B;border-radius:10px;padding:8px;margin-top:6px;display:flex;flex-direction:column;gap:3px}
+#v-dash .hm-nb{background:#7ED321;color:#121412}
+#v-dash .hm-more{display:flex;gap:8px;flex-wrap:wrap}
+#v-dash .hm-more .btn{color:#121412}#v-dash .hm-more .btn:nth-child(1){background:#FBDCD3}#v-dash .hm-more .btn:nth-child(2){background:#E3E8FB}#v-dash .hm-more .btn:nth-child(3){background:#FCEFC2}#v-dash .hm-more .btn:nth-child(4){background:#E9F7C4}#v-dash .hm-more .btn:nth-child(5){background:#DDEBFA}
+#v-dash .hm-foot{font-size:.73rem;color:var(--muted);margin:12px 2px}
+@media(max-width:800px){#v-dash .hm-row,#v-dash .hm-row2{grid-template-columns:1fr}}
+</style>`);
+function hmHint(n,t,d){return'<p class="hm-hint hm-h'+n+'"><b>'+t+'</b> '+d+'</p>'}
+function hmTasks(p){let L=[];try{L=tdTasks(p)}catch(_){}let G=[];try{G=gsAll(p)}catch(_){}const old=[],cur=[];
+ L.forEach(t=>{let late=false;if(String(t.key).startsWith("gs-")){const g=G.find(x=>"gs-"+x.id===t.key);if(g&&g.due&&daysFrom(g.due,TODAY)>7&&!tdIsDone(p,t.key))late=true}(late?old:cur).push(t)});return{cur,old}}
+function hmTaskHTML(p,t){const done=tdIsDone(p,t.key);let why="";try{why=tdLC(t.lc)}catch(_){}return'<div class="hm-task"><input type="checkbox" id="hmt-'+esc(t.key)+'" data-tdk="'+esc(t.key)+'"'+(done?" checked":"")+'><div style="flex:1;min-width:0"><label for="hmt-'+esc(t.key)+'" class="'+(done?"done":"")+'"><b>'+esc(t.txt)+'</b></label>'+(why?'<details><summary>Why?</summary>'+why+'</details>':"")+'</div></div>'}
+function renderHome(){const p=prop(),v=$("#v-dash");if(!p||!v)return;const alertEl=v.querySelector("#gAlert"),cust=typeof isCust==="function"&&isCust();
+ const T=hmTasks(p),show=T.cur.slice(0,3),fin=show.filter(t=>tdIsDone(p,t.key)).length,all=bedsOf(p),at=attention(p),mix=lightMix(p,S.date),meas=all.filter(x=>(x.tests||[]).some(t=>t.kind==="measured")).length;
+ const roof=p.objects.find(o=>o.type==="house"),runoff=roof?Math.round(roof.w*roof.d*.623):null,barrels=p.objects.filter(o=>o.type==="barrel"&&!gone(o)),cap=barrels.reduce((n,o)=>n+(+o.cap||0),0);
+ const d=day(p),len=d.set-d.rise,key=lkey(p.loc.lat,p.loc.lon),wx=typeof V90WX!=="undefined"&&V90WX.get(key)&&V90WX.get(key).c;
+ let h='<div class="hm"><p class="hm-hi">'+esc(greet())+' · <b>'+esc(p.name)+'</b>'+(p.place?' · '+esc(p.place):"")+(p.demo?' · a fictional sample to explore':"")+'</p>';
+ /* 1 */
+ h+='<div class="hm-grp hm-g1"><h2>1 · What should I do today?</h2><p>Start here. Today’s weather and the few jobs that matter most right now.</p></div><div id="hmAlert"></div>';
+ h+=hmHint(1,"Your to-do list.","Check a job off when it’s done. Jobs that slipped by more than a week fold into “Still doing these?” so the list stays current.");
+ h+='<section class="hm-card hm-todo" aria-label="Your to-do list"><div class="hm-wx"><span>☀️ '+(wx?'<span id="ch-weather">'+v90Weather(p)+'</span>':'<b>'+esc(new Date(TODAY+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"}))+'</b>')+'</span><span>Sunrise '+fmtT(d.rise)+' · Sunset '+fmtT(d.set)+' · '+Math.floor(len/60)+' h '+(len%60)+' m of light</span>'+(!wx&&!p.demo?'<span id="ch-weather"><button type="button" class="btn sm" data-act="v90-weather">Show today’s weather</button></span>':"")+'</div>';
+ h+='<h3>This week · '+fin+' of '+show.length+' done</h3>'+(show.length?show.map(t=>hmTaskHTML(p,t)).join(""):'<p class="small" style="margin:4px 0">Nothing due right now. New jobs show up here as your plan grows.</p>');
+ if(T.old.length)h+='<details class="hm-old"><summary>Still doing these? ('+T.old.length+' older job'+(T.old.length===1?"":"s")+')</summary><p class="small" style="margin:4px 0">Check them off if they’re done, or leave them. They stay in your plan either way.</p>'+T.old.map(t=>hmTaskHTML(p,t)).join("")+'</details>';
+ h+='<p class="small" style="margin:8px 0 0">'+(T.cur.length>3?(T.cur.length-3)+' more in your plan · ':"")+'<button type="button" class="ch-link" data-act="tab" data-arg="planner">See my whole plan →</button></p></section>';
+ /* 2 */
+ h+='<div class="hm-grp hm-g2"><h2>2 · How is my garden doing?</h2><p>Your yard on one map, and the three things plants need most.</p></div>';
+ h+='<div class="hm-row"><div>'+hmHint(2,"Your map.","Tap the map to open it and edit your beds. Use the buttons under it to see sun, shade, water or soil.")+'<article class="ch-card ch-map-card" style="padding:8px"><div class="ch-mapframe" role="button" tabindex="0" data-act="tab" data-arg="property" aria-label="Open your garden map"><canvas id="miniCv" aria-label="Preview of your garden map"></canvas><span class="nowchip" id="heroNow" aria-live="polite"></span></div><div class="hm-views" role="group" aria-label="Open the map showing"><button type="button" class="btn sm" data-act="tab" data-arg="property">Garden</button><button type="button" class="btn sm" data-act="goto-layer" data-arg="hours">Sun &amp; shade</button><button type="button" class="btn sm" data-act="goto-layer" data-arg="water">Water</button><button type="button" class="btn sm" data-act="goto-layer" data-arg="soil">Soil</button><button type="button" class="btn sm" data-act="hm-3d">3D</button></div></article></div>';
+ const pct=mix.n?Math.round(100*mix.F/mix.n):0;
+ h+='<div>'+hmHint(2,"Sun, soil and water.","A quick health check. Anything marked ⚠ needs a look; tap it to see why and what to do.")+'<div class="hm-card hm-cond"><div class="hm-stats">'+
+  '<button type="button" class="hm-stat" style="background:#F2C94C" data-act="goto-layer" data-arg="hours"><small>☀️ SUN</small><strong>'+(mix.n?pct+'% full sun':'No beds yet')+'</strong><span>'+(mix.n?mix.F+' of '+mix.n+' beds get full sun (clear-day estimate)':'Add beds to see sun hours')+'</span></button>'+
+  '<button type="button" class="hm-stat" style="background:#C9F25A" data-act="goto-layer" data-arg="soil"><small>🪱 SOIL'+(at.length?' ⚠':'')+'</small><strong>'+meas+' of '+all.length+' beds tested</strong><span>'+(at.length?at.length+' thing'+(at.length===1?"":"s")+' need'+(at.length===1?"s":"")+' a look · '+esc(at[0].t):'Nothing flagged in your records')+'</span></button>'+
+  '<button type="button" class="hm-stat" style="background:#9FB4F5" data-act="goto-layer" data-arg="water"><small>💧 WATER</small><strong>'+(cap?cap+' gal stored':'Rain planning')+'</strong><span>'+(barrels.length?barrels.length+' rain barrel'+(barrels.length===1?"":"s"):'No rain barrels mapped')+(runoff!=null?' · '+runoff.toLocaleString()+' gal roof runoff per inch of rain (estimate)':'')+'</span></button></div></div></div></div>';
+ /* 3 */
+ h+='<div class="hm-grp hm-g3"><h2>3 · What’s new around me?</h2><p>Pest warnings for your area and what other local gardeners are sharing.</p></div>';
+ let alerts="";try{alerts=W("around",p)}catch(_){}
+ h+='<div class="hm-row2"><div>'+hmHint(3,"Pest &amp; local alerts.","Bugs and diseases showing up near you this month, and local water rules. Nothing to do unless one says to check your plants.")+'<article class="hm-card hm-alerts ch-alerts"><h3>🐛 Pest &amp; local alerts</h3>'+alerts+'</article></div>';
+ h+='<div>'+hmHint(3,"Neighbors.","Trade extra harvests, seeds and cuttings, or talk with local gardeners. Your address is never shown.")+'<article class="hm-card hm-nb"><h3>🤝 Neighbors</h3><p class="small" style="margin:0 0 8px">Find people growing what you grow, share advice and swap harvests when you choose to.</p><div class="row" style="gap:6px;flex-wrap:wrap"><button class="btn sm" type="button" data-act="trade-mode" data-arg="swap">Swap harvests</button><button class="btn sm" type="button" data-act="tab" data-arg="explore">Growing Circle</button></div></article></div></div>';
+ /* more */
+ h+='<div class="hm-grp hm-g4"><h2>More</h2><p>Everything else, one tap away.</p></div>'+hmHint(4,"Shortcuts.","Each one opens its page.");
+ h+='<div class="hm-more"><button class="btn sm" type="button" data-act="ch-journal">📝 Notes &amp; harvests</button><button class="btn sm" type="button" data-act="go-photos">📷 Photos</button><button class="btn sm" type="button" data-act="tab" data-arg="planner">🏆 Progress</button><button class="btn sm" type="button" data-act="tab" data-arg="planner">💰 Budget &amp; supplies</button><button class="btn sm" type="button" data-act="goto-layer" data-arg="water">🌧 Rain &amp; runoff</button><button class="btn sm" type="button" data-act="sw-open">🛟 Something wrong?</button>'+(cust?'<button class="btn sm" type="button" data-act="ch-ask">✉ Ask my consultant</button>':"")+'</div>';
+ h+='<p class="hm-foot">Sun and runoff figures are estimates, not measurements. Community reports show whether they’re verified. Your garden stays private to you'+(p.cloud?" and your consultant":"")+'.</p></div>';
+ v.innerHTML=h;if(alertEl){const s=v.querySelector("#hmAlert");if(s)s.replaceWith(alertEl)}try{heroDraw()}catch(_){}}
+{const _rdH=renderDash;renderDash=function(){const r=_rdH.apply(this,arguments);try{renderHome()}catch(e){if(window.__T)console.error(e)}return r}}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest('[data-act="hm-3d"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();go("property");setTimeout(()=>{const t=document.querySelector('[data-act="map-dim"][data-arg="3d"]');if(t)t.click()},150)},true);
 /* ---------- init ---------- */
 document.documentElement.lang="en";
 applyA11y();
