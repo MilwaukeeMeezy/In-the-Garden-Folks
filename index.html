@@ -932,7 +932,7 @@ tbody th{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-siz
 <div id="setup" class="wrap" hidden></div>
 <div id="acct" class="wrap" hidden></div>
 
-<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 24, 10:13 PM</p>
+<footer class="site-f wrap"><p class="tiny muted" style="margin:0 0 6px">Version Nov 24, 10:50 PM</p>
   <span class="small muted">In the Garden, Folks! · working prototype</span>
   <div class="row small">
     <button class="btn link" data-act="help-open">Plain-language help</button>
@@ -3263,7 +3263,7 @@ function renderSetup(){
   (w.satBusy?'<p class="small" role="status">Getting the satellite view…</p>':"")+(w.satErr?'<p class="small" role="alert"><b>'+esc(w.satErr)+"</b></p>":"")+(w.pics==="sat"&&w.photos.overhead&&w.photos.overhead.sat?'<p class="small" role="status">✓ Satellite view ready. You\'ll see it in the next step.</p>':"")+
   '<p class="tiny muted">Satellite imagery: when you choose it, the app asks Esri\'s World Imagery service for the map squares around your home. That shares your home\'s approximate map position with Esri. Imagery can be months or years old. Imagery © Esri, Maxar, Earthstar Geographics.</p></div>'}
  if(w.step===2){const o=w.photos.overhead,L=wzLoc(w);
-  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 24, 10:13 PM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
+  h+='<div class="card stack"><div class="whead"><div class="stack" style="gap:6px;flex:1;min-width:240px"><h2>Photos &amp; home orientation</h2><p class="tiny muted" style="margin:0">Version Nov 24, 10:50 PM</p><p>Add photos of your home and yard, then make sure the map matches how your house actually sits. The live compass helps you find your true orientation so sun, shade and measurements are accurate.</p></div><div class="wtips"><b>💡 Quick tips</b><ul class="small"><li>For the live compass, stand in your front doorway and hold the phone flat with its top edge pointing at the street.</li><li>Make sure north is up in your top photo.</li><li>Add front, back and side photos (each can be turned).</li><li>Choose files from a folder; the site never opens your photo library, camera or microphone. Location data is removed from each photo.</li></ul></div></div><h3 class="wsub"><span class="wbadge">1</span> House orientation</h3><div class="row" role="group" aria-label="Which way your house faces" style="gap:6px">'+[["North",0],["East",90],["South",180],["West",270]].map(([n,d])=>'<button class="btn sm wface'+(Math.round(w.face)%360===d?" primary":"")+'" type="button" data-act="wz-face" data-arg="'+d+'" aria-pressed="'+(Math.round(w.face)%360===d)+'">'+n+"</button>").join("")+'<span class="small muted">Your home faces <b>'+cap(WORDS[dir16(w.face)])+" ("+Math.round(w.face)+'°)</b>. Fine-tune with the dial below.</span></div><h3 class="wsub"><span class="wbadge">2</span> Find your home orientation</h3>';
   let R=wzCompass(w);
   if(o&&!o.sat)R+='<div class="ctlgrp"><span class="small"><b>1. Turn the photo</b> until north is at the top of the dial.</span><div class="row" role="group" aria-label="Turn the top photo">'+[[-90,"↺ 90°"],[-15,"↺ 15°"],[-1,"↺ 1°"],[1,"↻ 1°"],[15,"↻ 15°"],[90,"↻ 90°"]].map(b2=>'<button class="btn sm" type="button" data-act="wz-prot" data-arg="'+b2[0]+'" aria-label="Turn the photo '+Math.abs(b2[0])+" degrees "+(b2[0]<0?"left":"right")+'">'+b2[1]+"</button>").join("")+"</div></div>";
   else if(o&&o.sat)R+='<p class="tiny muted">Satellite pictures already have north at the top. Imagery © Esri, Maxar, Earthstar Geographics.</p>';
@@ -12363,6 +12363,52 @@ document.addEventListener("submit",async e=>{const f=e.target;if(!f||(f.id!=="ce
   if(CEM.old&&!c2){btn.disabled=false;btn.textContent=lab;cemSheet("Almost done: your current email ("+CEM.old+") also got a code. Type it in the second box, then tap Change my email.");return}
   throw new Error("That code didn’t work. Check it, or send a new code.")}
  catch(er){cemSheet(cemErr(er))}finally{if(btn.isConnected){btn.disabled=false;btn.textContent=lab}}},true);
+/* ---------- tidy top bar for clients: one row, Settings and account menus (consultant top bar unchanged) ---------- */
+document.head.insertAdjacentHTML("beforeend",`<style>
+body.cvt .topbar > .row:nth-of-type(2),body.cvt label[for="propSel"],body.cvt #saveChip,body.cvt #clAcctBtn{display:none!important}
+body.cvt .topbar > .row:first-of-type{flex-wrap:nowrap;width:100%}
+#ctPick{display:inline-flex;flex-direction:column;gap:1px}
+#ctSync{border:0;background:none;padding:0 2px;font-size:.72rem;font-weight:700;color:#2f6e10;text-align:left;cursor:pointer}
+#ctRight{display:flex;gap:8px;align-items:center;margin-left:auto;position:relative}#ctRight > .btn{white-space:nowrap}#ctPick select{max-width:260px}
+.ctMenu{position:absolute;right:0;top:calc(100% + 8px);min-width:260px;background:#fff;color:#121412;border:2px solid #121412;border-radius:12px;padding:6px;box-shadow:0 5px 0 #121412;z-index:60;display:flex;flex-direction:column}
+.ctMenu button{display:flex;justify-content:space-between;gap:12px;border:0;background:none;padding:9px 10px;border-radius:8px;font-weight:700;font-size:.9rem;color:#121412;text-align:left;cursor:pointer}
+.ctMenu button:hover,.ctMenu button:focus-visible{background:#E3E8FB}
+.ctMenu small{font-weight:500;color:#555}.ctMenu hr{border:0;border-top:1px solid #ccc;margin:4px 0}
+@media(max-width:700px){#ctRight .ctl{display:none}body.cvt .topbar > .row:first-of-type{flex-wrap:wrap;row-gap:8px}body.cvt .topbar .tsearch{flex:1 1 100%;order:5}#ctPick{flex:1;min-width:0}#ctPick select{max-width:100%}#ctRight{gap:6px}}
+</style>`);
+function ctOn(){return !(typeof isAdmin==="function"&&isAdmin())}
+function ctClose(){document.querySelectorAll(".ctMenu").forEach(m=>m.remove());document.querySelectorAll("[data-ctm]").forEach(b=>b.setAttribute("aria-expanded","false"))}
+function ctBuild(){const on=ctOn();document.body.classList.toggle("cvt",on);const row=document.querySelector(".topbar > .row"),sel=$("#propSel");if(!row||!sel)return;
+ let pk=$("#ctPick");if(on&&!pk){pk=document.createElement("span");pk.id="ctPick";sel.parentNode.insertBefore(pk,sel);pk.appendChild(sel);pk.insertAdjacentHTML("beforeend",'<button type="button" id="ctSync" data-act="ct-sync" aria-label="Sync now"></button>')}
+ else if(!on&&pk){pk.parentNode.insertBefore(sel,pk);pk.remove()}
+ const sc=$("#saveChip"),sy=$("#ctSync");if(sy){const t=(sc&&sc.textContent||"").trim();sy.textContent=t?(/^synced/i.test(t)?"✓ "+t:t):"";sy.hidden=!t}
+ let r=$("#ctRight");if(on&&!r){r=document.createElement("div");r.id="ctRight";row.appendChild(r)}else if(!on&&r){r.remove();return}if(!on)return;
+ const nm=(typeof CL!=="undefined"&&CL.on)?((CL.name||"").split(" ")[0]||"Account"):"Sign in";
+ r.innerHTML='<button class="btn sm primary" type="button" data-act="rx-open" aria-haspopup="dialog" aria-label="Reports">📄<span class="ctl"> Reports</span></button><button class="btn sm" type="button" data-act="help-open" aria-label="Help: garden words explained">?<span class="ctl"> Help</span></button><button class="btn sm" type="button" data-ctm="set" aria-haspopup="menu" aria-expanded="false" aria-label="Settings">⚙<span class="ctl"> Settings ▾</span></button><button class="btn sm" type="button" data-ctm="me" aria-haspopup="menu" aria-expanded="false" aria-label="Your account menu">👤<span class="ctl"> '+esc(nm)+' ▾</span></button>'}
+function ctMenu(btn){const k=btn.dataset.ctm,open=btn.getAttribute("aria-expanded")==="true";ctClose();if(open)return;const m=document.createElement("div");m.className="ctMenu";m.setAttribute("role","menu");
+ const mood=($("#moodBtn")||{}).textContent||"Garden Mood: Off",lang=(($("#langBtn")||{}).textContent||"ES").trim(),signed=typeof CL!=="undefined"&&CL.on,it=(act,arg,label,note)=>'<button type="button" role="menuitem" data-act="'+act+'"'+(arg?' data-arg="'+arg+'"':"")+">"+label+(note?"<small>"+esc(note)+"</small>":"")+"</button>";
+ m.innerHTML=k==="set"?it("mood","","🌈 Garden Mood",mood.replace(/^Garden Mood:\s*/,""))+it("lang-toggle","","🌐 "+(lang==="ES"?"Español":"English"),"Switch")+it("display","","Aa Text size &amp; display","›")+"<hr>"+it("privacy-choices","","🔒 Privacy choices","›")
+  :(signed?it("login","","Your account","email, name, security")+it("tab","profile","Profile","›")+it("cl-sync-now","","Sync now",(($("#saveChip")||{}).textContent||"").replace(/^Synced\s*/i,""))+"<hr>"+it("cl-signout","","Sign out"):it("login","","Sign in or sign up","›")+it("tab","profile","Profile","›"));
+ btn.parentNode.appendChild(m);btn.setAttribute("aria-expanded","true");const f=m.querySelector("button");if(f)f.focus()}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-ctm]");if(b){e.preventDefault();e.stopImmediatePropagation();ctMenu(b);return}
+ const sy=e.target.closest&&e.target.closest('[data-act="ct-sync"]');if(sy){e.preventDefault();e.stopImmediatePropagation();const t=document.createElement("button");t.dataset.act=(typeof CL!=="undefined"&&CL.on)?"cl-sync-now":"privacy-choices";t.hidden=true;document.body.appendChild(t);t.click();t.remove();return}
+ if(e.target.closest&&e.target.closest(".ctMenu [data-act]"))setTimeout(ctClose,0);else if(!(e.target.closest&&e.target.closest(".ctMenu")))ctClose()},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.querySelector(".ctMenu")){const b=document.querySelector('[data-ctm][aria-expanded="true"]');ctClose();if(b)b.focus()}});
+{const _rc=renderChrome;renderChrome=function(){const r=_rc.apply(this,arguments);try{ctBuild()}catch(e){if(window.__T)console.error(e)}return r}}
+new MutationObserver(()=>{const sy=$("#ctSync"),sc=$("#saveChip");if(sy&&sc){const t=sc.textContent.trim(),v=t?(/^synced/i.test(t)?"✓ "+t:t):"";if(sy.textContent!==v){sy.textContent=v;sy.hidden=!t}}}).observe(document.body,{subtree:true,characterData:true,childList:true});
+/* ---------- porch steps sit on the ground: solid steps from the porch floor down to the ground at the foot ---------- */
+{const _sd=stepsDraw3D;stepsDraw3D=function(p,o){if(!G3.T||G3.objZ==null)return _sd.apply(this,arguments);const ex=S.g3.vx||1,Zp=G3.objZ,at=(x,y)=>G3.T.at(x,y)*ex,keep=G3.noLift;
+ try{G3.noLift=true;if(STEPK(o))stepList(p,o).forEach(st=>{const G=stepGeo(p,o,st);if(!G)return;const top=Zp+G.rise,fix=+st.n>0,run=G.run;let n=G.n,foot=0,drop=0;
+  for(let it=0;it<3;it++){const ox=G.c[0]+G.s.n[0]*run*n,oy=G.c[1]+G.s.n[1]*run*n;foot=Math.min(top-.2,at(ox,oy));drop=top-foot;if(fix)break;const n2=Math.min(40,Math.max(1,Math.round(drop/(7/12))-1));if(n2===n)break;n=n2}
+  for(let k=1;k<=n;k++){const out=run*(n-k+.5),cx=G.c[0]+G.s.n[0]*out,cy=G.c[1]+G.s.n[1]*out,t=foot+drop*k/(n+1),g=Math.min(at(cx,cy),at(cx+G.s.n[0]*run/2,cy+G.s.n[1]*run/2),at(cx-G.s.n[0]*run/2,cy-G.s.n[1]*run/2))-.3,b=Math.min(g,t-.3);g3Box(cx,cy,b,run,t-b,G.w,G.rot,k%2?"#A9A49B":"#B5B0A7")}})}
+ finally{G3.noLift=keep}}}
+/* ---------- 3D buttons readable in dark mode; client Show bar on phones; client Map page always shows the flat map ---------- */
+document.head.insertAdjacentHTML("beforeend",`<style>
+.g3views .btn,.g3ctl .btn,.g3opt .btn{color:#121412!important;border-color:#121412!important}
+.g3views .btn[aria-pressed="true"],.g3opt .btn[aria-pressed="true"]{background:#121412!important;color:#D7F35B!important}
+@media(max-width:700px){#cvBar>span{width:100%}#cvBar .seg{display:grid;grid-template-columns:repeat(3,1fr);width:100%}#cvBar .seg button{border-right:1.5px solid #121412;border-bottom:1.5px solid #121412;padding:10px 4px;text-align:center}#cvBar .seg button:nth-child(3n){border-right:0}#cvBar .seg button:nth-last-child(-n+3){border-bottom:0}#cvBar .lbl2{display:block;margin:0 0 4px}#cvBar .cvedit{margin-left:0;width:100%}.cvzoom{top:56px;gap:4px}.cvzoom button{width:36px;height:36px;font-size:1.05rem}}
+</style>`);
+{const _cr=cvRender;cvRender=function(){if(cvOn()&&S.map3d&&S.tab==="garden"&&S.gsub==="map"){try{mapModeSet(S.mapBase==="lot"?"lot":"2d")}catch(_){}}return _cr.apply(this,arguments)}}
 /* ---------- init ---------- */
 document.documentElement.lang="en";
 applyA11y();
